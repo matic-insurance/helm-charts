@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  nginx:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-02-14T16:15:03.129765685Z"
+    description: A Nginx Helm chart for Kubernetes
+    digest: f83adf3970fe12c21c03ca23a3ecc04630104c9cb502a2cc5eac2eff8a913c97
+    home: https://matic-insurance.github.io/helm-charts
+    name: nginx
+    urls:
+    - https://matic-insurance.github.io/helm-charts/nginx-1.0.0.tgz
+    version: 1.0.0
+generated: "2020-02-14T16:15:03.129304683Z"
