@@ -1,0 +1,21 @@
+name: publish-charts
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
+    steps:
+      - uses: stefanprodan/kube-tools@v1
+        with:
+          helm: 2.16.1
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+          clean: true
+          fetch-depth: '0'
+      - name: Publish charts
+        run: bash test/publish.sh stable https://matic-insurance.github.io/helm-charts
