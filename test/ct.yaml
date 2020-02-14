@@ -3,6 +3,6 @@ target-branch: master
 validate-maintainers: false
 chart-dirs:
   - stable
-chart-repos:
-  - stable=https://matic-insurance.github.io/helm-charts
+#chart-repos:
+#  - stable=https://matic-insurance.github.io/helm-charts
 helm-extra-args: --timeout 600
