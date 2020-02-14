@@ -1,0 +1,103 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "nginx.name" . }}
+  {{- if .Values.reloader.enabled }}
+  annotations:
+    reloader.stakater.com/auto: "true"
+  {{- end }}
+  labels:
+    app.kubernetes.io/name: {{ include "nginx.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/version: {{ include "nginx.version" . }}
+    environment: {{ include "nginx.environment" . }}
+    product: {{ .Values.product }}
+    helm.sh/chart: {{ include "nginx.chart" . }}
+spec:
+  replicas: {{ .Values.replica.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "nginx.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      environment: {{ include "nginx.environment" . }}
+      product: {{ .Values.product }}
+  minReadySeconds: {{ .Values.replica.minReadySeconds }}
+  progressDeadlineSeconds: {{ .Values.replica.progressDeadlineSeconds }}
+  revisionHistoryLimit: {{ .Values.replica.revisionHistoryLimit }}
+  strategy:
+    type: {{ .Values.replica.strategy }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "nginx.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/version: {{ include "nginx.version" . }}
+        environment: {{ include "nginx.environment" . }}
+        product: {{ .Values.product }}
+        helm.sh/chart: {{ include "nginx.chart" . }}
+    spec:
+      containers:
+      - name: {{ include "nginx.name" . }}
+        image: {{ .Values.image.repository }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        {{- range .Values.ports }}
+        - containerPort: {{ .port }}
+        {{- end }}
+        {{- if or (eq .Values.ssl.enabled true) (eq .Values.custom_configs.enabled true) }}
+        volumeMounts:
+        {{- end }}
+        {{- if .Values.ssl.enabled -}}
+        {{- $product := .Values.product -}}
+        {{- range $index, $domain := .Values.ssl.cert_domains}}
+        - name: {{ $product }}-tls-vol-{{ $index }}
+          mountPath: /etc/nginx/certs/{{ $domain }}
+          secretName: {{ $domain }}-tls
+          readOnly: true
+        {{- end }}
+        {{- end }}
+        {{ if .Values.custom_configs.enabled -}}
+        - name: {{ .Values.product }}-configmap-vol        
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+        {{- end }}
+        {{ if .Values.probes.enabled -}}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.probes.url }}
+            port: {{ .Values.probes.port }}
+          initialDelaySeconds: {{ .Values.probes.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.probes.timeoutSeconds }}
+          periodSeconds: {{ .Values.probes.periodSeconds }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.probes.url }}
+            port: {{ .Values.probes.port }}
+          initialDelaySeconds: {{ .Values.probes.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.probes.timeoutSeconds }}
+          periodSeconds: {{ .Values.probes.periodSeconds }}
+        {{- end }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+      {{- if or (eq .Values.ssl.enabled true) (eq .Values.custom_configs.enabled true) }}
+      volumes:
+      {{- end }}
+      {{- if .Values.ssl.enabled }}
+      {{- $product := .Values.product -}}
+      {{- range $index, $domain := .Values.ssl.cert_domains}}
+      - name: {{ $product }}-tls-vol-{{ $index }}
+        secret:           
+          secretName: {{ $domain }}-tls
+      {{- end }}
+      {{- end }}
+
+      {{- if .Values.custom_configs.enabled }}
+      - name: {{ .Values.product }}-configmap-vol
+        configMap:
+          name: {{ .Values.custom_configs.configmap_name }} 
+          items:
+          - key: default.conf
+            path: default.conf
+      {{- end }}

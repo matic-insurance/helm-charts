@@ -1,0 +1,62 @@
+# Default values for nginx.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+product: myproduct
+environment: staging
+
+image:
+  repository: nginx:stable
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  annotations: {}
+
+ports:
+  - name: "http"
+    port: 80
+  - name: "https"
+    port: 443
+
+ssl:
+  enabled: false
+  cert_domains:
+    - example.com
+    - test.com
+
+# LoadBalancer service type only
+whitelist:
+  enabled: false
+  networks:
+    - 10.0.0.0/16
+
+custom_configs:
+  enabled: false
+  configmap_name: configmap-nginx
+
+reloader:
+  enabled: false
+
+replica:
+  replicaCount: 1
+  minReadySeconds: 1  # minimum number of seconds before Kubernetes starts considering the Pods healthy
+  progressDeadlineSeconds: 60  # how much the Deployment has to wait before it deduces that it cannot progress due to a failure to run a Pod”
+  revisionHistoryLimit: 5  # number of ReplicaSet we can rollback
+  strategy: RollingUpdate
+
+probes:
+  port: 80
+  enabled: false
+  url: /
+  initialDelaySeconds: 5
+  timeoutSeconds: 1
+  periodSeconds: 15
+
+resources:
+  requests:
+    memory: 128Mi
+    cpu: 100m
+  limits:
+    memory: 128Mi
+    cpu: 100m
