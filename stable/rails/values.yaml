@@ -47,7 +47,7 @@ webserver:
     port: 3000
     initialDelaySeconds: 10
     timeoutSeconds: 1
-    periodSeconds: 15
+    periodSeconds: 20
 
 worker:
   enabled: false
@@ -66,7 +66,7 @@ worker:
     command: ["ps 1 | grep sidekiq || exit 1"]
     initialDelaySeconds: 5
     timeoutSeconds: 1
-    periodSeconds: 15
+    periodSeconds: 20
 
 reloader:
   enabled: false
