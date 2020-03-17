@@ -41,6 +41,8 @@ spec:
         environment: {{ include "rails.environment" . }}
         product: {{ .Values.product }}
         helm.sh/chart: {{ include "rails.chart" . }}
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
     spec:
       containers:
       - name: {{ include "rails.name" . }}-webserver

@@ -52,7 +52,7 @@ spec:
            name: {{ $.Values.product }}-envvars
         volumeMounts:
           {{- range $index, $config := $.Values.custom_configs.files}}
-          - name: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
+          - name: {{ $.Values.product }}-migrations{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
             mountPath: {{ $config }}
             subPath: {{ base $config }}
             readOnly: true
@@ -67,9 +67,9 @@ spec:
       {{ if $.Values.custom_configs.enabled -}}
       volumes:
         {{- range $index, $config := $.Values.custom_configs.files}}
-        - name: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
+        - name: {{ $.Values.product }}-migrations{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
           secret:           
-            secretName: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
+            secretName: {{ $.Values.product }}-migrations{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
         {{- end }}
       {{- end }}
 {{- end }}

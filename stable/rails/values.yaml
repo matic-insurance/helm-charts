@@ -33,7 +33,7 @@ webserver:
   enabled: true
   command: "bundle exec puma"
   replicaCount: 1
-  port: 8080
+  port: 3000
   resources:
     requests:
       memory: 128Mi
@@ -43,11 +43,11 @@ webserver:
       cpu: 100m
   probes:
     enabled: true
-    path: /
-    port: 8080
+    path: /welcome/index
+    port: 3000
     initialDelaySeconds: 10
     timeoutSeconds: 1
-    periodSeconds: 15
+    periodSeconds: 20
 
 worker:
   enabled: false
@@ -66,20 +66,19 @@ worker:
     command: ["ps 1 | grep sidekiq || exit 1"]
     initialDelaySeconds: 5
     timeoutSeconds: 1
-    periodSeconds: 15
+    periodSeconds: 20
 
 reloader:
   enabled: false
 
 replica:
   minReadySeconds: 1  # minimum number of seconds before Kubernetes starts considering the Pods healthy
-  progressDeadlineSeconds: 60  # how much the Deployment has to wait before it deduces that it cannot progress due to a failure to run a Pod”
+  progressDeadlineSeconds: 60  # how much the Deployment has to wait before it deduces that it cannot progress due to a failure to run a Pod
   revisionHistoryLimit: 5  # number of ReplicaSet we can rollback
   strategy: RollingUpdate
 
 service:
   type: ClusterIP
-  annotations: {}
 
 securityContextID: 100
 
