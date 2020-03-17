@@ -1,13 +1,24 @@
-# rails Helm chart
+# Rails Helm chart
 
-The Helm chart perform Ruby on Rails application deployment to the Kubernetes cluster. With default parameters simple Puma web-server will be installed and available via ClusterIP within Kubernetes CNI network.
+The Helm chart perform Ruby on Rails application deployment into the Kubernetes cluster. With default parameters application will be served by Puma web-server and available towards ClusterIP service within Kubernetes CNI network.
 
-## Requirements
+## Custom configuration
 
-* In case when custom configuration is required to pass, it must be created in advance as Secret. The Secret name should meet following pattern: `<product>-<configuration-file-path>`.
+With this chart, you may pass customized configuration files required by an application.
 
-For example we have following structure with configuration files:
-```
+All custom configuration files should be created in advance and available as k8s Secrets.
+
+The chart will be looking for a Secret name with the following pattern:
+
+`<product>-<configuration-file-path>`
+
+If you'd like to use database migrations option, you must create a separate Secret with this naming format:
+
+`<product>-migrations-<configuration-file-path>`
+
+Let's take an example next configuration structure:
+
+```bash
 configs/
 └── staging
     └── app
@@ -15,7 +26,7 @@ configs/
         └── settings.yml
 ```
 
-In order to convert them to Secrets, use the following chart:
+In order to make a Secret with needed pattern, use following template
 
 ```yaml
 {{- if .Values.rails.enabled -}}
@@ -25,7 +36,10 @@ In order to convert them to Secrets, use the following chart:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ $.Values.rails.product}}{{ $config | replace "/" "-" | replace "." "-" }}
+  name: {{ $.Values.rails.product}}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
 type: Opaque
 data:
   {{- $path := printf "configs/%s%s" $.Values.rails.environment $config}}
@@ -34,7 +48,9 @@ data:
 
 {{- end -}}
 ```
-As a result we'll get this rendered part:
+
+The rendered part will be looking like this:
+
 ```yaml
 ---
 apiVersion: v1
@@ -54,9 +70,8 @@ data:
     config.yml: ....
 ```
 
-The Deployment will be looking for the Secret with corresponding naming pattern and mount it to the Pods.
-
-NOTE: `custom_configs.files` values should match configuration files path. Otherwise Chart will not be able to populate Secrets with proper data.
+**NOTE**: you should keep consistency with your configuration file path and `Values.custom_configs.files` parameters. Otherwise, the chart will not be able to update Secrets with proper data.
 
 ## Usage
+
 In order to install chart: `helm install -n rails ./rails --namespace mynamespace`

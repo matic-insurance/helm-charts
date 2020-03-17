@@ -73,7 +73,7 @@ reloader:
 
 replica:
   minReadySeconds: 1  # minimum number of seconds before Kubernetes starts considering the Pods healthy
-  progressDeadlineSeconds: 60  # how much the Deployment has to wait before it deduces that it cannot progress due to a failure to run a Pod”
+  progressDeadlineSeconds: 60  # how much the Deployment has to wait before it deduces that it cannot progress due to a failure to run a Pod
   revisionHistoryLimit: 5  # number of ReplicaSet we can rollback
   strategy: RollingUpdate
 
