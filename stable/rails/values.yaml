@@ -33,7 +33,7 @@ webserver:
   enabled: true
   command: "bundle exec puma"
   replicaCount: 1
-  port: 8080
+  port: 3000
   resources:
     requests:
       memory: 128Mi
@@ -43,8 +43,8 @@ webserver:
       cpu: 100m
   probes:
     enabled: true
-    path: /
-    port: 8080
+    path: /welcome/index
+    port: 3000
     initialDelaySeconds: 10
     timeoutSeconds: 1
     periodSeconds: 15
