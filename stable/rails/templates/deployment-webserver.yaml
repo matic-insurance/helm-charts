@@ -1,0 +1,103 @@
+{{- if .Values.webserver.enabled -}}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "rails.name" . }}-webserver
+  {{- if .Values.reloader.enabled }}
+  annotations:
+    reloader.stakater.com/auto: "true"
+  {{- end }}
+  labels:
+    app: {{ include "rails.name" . }}-webserver
+    app.kubernetes.io/name: {{ include "rails.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/version: {{ include "rails.version" . }}
+    environment: {{ include "rails.environment" . }}
+    product: {{ .Values.product }}
+    helm.sh/chart: {{ include "rails.chart" . }}
+spec:
+  replicas: {{ .Values.webserver.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "rails.name" . }}-webserver
+      app.kubernetes.io/name: {{ include "rails.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      environment: {{ include "rails.environment" . }}
+      product: {{ .Values.product }}
+  minReadySeconds: {{ .Values.replica.minReadySeconds }}
+  progressDeadlineSeconds: {{ .Values.replica.progressDeadlineSeconds }}
+  revisionHistoryLimit: {{ .Values.replica.revisionHistoryLimit }}
+  strategy:
+    type: {{ .Values.replica.strategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "rails.name" . }}-webserver
+        app.kubernetes.io/name: {{ include "rails.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/version: {{ include "rails.version" . }}
+        environment: {{ include "rails.environment" . }}
+        product: {{ .Values.product }}
+        helm.sh/chart: {{ include "rails.chart" . }}
+    spec:
+      containers:
+      - name: {{ include "rails.name" . }}-webserver
+        image: {{ .Values.image.repository }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.use_bash }}
+        command: ["bash","-c","{{ .Values.webserver.command }}"]
+        {{- else }}
+        command: ["sh","-c","{{ .Values.webserver.command }}"]
+        {{- end }}
+        ports:
+        - containerPort: {{ .Values.webserver.port }}
+        env:
+        - name: PORT
+          value: {{ .Values.webserver.port | quote }}       
+        {{ if .Values.datadog.enabled }}
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        {{- end }}
+        {{- if .Values.custom_configs.enabled }}
+        envFrom:
+        - secretRef:
+           name: {{ .Values.product }}-envvars
+        volumeMounts:
+          {{- range $index, $config := .Values.custom_configs.files}}
+          - name: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
+            mountPath: {{ $config }}
+            subPath: {{ base $config }}
+            readOnly: true
+          {{- end }}
+        {{- end }}
+        {{- if .Values.webserver.probes.enabled }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.webserver.probes.path }}
+            port: {{ .Values.webserver.probes.port }}
+          initialDelaySeconds: {{ .Values.webserver.probes.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.webserver.probes.timeoutSeconds }}
+          periodSeconds: {{ .Values.webserver.probes.periodSeconds }}
+        {{- end }}
+        resources:
+{{ toYaml .Values.webserver.resources | indent 10 }}
+      securityContext:
+        fsGroup: {{ .Values.securityContextID }}
+        runAsUser: {{ .Values.securityContextID }}
+      {{- if .Values.image_private_registry.enabled }}
+      imagePullSecrets:
+       - name: {{ .Values.image_private_registry.secret }}
+      {{- end }}
+      {{ if .Values.custom_configs.enabled -}}
+      volumes:
+        {{- range $index, $config := .Values.custom_configs.files}}
+        - name: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
+          secret:           
+            secretName: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
+        {{- end }}
+      {{- end }}    
+{{- end }}

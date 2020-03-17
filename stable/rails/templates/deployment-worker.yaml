@@ -1,0 +1,102 @@
+{{- if .Values.worker.enabled -}}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "rails.name" . }}-worker
+  {{- if .Values.reloader.enabled }}
+  annotations:
+    reloader.stakater.com/auto: "true"
+  {{- end }}
+  labels:
+    app: {{ include "rails.name" . }}-worker
+    app.kubernetes.io/name: {{ include "rails.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/version: {{ include "rails.version" . }}
+    environment: {{ include "rails.environment" . }}
+    product: {{ .Values.product }}
+    helm.sh/chart: {{ include "rails.chart" . }}
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "rails.name" . }}-worker
+      app.kubernetes.io/name: {{ include "rails.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      environment: {{ include "rails.environment" . }}
+      product: {{ .Values.product }}
+  minReadySeconds: {{ .Values.replica.minReadySeconds }}
+  progressDeadlineSeconds: {{ .Values.replica.progressDeadlineSeconds }}
+  revisionHistoryLimit: {{ .Values.replica.revisionHistoryLimit }}
+  strategy:
+    type: {{ .Values.replica.strategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "rails.name" . }}-worker
+        app.kubernetes.io/name: {{ include "rails.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/version: {{ include "rails.version" . }}
+        environment: {{ include "rails.environment" . }}
+        product: {{ .Values.product }}
+        helm.sh/chart: {{ include "rails.chart" . }}
+    spec:
+      containers:
+      {{- $rails_name := include "rails.name" . -}}
+      {{- range $index, $command := .Values.worker.command }}
+      - name: {{ $rails_name }}-worker-{{ $index }}
+        image: {{ $.Values.image.repository }}
+        imagePullPolicy: {{ $.Values.image.pullPolicy }}
+        {{- if $.Values.use_bash }}
+        command: ["bash","-c","{{ $command }}"]
+        {{- else }}
+        command: ["sh","-c","{{ $command }}"]
+        {{- end }}
+        {{ if $.Values.datadog.enabled -}}
+        env:
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        {{- end }}
+        {{- if $.Values.custom_configs.enabled }}
+        envFrom:
+        - secretRef:
+           name: {{ $.Values.product }}-envvars
+        volumeMounts:
+          {{- range $index, $config := $.Values.custom_configs.files}}
+          - name: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
+            mountPath: {{ $config }}
+            subPath: {{ base $config }}
+            readOnly: true
+          {{- end }}
+        {{- end }}
+        {{- if $.Values.worker.probes.enabled }}
+        readinessProbe:
+          exec:
+            command: {{ $.Values.worker.probes.command }}
+          initialDelaySeconds: {{ $.Values.worker.probes.initialDelaySeconds }}
+          timeoutSeconds: {{ $.Values.worker.probes.timeoutSeconds }}
+          periodSeconds: {{ $.Values.worker.probes.periodSeconds }}
+        {{- end }}
+        resources:
+{{ toYaml $.Values.worker.resources | indent 10 }}
+      {{- end }}
+      {{- if $.Values.image_private_registry.enabled }}
+      imagePullSecrets:
+      - name: {{ $.Values.image_private_registry.secret }}
+      {{- end }}
+      securityContext:
+        fsGroup: {{ .Values.securityContextID }}
+        runAsUser: {{ .Values.securityContextID }}
+      {{ if $.Values.custom_configs.enabled -}}
+      volumes:
+        {{- range $index, $config := $.Values.custom_configs.files}}
+        - name: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
+          secret:           
+            secretName: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
+        {{- end }}
+        {{- end }}
+
+{{- end }}

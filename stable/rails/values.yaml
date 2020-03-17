@@ -1,0 +1,89 @@
+# Default values for rails.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+product: myproduct
+environment: staging
+
+image:
+  repository: bitnami/ruby-example:0.0.1
+  pullPolicy: IfNotPresent
+
+image_private_registry:
+  enabled: false
+  secret: docker-login
+
+custom_configs:
+  enabled: false
+  files:
+  - /app/settings.yml
+  - /app/some_config.yml
+
+migrations:
+  enabled: false
+  commands:
+  - "bundle exec rake db:migrate"
+
+ingress:
+  enabled: false
+  type: nginx-internal
+  host: myhost.local
+
+webserver:
+  enabled: true
+  command: "bundle exec puma"
+  replicaCount: 1
+  port: 8080
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 256Mi
+      cpu: 100m
+  probes:
+    enabled: true
+    path: /
+    port: 8080
+    initialDelaySeconds: 10
+    timeoutSeconds: 1
+    periodSeconds: 15
+
+worker:
+  enabled: false
+  command:
+  - "bundle exec sidekiq -q default -c 20"
+  replicaCount: 1
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 128Mi
+      cpu: 100m
+  probes:
+    enabled: false
+    command: ["ps 1 | grep sidekiq || exit 1"]
+    initialDelaySeconds: 5
+    timeoutSeconds: 1
+    periodSeconds: 15
+
+reloader:
+  enabled: false
+
+replica:
+  minReadySeconds: 1  # minimum number of seconds before Kubernetes starts considering the Pods healthy
+  progressDeadlineSeconds: 60  # how much the Deployment has to wait before it deduces that it cannot progress due to a failure to run a Pod”
+  revisionHistoryLimit: 5  # number of ReplicaSet we can rollback
+  strategy: RollingUpdate
+
+service:
+  type: ClusterIP
+  annotations: {}
+
+securityContextID: 100
+
+datadog:
+  enabled: false
+
+use_bash: false

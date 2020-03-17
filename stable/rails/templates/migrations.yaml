@@ -1,0 +1,75 @@
+{{ if .Values.migrations.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "rails.name" . }}-migrations
+  labels:
+    app: {{ include "rails.name" . }}-migrations
+    app.kubernetes.io/name: {{ include "rails.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/version: {{ include "rails.version" . }}
+    environment: {{ include "rails.environment" . }}
+    product: {{ .Values.product }}
+    helm.sh/chart: {{ include "rails.chart" . }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: {{ include "rails.name" . }}-migrations
+        app.kubernetes.io/name: {{ include "rails.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/version: {{ include "rails.version" . }}
+        environment: {{ include "rails.environment" . }}
+        product: {{ .Values.product }}
+        helm.sh/chart: {{ include "rails.chart" . }}
+    spec:
+      containers:
+      {{- $rails_name := include "rails.name" . -}}
+      {{- range $index, $command := .Values.migrations.commands }}
+      - name: {{ $rails_name }}-migrations-{{ $index }}
+        image: {{ $.Values.image.repository }}
+        {{- if $.Values.use_bash }}
+        command: ["bash","-c","{{ $command }}"]
+        {{- else }}
+        command: ["sh","-c","{{ $command }}"]
+        {{- end }}
+        {{ if $.Values.datadog.enabled }}
+        env:
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        {{- end }}
+        {{ if $.Values.custom_configs.enabled -}}
+        envFrom:
+        - secretRef:
+           name: {{ $.Values.product }}-envvars
+        volumeMounts:
+          {{- range $index, $config := $.Values.custom_configs.files}}
+          - name: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
+            mountPath: {{ $config }}
+            subPath: {{ base $config }}
+            readOnly: true
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      restartPolicy: Never
+      {{- if $.Values.image_private_registry.enabled }}
+      imagePullSecrets:
+       - name: {{ $.Values.image_private_registry.secret }}
+      {{- end }}
+      {{ if $.Values.custom_configs.enabled -}}
+      volumes:
+        {{- range $index, $config := $.Values.custom_configs.files}}
+        - name: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
+          secret:           
+            secretName: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
+        {{- end }}
+      {{- end }}
+{{- end }}
