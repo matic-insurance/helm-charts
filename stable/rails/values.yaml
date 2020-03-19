@@ -65,8 +65,8 @@ worker:
     enabled: false
     command: ["ps 1 | grep sidekiq || exit 1"]
     initialDelaySeconds: 5
-    timeoutSeconds: 1
-    periodSeconds: 20
+    timeoutSeconds: 5
+    periodSeconds: 15
 
 reloader:
   enabled: false

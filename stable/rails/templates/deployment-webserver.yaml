@@ -57,7 +57,7 @@ spec:
         - containerPort: {{ .Values.webserver.port }}
         env:
         - name: SENTRY_RELEASE
-          value: "{{ include "rails.product" . }}@{{ include "rails.product" . }}-{{ include "rails.version" . }}"
+          value: "{{ include "rails.product" . }}-{{ include "rails.version" . }}"
         - name: PORT
           value: {{ .Values.webserver.port | quote }}
         {{ if .Values.datadog.enabled }}
