@@ -3,9 +3,9 @@ entries:
   nginx:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-03-19T14:57:23.118687429Z"
+    created: "2020-03-19T15:41:37.351805511Z"
     description: A Nginx Helm chart for Kubernetes
-    digest: 8b3c723e2d6b3ffa055f627d7fa9171d90d7ab5fbb1f70bd85c7c63a1a1819b6
+    digest: 55335534eca4c8dc99054c9384b934301ba5504c172769688468a1ac031d698c
     home: https://matic-insurance.github.io/helm-charts
     name: nginx
     urls:
@@ -13,8 +13,18 @@ entries:
     version: 1.0.0
   rails:
   - apiVersion: v1
+    appVersion: 1.2.1
+    created: "2020-03-19T15:41:37.369744312Z"
+    description: A Helm chart deploying Ruby on Rails app to Kubernetes
+    digest: c71a5a244a4ed07127c0dec111a2c79993c68559a68e01855376731345a264c0
+    home: https://matic-insurance.github.io/helm-charts
+    name: rails
+    urls:
+    - https://matic-insurance.github.io/helm-charts/rails-1.2.1.tgz
+    version: 1.2.1
+  - apiVersion: v1
     appVersion: 1.2.0
-    created: "2020-03-19T14:57:23.121093364Z"
+    created: "2020-03-19T15:41:37.369120612Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 5003b7cf6086d54f821c7b879451d01260230529c346318b9bd8d2c5cc21f639
     home: https://matic-insurance.github.io/helm-charts
@@ -24,7 +34,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-03-19T14:57:23.120312653Z"
+    created: "2020-03-19T15:41:37.368395912Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 029da56b770612d8f68edb45847adb9c81c28e0109df507e1a2dea5ab13a6cda
     home: https://matic-insurance.github.io/helm-charts
@@ -34,7 +44,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-03-19T14:57:23.119519241Z"
+    created: "2020-03-19T15:41:37.367501712Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: a22b49ab6eb61e7c8c238f091c73e796643002a84f6b21bcf44f27d5f476daa4
     home: https://matic-insurance.github.io/helm-charts
@@ -42,4 +52,4 @@ entries:
     urls:
     - https://matic-insurance.github.io/helm-charts/rails-1.0.0.tgz
     version: 1.0.0
-generated: "2020-03-19T14:57:23.105917947Z"
+generated: "2020-03-19T15:41:37.349973211Z"
