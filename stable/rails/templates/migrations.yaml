@@ -41,6 +41,8 @@ spec:
         {{- end }}
         {{ if $.Values.datadog.enabled }}
         env:
+        - name: SENTRY_RELEASE
+          value: "{{ include "rails.product" . }}-{{ include "rails.version" . }}"
         - name: DD_AGENT_HOST
           valueFrom:
             fieldRef:
