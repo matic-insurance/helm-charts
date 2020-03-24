@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# Variables
+CHARTS_DIR="${1:-stable}"
+
+# Install each chart separately with dry-run option
+for i in $(ls -1 ${CHARTS_DIR})
+do
+    echo "Installing ${i} chart"
+    # Let's enable all values
+    sed -i '' "s/false/true/g" */*/values.yaml
+
+    helm install --debug --dry-run "${CHARTS_DIR}"/"${i}"
+
+    # On success, rollback default values
+    git checkout -- */*/values.yaml
+done

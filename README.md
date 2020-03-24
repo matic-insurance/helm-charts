@@ -11,3 +11,9 @@ helm search matic/nginx
 NAME        	CHART VERSION	APP VERSION	DESCRIPTION
 matic/nginx	1.0.0        	1.0        	A Nginx Helm chart for Kubernetes
 ```
+
+## Use hook for local dry-run tests
+
+```bash
+git config core.hooksPath .hooks
+```
