@@ -31,6 +31,8 @@ spec:
     spec:
       containers:
       {{- $rails_name := include "rails.name" . -}}
+      {{- $rails_product := include "rails.product" . -}}
+      {{- $rails_version := include "rails.version" . -}}
       {{- range $index, $command := .Values.migrations.commands }}
       - name: {{ $rails_name }}-migrations-{{ $index }}
         image: {{ $.Values.image.repository }}
@@ -42,7 +44,7 @@ spec:
         {{ if $.Values.datadog.enabled }}
         env:
         - name: SENTRY_RELEASE
-          value: "{{ include "rails.product" . }}-{{ include "rails.version" . }}"
+          value: "{{ $rails_product }}-{{ $rails_version }}"
         - name: DD_AGENT_HOST
           valueFrom:
             fieldRef:
