@@ -1,0 +1,15 @@
+{{- if .Values.webserver.autoscaling.enabled -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "rails.name" . }}-webserver-autoscaling
+spec:
+  minReplicas: {{ .Values.webserver.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.webserver.autoscaling.maxReplicas }}
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: {{ include "rails.name" . }}-webserver
+  metrics:
+{{ toYaml .Values.webserver.autoscaling.metrics | indent 2 }}
+{{- end }}

@@ -48,6 +48,17 @@ webserver:
     initialDelaySeconds: 10
     timeoutSeconds: 1
     periodSeconds: 20
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
 
 worker:
   enabled: false
@@ -67,6 +78,17 @@ worker:
     initialDelaySeconds: 5
     timeoutSeconds: 5
     periodSeconds: 15
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
 
 reloader:
   enabled: false
