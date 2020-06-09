@@ -4,12 +4,13 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "rails.name" . }}-webserver-autoscaling
 spec:
-  minReplicas: {{ .Values.webserver.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.webserver.autoscaling.maxReplicas }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: {{ include "rails.name" . }}-webserver
+  minReplicas: {{ .Values.webserver.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.webserver.autoscaling.maxReplicas }}
   metrics:
-{{ toYaml .Values.webserver.autoscaling.metrics | indent 2 }}
+  - type: {{ .Values.webserver.autoscaling.type }}
+{{ toYaml .Values.webserver.autoscaling.metrics | indent 4 }}
 {{- end }}

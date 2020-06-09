@@ -52,8 +52,8 @@ webserver:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
+    type: Resource
     metrics:
-    - type: Resource
       resource:
         name: cpu
         target:
@@ -61,7 +61,7 @@ webserver:
           averageUtilization: 50
 
 worker:
-  enabled: false
+  enabled: true
   command:
   - "bundle exec sidekiq -q default -c 20"
   replicaCount: 1
@@ -82,13 +82,15 @@ worker:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
+    type: External
     metrics:
-    - type: Resource
-      resource:
-        name: cpu
+      external:
+        metric:
+          name: queue_messages_ready
+          selector: "queue=worker_tasks"
         target:
-          type: Utilization
-          averageUtilization: 50
+          type: AverageValue
+          averageValue: 30
 
 reloader:
   enabled: false

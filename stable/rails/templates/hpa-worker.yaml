@@ -4,12 +4,13 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "rails.name" . }}-worker-autoscaling
 spec:
-  minReplicas: {{ .Values.worker.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.worker.autoscaling.maxReplicas }}
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: {{ include "rails.name" . }}-worker
+  minReplicas: {{ .Values.worker.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.worker.autoscaling.maxReplicas }}
   metrics:
-{{ toYaml .Values.worker.autoscaling.metrics | indent 2 }}
+  - type: {{ .Values.worker.autoscaling.type }}
+{{ toYaml .Values.worker.autoscaling.metrics | indent 4 }}
 {{- end }}
