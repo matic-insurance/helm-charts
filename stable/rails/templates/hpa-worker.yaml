@@ -1,0 +1,16 @@
+{{ if (and .Values.worker.enabled .Values.worker.autoscaling.enabled) -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "rails.name" . }}-worker-autoscaling
+spec:
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: {{ include "rails.name" . }}-worker
+  minReplicas: {{ .Values.worker.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.worker.autoscaling.maxReplicas }}
+  metrics:
+  - type: {{ .Values.worker.autoscaling.type }}
+{{ toYaml .Values.worker.autoscaling.metrics | indent 4 }}
+{{- end }}

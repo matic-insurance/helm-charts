@@ -48,9 +48,18 @@ webserver:
     initialDelaySeconds: 10
     timeoutSeconds: 1
     periodSeconds: 20
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    type: Resource
+    metrics:
+      resource:
+        name: memory
+        targetAverageUtilization: 80
 
 worker:
-  enabled: false
+  enabled: true
   command:
   - "bundle exec sidekiq -q default -c 20"
   replicaCount: 1
@@ -67,6 +76,15 @@ worker:
     initialDelaySeconds: 5
     timeoutSeconds: 5
     periodSeconds: 15
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    type: External
+    metrics:
+      external:
+        metricName: custom.queue_messages_ready
+        targetValue: 10
 
 reloader:
   enabled: false
