@@ -1,0 +1,15 @@
+# Default values for namespaces.
+# Use this chart for namespaces creataion.
+
+# Example:
+# namespaces:
+#   enabled: true
+#   list:
+#   - name: test
+#   - name: istio
+#     options:
+#       labels:
+#         istio-injection: enabled
+
+namespaces:
+  enabled: false
