@@ -36,11 +36,7 @@ spec:
       {{- range $index, $command := .Values.migrations.commands }}
       - name: {{ $rails_name }}-migrations-{{ $index }}
         image: {{ $.Values.image.repository }}
-        {{- if $.Values.use_bash }}
-        command: ["bash","-c","{{ $command }}"]
-        {{- else }}
         command: ["sh","-c","{{ $command }}"]
-        {{- end }}
         {{ if $.Values.datadog.enabled }}
         env:
         - name: SENTRY_RELEASE

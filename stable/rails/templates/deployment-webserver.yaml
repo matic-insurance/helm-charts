@@ -1,12 +1,8 @@
 {{- if .Values.webserver.enabled -}}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "rails.name" . }}-webserver
-  {{- if .Values.reloader.enabled }}
-  annotations:
-    reloader.stakater.com/auto: "true"
-  {{- end }}
   labels:
     app: {{ include "rails.name" . }}-webserver
     app.kubernetes.io/name: {{ include "rails.name" . }}
@@ -48,11 +44,7 @@ spec:
       - name: {{ include "rails.name" . }}-webserver
         image: {{ .Values.image.repository }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        {{- if .Values.use_bash }}
-        command: ["bash","-c","{{ .Values.webserver.command }}"]
-        {{- else }}
         command: ["sh","-c","{{ .Values.webserver.command }}"]
-        {{- end }}
         ports:
         - containerPort: {{ .Values.webserver.port }}
         env:
