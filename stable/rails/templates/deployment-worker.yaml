@@ -1,12 +1,8 @@
 {{- if .Values.worker.enabled -}}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "rails.name" . }}-worker
-  {{- if .Values.reloader.enabled }}
-  annotations:
-    reloader.stakater.com/auto: "true"
-  {{- end }}
   labels:
     app: {{ include "rails.name" . }}-worker
     app.kubernetes.io/name: {{ include "rails.name" . }}
@@ -52,11 +48,7 @@ spec:
       - name: {{ $rails_name }}-worker-{{ $index }}
         image: {{ $.Values.image.repository }}
         imagePullPolicy: {{ $.Values.image.pullPolicy }}
-        {{- if $.Values.use_bash }}
-        command: ["bash","-c","{{ $command }}"]
-        {{- else }}
         command: ["sh","-c","{{ $command }}"]
-        {{- end }}
         env:
         - name: SENTRY_RELEASE
           value: "{{ $rails_product }}-{{ $rails_version }}"
