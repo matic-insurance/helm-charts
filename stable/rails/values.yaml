@@ -26,8 +26,11 @@ migrations:
 
 ingress:
   enabled: false
-  type: nginx-internal
   host: myhost.local
+  annotations: {}
+  tls:
+    enabled: false
+    secret: myhost.local-tls
 
 webserver:
   enabled: true
@@ -72,9 +75,6 @@ worker:
   autoscaling:
     enabled: false
 
-reloader:
-  enabled: false
-
 replica:
   minReadySeconds: 1  # minimum number of seconds before Kubernetes starts considering the Pods healthy
   progressDeadlineSeconds: 120  # how much the Deployment has to wait before it deduces that it cannot progress due to a failure to run a Pod
@@ -88,5 +88,3 @@ securityContextID: 100
 
 datadog:
   enabled: false
-
-use_bash: false
