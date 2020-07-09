@@ -1,11 +1,7 @@
-apiVersion: extensions/v1beta1
+apiVersion:  apps/v1
 kind: Deployment
 metadata:
   name: {{ include "nginx.name" . }}
-  {{- if .Values.reloader.enabled }}
-  annotations:
-    reloader.stakater.com/auto: "true"
-  {{- end }}
   labels:
     app.kubernetes.io/name: {{ include "nginx.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -37,6 +33,8 @@ spec:
         environment: {{ include "nginx.environment" . }}
         product: {{ .Values.product }}
         helm.sh/chart: {{ include "nginx.chart" . }}
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
     spec:
       containers:
       - name: {{ include "nginx.name" . }}
@@ -54,24 +52,16 @@ spec:
         {{- range $index, $domain := .Values.ssl.cert_domains}}
         - name: {{ $product }}-tls-vol-{{ $index }}
           mountPath: /etc/nginx/certs/{{ $domain }}
-          secretName: {{ $domain }}-tls
           readOnly: true
         {{- end }}
         {{- end }}
-        {{ if .Values.custom_configs.enabled -}}
+        {{- if .Values.custom_configs.enabled }}
         - name: {{ .Values.product }}-configmap-vol        
           mountPath: /etc/nginx/conf.d
           readOnly: true
         {{- end }}
-        {{ if .Values.probes.enabled -}}
+        {{- if .Values.probes.enabled }}
         readinessProbe:
-          httpGet:
-            path: {{ .Values.probes.url }}
-            port: {{ .Values.probes.port }}
-          initialDelaySeconds: {{ .Values.probes.initialDelaySeconds }}
-          timeoutSeconds: {{ .Values.probes.timeoutSeconds }}
-          periodSeconds: {{ .Values.probes.periodSeconds }}
-        livenessProbe:
           httpGet:
             path: {{ .Values.probes.url }}
             port: {{ .Values.probes.port }}
