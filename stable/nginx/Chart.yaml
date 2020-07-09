@@ -3,4 +3,4 @@ appVersion: "1.0"
 description: A Nginx Helm chart for Kubernetes
 home: https://matic-insurance.github.io/helm-charts
 name: nginx
-version: 1.0.0
+version: 1.1.0
