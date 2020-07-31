@@ -3,9 +3,9 @@ entries:
   namespaces:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2020-07-09T09:44:25.13932147Z"
+    created: "2020-07-31T10:56:09.427677525Z"
     description: A Helm chart for creation Kubernetes Namespaces
-    digest: f7c376f3914a216ae560e94d9c61ed6a6344c578b9f7655bfb461c8d16b12201
+    digest: 4fc94c7fa5a391ce46955f79d839e5fec010b30e73fd67c75791377f3d8a1b89
     name: namespaces
     type: application
     urls:
@@ -14,9 +14,9 @@ entries:
   nginx:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-07-09T09:44:25.163737401Z"
+    created: "2020-07-31T10:56:09.428912728Z"
     description: A Nginx Helm chart for Kubernetes
-    digest: 1ddb2cf0ba5a1ed8dc42ab469015eed697f229959338b6d8b67fd7e11b1055c8
+    digest: bb0d4d0702e81083193c0ee12f41eb4f651ebaaf063ee2890af650d8543f3a3d
     home: https://matic-insurance.github.io/helm-charts
     name: nginx
     urls:
@@ -24,7 +24,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-07-09T09:44:25.139804282Z"
+    created: "2020-07-31T10:56:09.428411127Z"
     description: A Nginx Helm chart for Kubernetes
     digest: 075dff657129c0cbb3436dfbc4f6d5a179b68cba2049377030de77cf74560934
     home: https://matic-insurance.github.io/helm-charts
@@ -34,8 +34,18 @@ entries:
     version: 1.0.0
   rails:
   - apiVersion: v1
+    appVersion: 1.4.2
+    created: "2020-07-31T10:56:09.439165159Z"
+    description: A Helm chart deploying Ruby on Rails app to Kubernetes
+    digest: b24fa08a85edadf78aec9358cbf911058344a35a413b0d0add2f2681b55fbc98
+    home: https://matic-insurance.github.io/helm-charts
+    name: rails
+    urls:
+    - https://matic-insurance.github.io/helm-charts/rails-1.4.2.tgz
+    version: 1.4.2
+  - apiVersion: v1
     appVersion: 1.4.1
-    created: "2020-07-09T09:44:25.187375312Z"
+    created: "2020-07-31T10:56:09.438071055Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 3fef2055ac05801028c25efccc7dccef0e4e04b0f92410f22eded9efb614d5ff
     home: https://matic-insurance.github.io/helm-charts
@@ -45,7 +55,7 @@ entries:
     version: 1.4.1
   - apiVersion: v1
     appVersion: 1.4.0
-    created: "2020-07-09T09:44:25.186613392Z"
+    created: "2020-07-31T10:56:09.43637995Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 4c5d59d80da3b7c10f772c378bf4e4eef2428bff3aaf786fb902f49816324303
     home: https://matic-insurance.github.io/helm-charts
@@ -55,7 +65,7 @@ entries:
     version: 1.4.0
   - apiVersion: v1
     appVersion: 1.3.1
-    created: "2020-07-09T09:44:25.178311778Z"
+    created: "2020-07-31T10:56:09.435088147Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: ef47874e4864ad57f56ec293870e5c5b9979919b80ef84a451606f8c77ca9b5e
     home: https://matic-insurance.github.io/helm-charts
@@ -65,7 +75,7 @@ entries:
     version: 1.3.1
   - apiVersion: v1
     appVersion: 1.3.0
-    created: "2020-07-09T09:44:25.177785864Z"
+    created: "2020-07-31T10:56:09.434389444Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: e008fc06e4735c95b207497a8d528d29d01eed0cb038f7a43465da0760b19ac8
     home: https://matic-insurance.github.io/helm-charts
@@ -75,7 +85,7 @@ entries:
     version: 1.3.0
   - apiVersion: v1
     appVersion: 1.2.5
-    created: "2020-07-09T09:44:25.17725895Z"
+    created: "2020-07-31T10:56:09.433665242Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: a2fc4cffcd3f2f6857159db97239ccd8694cf65b242308fdafefce0da1ac2d66
     home: https://matic-insurance.github.io/helm-charts
@@ -85,7 +95,7 @@ entries:
     version: 1.2.5
   - apiVersion: v1
     appVersion: 1.2.4
-    created: "2020-07-09T09:44:25.176743137Z"
+    created: "2020-07-31T10:56:09.43300534Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: b777e5b3e7171a060c56710b691e63fdea05ac6f1ae67d908eefcfa2832a5286
     home: https://matic-insurance.github.io/helm-charts
@@ -95,7 +105,7 @@ entries:
     version: 1.2.4
   - apiVersion: v1
     appVersion: 1.2.3
-    created: "2020-07-09T09:44:25.167893608Z"
+    created: "2020-07-31T10:56:09.432343338Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 67a6fa511ab4f91299d04e2e5bd28551e51398ff3bec2ffcff6e7307a47ba3dd
     home: https://matic-insurance.github.io/helm-charts
@@ -105,7 +115,7 @@ entries:
     version: 1.2.3
   - apiVersion: v1
     appVersion: 1.2.1
-    created: "2020-07-09T09:44:25.167118288Z"
+    created: "2020-07-31T10:56:09.431674536Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: c71a5a244a4ed07127c0dec111a2c79993c68559a68e01855376731345a264c0
     home: https://matic-insurance.github.io/helm-charts
@@ -115,7 +125,7 @@ entries:
     version: 1.2.1
   - apiVersion: v1
     appVersion: 1.2.0
-    created: "2020-07-09T09:44:25.166334868Z"
+    created: "2020-07-31T10:56:09.431002834Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 5003b7cf6086d54f821c7b879451d01260230529c346318b9bd8d2c5cc21f639
     home: https://matic-insurance.github.io/helm-charts
@@ -125,7 +135,7 @@ entries:
     version: 1.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-07-09T09:44:25.165464445Z"
+    created: "2020-07-31T10:56:09.430314232Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 029da56b770612d8f68edb45847adb9c81c28e0109df507e1a2dea5ab13a6cda
     home: https://matic-insurance.github.io/helm-charts
@@ -135,7 +145,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-07-09T09:44:25.164632124Z"
+    created: "2020-07-31T10:56:09.42959743Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: a22b49ab6eb61e7c8c238f091c73e796643002a84f6b21bcf44f27d5f476daa4
     home: https://matic-insurance.github.io/helm-charts
@@ -146,9 +156,9 @@ entries:
   secrets:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2020-07-09T09:44:25.188015328Z"
+    created: "2020-07-31T10:56:09.440117661Z"
     description: A Helm chart for Kubernetes
-    digest: f185e7fd13ceca4ba65065e857f237517db4f4c4fe8d1b8ad11d217e37468bd7
+    digest: d1dca903c3c85cfb01b3a5582f9a41a538c870960018a3f3354b1e670b6d9d70
     name: secrets
     type: application
     urls:
@@ -156,7 +166,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2020-07-09T09:44:25.187770022Z"
+    created: "2020-07-31T10:56:09.43971676Z"
     description: A Helm chart for Kubernetes
     digest: 0a70ad4ca334eba70176e29b013a8301e35e7ecc238bbcc85e8d68bc95e3f9d3
     name: secrets
@@ -166,7 +176,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2020-07-09T09:44:25.187581217Z"
+    created: "2020-07-31T10:56:09.439449959Z"
     description: A Helm chart for Kubernetes
     digest: 0f2b7412a2a68514528328330222a8de583be9da45bd7bdeabc0a9cc5826b995
     name: secrets
@@ -174,4 +184,4 @@ entries:
     urls:
     - https://matic-insurance.github.io/helm-charts/secrets-0.1.0.tgz
     version: 0.1.0
-generated: "2020-07-09T09:44:25.137520623Z"
+generated: "2020-07-31T10:56:09.426958822Z"
