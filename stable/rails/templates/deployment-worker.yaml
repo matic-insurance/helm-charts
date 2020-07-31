@@ -85,6 +85,7 @@ spec:
       imagePullSecrets:
       - name: {{ $.Values.image_private_registry.secret }}
       {{- end }}
+      dnsPolicy: {{ default "Default" $.Values.dnsPolicy }}
       securityContext:
         fsGroup: {{ .Values.securityContextID }}
         runAsUser: {{ .Values.securityContextID }}

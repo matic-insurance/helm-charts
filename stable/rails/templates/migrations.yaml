@@ -60,6 +60,7 @@ spec:
         {{- end }}
       {{- end }}
       restartPolicy: Never
+      dnsPolicy: {{ default "Default" .Values.dnsPolicy }}
       {{- if $.Values.image_private_registry.enabled }}
       imagePullSecrets:
        - name: {{ $.Values.image_private_registry.secret }}
