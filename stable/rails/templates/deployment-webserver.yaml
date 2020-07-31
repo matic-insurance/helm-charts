@@ -81,6 +81,7 @@ spec:
         {{- end }}
         resources:
 {{ toYaml .Values.webserver.resources | indent 10 }}
+      dnsPolicy: {{ default "Default" .Values.dnsPolicy }}
       securityContext:
         fsGroup: {{ .Values.securityContextID }}
         runAsUser: {{ .Values.securityContextID }}
