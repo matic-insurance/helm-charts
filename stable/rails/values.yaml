@@ -53,6 +53,8 @@ webserver:
     periodSeconds: 20
   autoscaling:
     enabled: false
+  lifecycle:
+    enabled: false
 
 worker:
   enabled: false
@@ -73,6 +75,8 @@ worker:
     timeoutSeconds: 5
     periodSeconds: 15
   autoscaling:
+    enabled: false
+  lifecycle:
     enabled: false
 
 replica:

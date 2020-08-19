@@ -49,10 +49,14 @@ spec:
         image: {{ $.Values.image.repository }}
         imagePullPolicy: {{ $.Values.image.pullPolicy }}
         command: ["sh","-c","{{ $command }}"]
+        {{- if $.Values.worker.lifecycle.enabled }}
+        lifecycle:
+{{ toYaml $.Values.worker.lifecycle.hooks | indent 10 }}
+        {{- end }}
         env:
         - name: SENTRY_RELEASE
           value: "{{ $rails_product }}-{{ $rails_version }}"
-        {{ if $.Values.datadog.enabled -}}
+        {{- if $.Values.datadog.enabled }}
         - name: DD_AGENT_HOST
           valueFrom:
             fieldRef:
@@ -86,6 +90,7 @@ spec:
       - name: {{ $.Values.image_private_registry.secret }}
       {{- end }}
       dnsPolicy: {{ default "Default" $.Values.dnsPolicy }}
+      terminationGracePeriodSeconds: {{ default "30" $.Values.worker.terminationGracePeriodSeconds }}
       securityContext:
         fsGroup: {{ .Values.securityContextID }}
         runAsUser: {{ .Values.securityContextID }}
