@@ -74,7 +74,7 @@ spec:
             readOnly: true
           {{- end }}
         {{- end }}
-        {{- if $.Values.worker.readinessProbe.enabled }}
+        {{- if $.Values.worker.readinessProbe }}
         readinessProbe:
           exec:
             command: {{ $.Values.worker.readinessProbe.command }}
@@ -84,7 +84,7 @@ spec:
           successThreshold: {{ default "1" $.Values.worker.readinessProbe.successThreshold }}
           failureThreshold: {{ default "3" $.Values.worker.readinessProbe.failureThreshold }}
         {{- end }}
-        {{- if $.Values.worker.livenessProbe.enabled }}
+        {{- if $.Values.worker.livenessProbe }}
         livenessProbe:
           exec:
             command: {{ $.Values.worker.livenessProbe.command }}
