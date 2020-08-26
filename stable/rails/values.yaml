@@ -45,14 +45,6 @@ webserver:
       memory: 256Mi
       cpu: 100m
   readinessProbe:
-    enabled: true
-    path: /welcome/index
-    port: 3000
-    initialDelaySeconds: 10
-    timeoutSeconds: 1
-    periodSeconds: 20
-  livenessProbe:
-    enabled: true
     path: /welcome/index
     port: 3000
     initialDelaySeconds: 10
@@ -75,14 +67,6 @@ worker:
     limits:
       memory: 128Mi
       cpu: 100m
-  readinessProbe:
-    enabled: false
-    command: ["ps 1 | grep sidekiq || exit 1"]
-    initialDelaySeconds: 5
-    timeoutSeconds: 5
-    periodSeconds: 15
-  livenessProbe:
-    enabled: false
   autoscaling:
     enabled: false
   lifecycle:

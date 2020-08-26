@@ -74,7 +74,7 @@ spec:
             readOnly: true
           {{- end }}
         {{- end }}
-        {{- if .Values.webserver.readinessProbe.enabled }}
+        {{- if .Values.webserver.readinessProbe }}
         readinessProbe:
           httpGet:
             path: {{ .Values.webserver.readinessProbe.path }}
@@ -85,7 +85,7 @@ spec:
           successThreshold: {{ default "1" .Values.webserver.readinessProbe.successThreshold }}
           failureThreshold: {{ default "3" .Values.webserver.readinessProbe.failureThreshold }}
         {{- end }}
-        {{- if .Values.webserver.livenessProbe.enabled }}
+        {{- if .Values.webserver.livenessProbe }}
         livenessProbe:
           httpGet:
             path: {{ .Values.webserver.livenessProbe.path }}
