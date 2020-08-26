@@ -74,14 +74,27 @@ spec:
             readOnly: true
           {{- end }}
         {{- end }}
-        {{- if .Values.webserver.probes.enabled }}
+        {{- if .Values.webserver.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
-            path: {{ .Values.webserver.probes.path }}
-            port: {{ .Values.webserver.probes.port }}
-          initialDelaySeconds: {{ .Values.webserver.probes.initialDelaySeconds }}
-          timeoutSeconds: {{ .Values.webserver.probes.timeoutSeconds }}
-          periodSeconds: {{ .Values.webserver.probes.periodSeconds }}
+            path: {{ .Values.webserver.readinessProbe.path }}
+            port: {{ .Values.webserver.readinessProbe.port }}
+          initialDelaySeconds: {{ default "0" .Values.webserver.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ default "1" .Values.webserver.readinessProbe.timeoutSeconds }}
+          periodSeconds: {{ default "10" .Values.webserver.readinessProbe.periodSeconds }}
+          successThreshold: {{ default "1" .Values.webserver.readinessProbe.successThreshold }}
+          failureThreshold: {{ default "3" .Values.webserver.readinessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.webserver.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.webserver.livenessProbe.path }}
+            port: {{ .Values.webserver.livenessProbe.port }}
+          initialDelaySeconds: {{ default "0" .Values.webserver.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ default "1" .Values.webserver.livenessProbe.timeoutSeconds }}
+          periodSeconds: {{ default "10" .Values.webserver.livenessProbe.periodSeconds }}
+          successThreshold: {{ default "1" .Values.webserver.livenessProbe.successThreshold }}
+          failureThreshold: {{ default "3" .Values.webserver.livenessProbe.failureThreshold }}
         {{- end }}
         resources:
 {{ toYaml .Values.webserver.resources | indent 10 }}
