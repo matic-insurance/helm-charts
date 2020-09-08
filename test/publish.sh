@@ -9,11 +9,11 @@ HELM_PKG="docs"
 for i in $(ls -1 ${CHARTS_DIR})
 do
     echo "building ${i} chart"
-    helmv3 package -d ${HELM_PKG} ${CHARTS_DIR}/${i}
+    helm package -d ${HELM_PKG} ${CHARTS_DIR}/${i}
 done
 
 # Update index.yaml with new charts
-helmv3 repo index ${HELM_PKG} --url ${HELM_URL}
+helm repo index ${HELM_PKG} --url ${HELM_URL}
 
 # Commit and push packages
 git config --global user.email "46964379+petro-matic@users.noreply.github.com"
