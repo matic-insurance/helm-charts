@@ -60,7 +60,7 @@ webserver:
         metric:
           name: queue_messages_ready
           selector:
-            queue: worker_tasks
+            environment: staging
         target:
           type: AverageValue
           averageValue: 30
