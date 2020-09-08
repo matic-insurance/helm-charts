@@ -1,6 +1,7 @@
 apiVersion: v2
 name: nginx
 description: A Nginx Helm chart for Kubernetes
+home: https://matic-insurance.github.io/helm-charts
 
 # A chart can be either an 'application' or a 'library' chart.
 #
