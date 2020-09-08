@@ -60,7 +60,8 @@ webserver:
         metric:
           name: queue_messages_ready
           selector:
-            "environment=staging"
+            matchLabels:
+              environment: staging
         target:
           type: AverageValue
           averageValue: 30
