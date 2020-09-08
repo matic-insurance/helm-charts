@@ -5,4 +5,4 @@ chart-dirs:
   - stable
 chart-repos:
   - stable=https://matic-insurance.github.io/helm-charts
-helm-extra-args: --timeout 600
+helm-extra-args: --timeout 10m

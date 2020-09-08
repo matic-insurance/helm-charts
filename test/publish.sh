@@ -5,16 +5,15 @@ CHARTS_DIR="$1"
 HELM_URL="$2"
 HELM_PKG="docs"
 
-helm init --client-only
 # Build each chart separately
 for i in $(ls -1 ${CHARTS_DIR})
 do
     echo "building ${i} chart"
-    helm package -d ${HELM_PKG} ${CHARTS_DIR}/${i}
+    helmv3 package -d ${HELM_PKG} ${CHARTS_DIR}/${i}
 done
 
 # Update index.yaml with new charts
-helm repo index ${HELM_PKG} --url ${HELM_URL}
+helmv3 repo index ${HELM_PKG} --url ${HELM_URL}
 
 # Commit and push packages
 git config --global user.email "46964379+petro-matic@users.noreply.github.com"
