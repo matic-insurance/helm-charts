@@ -54,13 +54,15 @@ webserver:
     enabled: true
     minReplicas: 4
     maxReplicas: 12
-    type: Resource
+    type: External
     metrics:
-      resource:
-        name: cpu
+      external:
+        metric:
+          name: queue_messages_ready
+          selector: "queue=worker_tasks"
         target:
-          type: Utilization
-          averageUtilization: 50
+          type: AverageValue
+          averageValue: 30
   lifecycle:
     enabled: false
 
