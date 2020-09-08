@@ -51,20 +51,7 @@ webserver:
     timeoutSeconds: 1
     periodSeconds: 20
   autoscaling:
-    enabled: true
-    minReplicas: 4
-    maxReplicas: 12
-    type: External
-    metrics:
-      external:
-        metric:
-          name: queue_messages_ready
-          selector:
-            matchLabels:
-              environment: staging
-        target:
-          type: AverageValue
-          averageValue: 30
+    enabled: false
   lifecycle:
     enabled: false
 
