@@ -1,11 +1,11 @@
 {{ if (and .Values.webserver.enabled .Values.webserver.autoscaling.enabled) -}}
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "rails.name" . }}-webserver-autoscaling
 spec:
   scaleTargetRef:
-    apiVersion: extensions/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
     name: {{ include "rails.name" . }}-webserver
   minReplicas: {{ .Values.webserver.autoscaling.minReplicas }}
