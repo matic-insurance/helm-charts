@@ -59,7 +59,8 @@ webserver:
       external:
         metric:
           name: queue_messages_ready
-          selector: "queue=worker_tasks"
+          selector:
+            queue: worker_tasks
         target:
           type: AverageValue
           averageValue: 30
