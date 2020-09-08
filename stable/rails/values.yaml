@@ -51,16 +51,7 @@ webserver:
     timeoutSeconds: 1
     periodSeconds: 20
   autoscaling:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 2
-    type: Resource
-    metrics:
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 50
+    enabled: false
   lifecycle:
     enabled: false
 
