@@ -54,15 +54,13 @@ webserver:
     enabled: true
     minReplicas: 4
     maxReplicas: 12
-    type: External
+    type: Resource
     metrics:
-      external:
-        metricName: kubernetes.cpu.usage.total
-        metricSelector:
-          matchLabels:
-            product: origin
-            environment: uat
-        targetAverageValue: 250m
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
   lifecycle:
     enabled: false
 
