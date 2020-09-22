@@ -61,7 +61,7 @@ webserver:
     timeoutSeconds: 10
     periodSeconds: 30
     successThreshold: 1
-    failureThreshold: 4
+    failureThreshold: 10
   livenessProbe:
     enabled: false
     path: /welcome/index
@@ -70,7 +70,7 @@ webserver:
     timeoutSeconds: 20
     periodSeconds: 60
     successThreshold: 1
-    failureThreshold: 5
+    failureThreshold: 10
   autoscaling:
     enabled: false
   lifecycle:
