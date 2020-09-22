@@ -92,6 +92,36 @@ worker:
     enabled: false
   lifecycle:
     enabled: false
+  startupProbe:
+    enabled: false
+    command:
+      - cat
+      - /tmp/healthy
+    initialDelaySeconds: 5
+    timeoutSeconds: 5
+    periodSeconds: 15
+    successThreshold: 1
+    failureThreshold: 20
+  readinessProbe:
+    enabled: false
+    command:
+      - cat
+      - /tmp/healthy
+    initialDelaySeconds: 10
+    timeoutSeconds: 10
+    periodSeconds: 30
+    successThreshold: 1
+    failureThreshold: 10
+  livenessProbe:
+    enabled: false
+    command:
+      - cat
+      - /tmp/healthy
+    initialDelaySeconds: 20
+    timeoutSeconds: 20
+    periodSeconds: 60
+    successThreshold: 1
+    failureThreshold: 10
 
 replica:
   minReadySeconds: 1  # minimum number of seconds before Kubernetes starts considering the Pods healthy

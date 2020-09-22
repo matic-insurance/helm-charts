@@ -74,25 +74,35 @@ spec:
             readOnly: true
           {{- end }}
         {{- end }}
-        {{- if $.Values.worker.readinessProbe }}
+        {{- if $.Values.worker.startupProbe.enabled }}
+        startupProbe:
+        exec:
+          command: {{ $.Values.worker.startupProbe.command }}
+        initialDelaySeconds: {{ default "0" $.Values.worker.startupProbe.initialDelaySeconds }}
+        timeoutSeconds: {{ $.Values.worker.startupProbe.timeoutSeconds }}
+        periodSeconds: {{ $.Values.worker.startupProbe.periodSeconds }}
+        successThreshold: {{ $.Values.worker.startupProbe.successThreshold }}
+        failureThreshold: {{ $.Values.worker.startupProbe.failureThreshold }}
+        {{- end }}
+        {{- if $.Values.worker.readinessProbe.enabled }}
         readinessProbe:
           exec:
             command: {{ $.Values.worker.readinessProbe.command }}
-          initialDelaySeconds: {{ default "0" $.Values.worker.readinessProbe.initialDelaySeconds }}
-          timeoutSeconds: {{ default "1" $.Values.worker.readinessProbe.timeoutSeconds }}
-          periodSeconds: {{ default "10" $.Values.worker.readinessProbe.periodSeconds }}
-          successThreshold: {{ default "1" $.Values.worker.readinessProbe.successThreshold }}
-          failureThreshold: {{ default "3" $.Values.worker.readinessProbe.failureThreshold }}
+          initialDelaySeconds: {{ $.Values.worker.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ $.Values.worker.readinessProbe.timeoutSeconds }}
+          periodSeconds: {{ $.Values.worker.readinessProbe.periodSeconds }}
+          successThreshold: {{ $.Values.worker.readinessProbe.successThreshold }}
+          failureThreshold: {{ $.Values.worker.readinessProbe.failureThreshold }}
         {{- end }}
-        {{- if $.Values.worker.livenessProbe }}
+        {{- if $.Values.worker.livenessProbe.enabled }}
         livenessProbe:
           exec:
             command: {{ $.Values.worker.livenessProbe.command }}
-          initialDelaySeconds: {{ default "0" $.Values.worker.livenessProbe.initialDelaySeconds }}
-          timeoutSeconds: {{ default "1" $.Values.worker.livenessProbe.timeoutSeconds }}
-          periodSeconds: {{ default "10" $.Values.worker.livenessProbe.periodSeconds }}
-          successThreshold: {{ default "1" $.Values.worker.livenessProbe.successThreshold }}
-          failureThreshold: {{ default "3" $.Values.worker.livenessProbe.failureThreshold }}
+          initialDelaySeconds: {{ $.Values.worker.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ $.Values.worker.livenessProbe.timeoutSeconds }}
+          periodSeconds: {{ $.Values.worker.livenessProbe.periodSeconds }}
+          successThreshold: {{ $.Values.worker.livenessProbe.successThreshold }}
+          failureThreshold: {{ $.Values.worker.livenessProbe.failureThreshold }}
         {{- end }}
         resources:
 {{ toYaml $.Values.worker.resources | indent 10 }}
