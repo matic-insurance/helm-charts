@@ -44,6 +44,15 @@ webserver:
     limits:
       memory: 256Mi
       cpu: 100m
+  startupProbe:
+    enabled: false
+    path: /welcome/index
+    port: 3000
+    initialDelaySeconds: 5
+    timeoutSeconds: 5
+    periodSeconds: 15
+    successThreshold: 1
+    failureThreshold: 20
   readinessProbe:
     enabled: false
     path: /welcome/index

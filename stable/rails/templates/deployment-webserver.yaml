@@ -74,6 +74,17 @@ spec:
             readOnly: true
           {{- end }}
         {{- end }}
+        {{- if .Values.webserver.startupProbe.enabled }}
+        startupProbe:
+          httpGet:
+            path: {{ .Values.webserver.startupProbe.path }}
+            port: {{ .Values.webserver.startupProbe.port }}
+          initialDelaySeconds: {{ .Values.webserver.startupProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.webserver.startupProbe.timeoutSeconds }}
+          periodSeconds: {{ .Values.webserver.startupProbe.periodSeconds }}
+          successThreshold: {{ .Values.webserver.startupProbe.successThreshold }}
+          failureThreshold: {{ .Values.webserver.startupProbe.failureThreshold }}
+        {{- end }}
         {{- if .Values.webserver.readinessProbe.enabled }}
         readinessProbe:
           httpGet:
