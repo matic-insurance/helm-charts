@@ -76,13 +76,13 @@ spec:
         {{- end }}
         {{- if $.Values.worker.startupProbe.enabled }}
         startupProbe:
-        exec:
-          command: {{ $.Values.worker.startupProbe.command }}
-        initialDelaySeconds: {{ default "0" $.Values.worker.startupProbe.initialDelaySeconds }}
-        timeoutSeconds: {{ $.Values.worker.startupProbe.timeoutSeconds }}
-        periodSeconds: {{ $.Values.worker.startupProbe.periodSeconds }}
-        successThreshold: {{ $.Values.worker.startupProbe.successThreshold }}
-        failureThreshold: {{ $.Values.worker.startupProbe.failureThreshold }}
+          exec:
+            command: {{ $.Values.worker.startupProbe.command }}
+          initialDelaySeconds: {{ default "0" $.Values.worker.startupProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ $.Values.worker.startupProbe.timeoutSeconds }}
+          periodSeconds: {{ $.Values.worker.startupProbe.periodSeconds }}
+          successThreshold: {{ $.Values.worker.startupProbe.successThreshold }}
+          failureThreshold: {{ $.Values.worker.startupProbe.failureThreshold }}
         {{- end }}
         {{- if $.Values.worker.readinessProbe.enabled }}
         readinessProbe:
