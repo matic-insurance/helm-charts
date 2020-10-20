@@ -1,10 +1,10 @@
-{{ if (and .Values.webserver.enabled .Values.ingress.enabled) }}
+{{ if (and .Values.webserver.enabled .Values.ingress_private.enabled) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "rails.name" . }}-ingress
+  name: {{ include "rails.name" . }}-ingress-private
   annotations:
-  {{- range $key, $value := .Values.ingress.annotations }}
+  {{- range $key, $value := .Values.ingress_private.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
   labels:
@@ -18,16 +18,16 @@ metadata:
     helm.sh/chart: {{ include "rails.chart" . }}
 spec:
   rules:
-    - host: {{ .Values.ingress.host }}
+    - host: {{ .Values.ingress_private.host }}
       http:
         paths:
           - backend:
               serviceName: {{ include "rails.name" . }}
               servicePort: {{ .Values.webserver.port }}
-{{- if .Values.ingress.tls.enabled }}
+{{- if .Values.ingress_private.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.ingress.host }}
-      secretName: {{ .Values.ingress.tls.secret }}
+        - {{ .Values.ingress_private.host }}
+      secretName: {{ .Values.ingress_private.tls.secret }}
 {{- end }}
 {{- end }}
