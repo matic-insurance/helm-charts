@@ -1,0 +1,37 @@
+{{ if (and .Values.webserver.enabled .Values.ingress.enabled) }}
+{{- range .Values.ingress.list }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "rails.name" $ }}-ingress-{{ .type }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .type }}
+  {{- range $key, $value := .annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  labels:
+    app: {{ include "rails.name" $ }}-ingress
+    app.kubernetes.io/name: {{ include "rails.name" $ }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/version: {{ include "rails.version" $ }}
+    environment: {{ include "rails.environment" $ }}
+    product: {{ $.Values.product }}
+    helm.sh/chart: {{ include "rails.chart" $ }}
+spec:
+  rules:
+    - host: {{ .host }}
+      http:
+        paths:
+          - backend:
+              serviceName: {{ include "rails.name" $ }}
+              servicePort: {{ $.Values.webserver.port }}
+{{- if .tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .host }}
+      secretName: {{ .tls.secret }}
+{{- end }}
+{{ end }}
+{{- end }}

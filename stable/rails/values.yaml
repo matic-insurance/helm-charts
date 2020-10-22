@@ -24,21 +24,21 @@ migrations:
   commands:
   - "bundle exec rake db:migrate"
 
-ingress_private:
-  enabled: false
-  host: myhost.local
-  annotations: {}
-  tls:
-    enabled: false
-    secret: myhost.local-tls
-
-ingress_public:
-  enabled: false
-  host: myhost.local
-  annotations: {}
-  tls:
-    enabled: false
-    secret: myhost.local-tls
+ingress:
+  enabled: true
+  list:
+    - host: myhost1.local
+      type: public
+      annotations: {}
+      tls:
+        enabled: true
+        secret: myhost1.local-tls
+    - host: myhost2.local
+      type: private
+      annotations: {}
+      tls:
+        enabled: true
+        secret: myhost2.local-tls
 
 webserver:
   enabled: true
