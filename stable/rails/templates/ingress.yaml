@@ -1,10 +1,10 @@
 {{ if (and .Values.webserver.enabled .Values.ingress.enabled) }}
-{{- range .Values.ingress.list }}
+{{- range $index, $list := .Values.ingress.list }}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "rails.name" $ }}-ingress-{{ .type }}
+  name: {{ include "rails.name" $ }}-ingress-{{ .type }}-{{ $index }}
   annotations:
     kubernetes.io/ingress.class: {{ .type }}
   {{- range $key, $value := .annotations }}
