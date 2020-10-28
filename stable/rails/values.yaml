@@ -33,7 +33,7 @@ ingress:
         nginx.ingress.kubernetes.io/proxy-body-size: 256m
         nginx.ingress.kubernetes.io/server-snippet: |
           location /admin {
-              deny all; 
+              deny all;
           }
       tls:
         enabled: true
