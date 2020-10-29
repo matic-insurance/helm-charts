@@ -29,12 +29,11 @@ ingress:
   list:
     - host: myhost1.local
       type: public
-      annotations:
-        nginx.ingress.kubernetes.io/proxy-body-size: 256m
-        nginx.ingress.kubernetes.io/server-snippet: |
-          location /admin {
-              deny all;
-          }
+      annotations: {}
+      deny_locations:
+        - /admin
+        - /internal_api
+        - /etc
       tls:
         enabled: true
         secret: myhost1.local-tls
