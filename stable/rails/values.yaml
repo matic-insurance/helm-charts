@@ -29,9 +29,7 @@ ingress:
   list:
     - host: myhost1.local
       type: public
-      annotations: 
-        nginx.ingress.kubernetes.io/server-snippet: qwdqwd
-        nginx.ingress.kubernetes.io/server-dqwdwqwd: qwdqwd
+      annotations: {}
       server_snippet: |
         location /foldername-a {
           proxy_http_version 1.1;

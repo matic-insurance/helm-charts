@@ -4,23 +4,22 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "rails.name" $ }}-ingress-{{ .type }}-{{ $index }}
+  name: {{ include "rails.name" $ }}-ingress-{{ .type }}{{ $index }}
   annotations:
-    {{- if or  .deny_locations .server_snippet }}
+    {{- range $key, $value := .annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+    {{- if or .deny_locations .server_snippet }}
     nginx.ingress.kubernetes.io/server-snippet: |
     {{- if  .deny_locations }}
-      {{- range .deny_locations }}
-        location {{ . }} { deny all; }
-      {{- end }}
+    {{- range .deny_locations }}
+      location {{ . }} { deny all; }
+    {{- end }}
     {{- end }}
     {{- if  .server_snippet }}
-  {{- toYaml .server_snippet | trimAll "|" | indent 6 }}
+{{ toYaml .server_snippet | trimAll "|" | indent 4 }}
     {{- end }}
-   {{- end }}   
-    kubernetes.io/ingress.class: {{ .type }}
-  {{- range $key, $value := .annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
+   {{- end }} 
   labels:
     app: {{ include "rails.name" $ }}-ingress
     app.kubernetes.io/name: {{ include "rails.name" $ }}
