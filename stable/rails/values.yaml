@@ -150,6 +150,7 @@ replica:
 
 service:
   type: ClusterIP
+  annotations: {}
 
 securityContextID: 100
 
