@@ -12,6 +12,8 @@ metadata:
     environment: {{ include "rails.environment" . }}
     product: {{ .Values.product }}
     helm.sh/chart: {{ include "rails.chart" . }}
+  annotations:
+{{ toYaml .Values.service.annotations | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
