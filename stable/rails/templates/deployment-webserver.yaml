@@ -109,7 +109,7 @@ spec:
         {{- end }}
         resources:
 {{ toYaml .Values.webserver.resources | indent 10 }}
-      dnsPolicy: {{ default "Default" .Values.dnsPolicy }}
+      dnsPolicy: {{ default "ClusterFirst" .Values.dnsPolicy }}
       terminationGracePeriodSeconds: {{ default "30" $.Values.webserver.terminationGracePeriodSeconds }}
       securityContext:
         fsGroup: {{ .Values.securityContextID }}
