@@ -25,11 +25,13 @@ migrations:
   - "bundle exec rake db:migrate"
 
 ingress:
-  enabled: true
+  enabled: false
   list:
     - host: myhost1.local
       type: public
-      annotations: {}
+      annotations: 
+        nginx.ingress.kubernetes.io/server-snippet: qwdqwd
+        nginx.ingress.kubernetes.io/server-dqwdwqwd: qwdqwd
       server_snippet: |
         location /foldername-a {
           proxy_http_version 1.1;
@@ -43,7 +45,7 @@ ingress:
         - /internal_api
         - /etc
       tls:
-        enabled: true
+        enabled: false
         secret: myhost1.local-tls
     - host: myhost2.local
       type: private
