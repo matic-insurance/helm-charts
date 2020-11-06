@@ -26,12 +26,31 @@ migrations:
 
 ingress:
   enabled: false
-  host: myhost.local
-  annotations: {}
-  tls:
-    enabled: false
-    secret: myhost.local-tls
-
+  list:
+    - host: myhost1.local
+      type: public
+      annotations: {}
+      server_snippet: |
+        location /foldername-a {
+          proxy_http_version 1.1;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        location /foldername-b {
+          proxy_set_header X-Forwarded-Host $http_host;
+        }
+      deny_locations:
+        - /admin
+        - /internal_api
+        - /etc
+      tls:
+        enabled: false
+        secret: myhost1.local-tls
+    - host: myhost2.local
+      type: private
+      annotations: {}
+      tls:
+        enabled: false
+        secret: myhost2.local-tls
 webserver:
   enabled: true
   command: "bundle exec puma"

@@ -1,33 +1,48 @@
 {{ if (and .Values.webserver.enabled .Values.ingress.enabled) }}
+{{- range $index, $list := .Values.ingress.list }}
+---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ include "rails.name" . }}-ingress
+  name: {{ include "rails.name" $ }}-ingress-{{ .type }}-{{ $index }}
   annotations:
-  {{- range $key, $value := .Values.ingress.annotations }}
+    kubernetes.io/ingress.class: {{ .type | quote  }}
+    {{- range $key, $value := .annotations }}
     {{ $key }}: {{ $value | quote }}
-  {{- end }}
+    {{- end }}
+    {{- if or .deny_locations .server_snippet }}
+    nginx.ingress.kubernetes.io/server-snippet: |
+    {{- if  .deny_locations }}
+    {{- range .deny_locations }}
+      location {{ . }} { deny all; }
+    {{- end }}
+    {{- end }}
+    {{- if  .server_snippet }}
+{{ toYaml .server_snippet | trimAll "|" | indent 4 }}
+    {{- end }}
+    {{- end }} 
   labels:
-    app: {{ include "rails.name" . }}-ingres
-    app.kubernetes.io/name: {{ include "rails.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/version: {{ include "rails.version" . }}
-    environment: {{ include "rails.environment" . }}
-    product: {{ .Values.product }}
-    helm.sh/chart: {{ include "rails.chart" . }}
+    app: {{ include "rails.name" $ }}-ingress
+    app.kubernetes.io/name: {{ include "rails.name" $ }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/version: {{ include "rails.version" $ }}
+    environment: {{ include "rails.environment" $ }}
+    product: {{ $.Values.product }}
+    helm.sh/chart: {{ include "rails.chart" $ }}
 spec:
   rules:
-    - host: {{ .Values.ingress.host }}
+    - host: {{ .host }}
       http:
         paths:
           - backend:
-              serviceName: {{ include "rails.name" . }}
-              servicePort: {{ .Values.webserver.port }}
-{{- if .Values.ingress.tls.enabled }}
+              serviceName: {{ include "rails.name" $ }}
+              servicePort: {{ $.Values.webserver.port }}
+{{- if .tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.ingress.host }}
-      secretName: {{ .Values.ingress.tls.secret }}
+        - {{ .host }}
+      secretName: {{ .tls.secret }}
 {{- end }}
+{{ end }}
 {{- end }}
