@@ -6,14 +6,17 @@ kind: Ingress
 metadata:
   name: {{ include "rails.name" $ }}-ingress-{{ .type }}-{{ $index }}
   annotations:
-    {{- if .deny_locations }}
+    {{- if or  .deny_locations .server_snippet }}
     nginx.ingress.kubernetes.io/server-snippet: |
+    {{- if  .deny_locations }}
       {{- range .deny_locations }}
-        location {{ . }} {
-          deny all;
-        }
+        location {{ . }} { deny all; }
       {{- end }}
     {{- end }}
+    {{- if  .server_snippet }}
+  {{- toYaml .server_snippet | trimAll "|" | indent 6 }}
+    {{- end }}
+   {{- end }}   
     kubernetes.io/ingress.class: {{ .type }}
   {{- range $key, $value := .annotations }}
     {{ $key }}: {{ $value | quote }}
