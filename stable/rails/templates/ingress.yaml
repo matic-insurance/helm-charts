@@ -38,6 +38,7 @@ spec:
           - backend:
               serviceName: {{ include "rails.name" $ }}
               servicePort: {{ $.Values.webserver.port }}
+            path: {{ default "/" .path }}
 {{- if .tls.enabled }}
   tls:
     - hosts:
