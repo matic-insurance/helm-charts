@@ -1,6 +1,7 @@
 
 {{- if $.Values.worker.enabled -}}
   {{- range $index, $command := $.Values.worker.command }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -124,5 +125,7 @@ spec:
             secretName: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
         {{- end }}
         {{- end }}
+
   {{- end }}
+
 {{- end }}
