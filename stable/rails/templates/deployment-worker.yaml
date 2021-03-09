@@ -1,51 +1,52 @@
-{{- if .Values.worker.enabled -}}
+
+{{- if $.Values.worker.enabled -}}
+  {{- range $index, $command := $.Values.worker.command }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "rails.name" . }}-worker
+  name: {{ include "rails.name" $ }}-worker-{{ $index }}
   labels:
-    app: {{ include "rails.name" . }}-worker
-    app.kubernetes.io/name: {{ include "rails.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/version: {{ include "rails.version" . }}
-    environment: {{ include "rails.environment" . }}
-    product: {{ .Values.product }}
-    helm.sh/chart: {{ include "rails.chart" . }}
+    app: {{ include "rails.name" $ }}-worker
+    app.kubernetes.io/name: {{ include "rails.name" $ }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/version: {{ include "rails.version" $ }}
+    environment: {{ include "rails.environment" $ }}
+    product: {{ $.Values.product }}
+    helm.sh/chart: {{ include "rails.chart" $ }}
 spec:
-  replicas: {{ .Values.worker.replicaCount }}
+  replicas: {{ $.Values.worker.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "rails.name" . }}-worker
-      app.kubernetes.io/name: {{ include "rails.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      environment: {{ include "rails.environment" . }}
-      product: {{ .Values.product }}
-  minReadySeconds: {{ .Values.replica.minReadySeconds }}
-  progressDeadlineSeconds: {{ .Values.replica.progressDeadlineSeconds }}
-  revisionHistoryLimit: {{ .Values.replica.revisionHistoryLimit }}
+      app: {{ include "rails.name" $ }}-worker
+      app.kubernetes.io/name: {{ include "rails.name" $ }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
+      environment: {{ include "rails.environment" $ }}
+      product: {{ $.Values.product }}
+  minReadySeconds: {{ $.Values.replica.minReadySeconds }}
+  progressDeadlineSeconds: {{ $.Values.replica.progressDeadlineSeconds }}
+  revisionHistoryLimit: {{ $.Values.replica.revisionHistoryLimit }}
   strategy:
-    type: {{ .Values.replica.strategy }}
+    type: {{ $.Values.replica.strategy }}
   template:
     metadata:
       labels:
-        app: {{ include "rails.name" . }}-worker
-        app.kubernetes.io/name: {{ include "rails.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/version: {{ include "rails.version" . }}
-        environment: {{ include "rails.environment" . }}
-        product: {{ .Values.product }}
-        helm.sh/chart: {{ include "rails.chart" . }}
+        app: {{ include "rails.name" $ }}-worker
+        app.kubernetes.io/name: {{ include "rails.name" $ }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
+        app.kubernetes.io/managed-by: {{ $.Release.Service }}
+        app.kubernetes.io/version: {{ include "rails.version" $ }}
+        environment: {{ include "rails.environment" $ }}
+        product: {{ $.Values.product }}
+        helm.sh/chart: {{ include "rails.chart" $ }}
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
     spec:
       containers:
-      {{- $rails_name := include "rails.name" . -}}
-      {{- $rails_product := include "rails.product" . -}}
-      {{- $rails_version := include "rails.version" . -}}
-      {{- range $index, $command := .Values.worker.command }}
-      - name: {{ $rails_name }}-worker-{{ $index }}
+      {{- $rails_name := include "rails.name" $ -}}
+      {{- $rails_product := include "rails.product" $ -}}
+      {{- $rails_version := include "rails.version" $ }}
+      - name: {{ $rails_name }}-worker
         image: {{ $.Values.image.repository }}
         imagePullPolicy: {{ $.Values.image.pullPolicy }}
         command: ["sh","-c","{{ $command }}"]
@@ -106,7 +107,6 @@ spec:
         {{- end }}
         resources:
 {{ toYaml $.Values.worker.resources | indent 10 }}
-      {{- end }}
       {{- if $.Values.image_private_registry.enabled }}
       imagePullSecrets:
       - name: {{ $.Values.image_private_registry.secret }}
@@ -114,15 +114,15 @@ spec:
       dnsPolicy: {{ default "ClusterFirst" $.Values.dnsPolicy }}
       terminationGracePeriodSeconds: {{ default "30" $.Values.worker.terminationGracePeriodSeconds }}
       securityContext:
-        fsGroup: {{ .Values.securityContextID }}
-        runAsUser: {{ .Values.securityContextID }}
+        fsGroup: {{ $.Values.securityContextID }}
+        runAsUser: {{ $.Values.securityContextID }}
       {{ if $.Values.custom_configs.enabled -}}
       volumes:
         {{- range $index, $config := $.Values.custom_configs.files}}
         - name: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
-          secret:           
+          secret:
             secretName: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
         {{- end }}
         {{- end }}
-
+  {{- end }}
 {{- end }}
