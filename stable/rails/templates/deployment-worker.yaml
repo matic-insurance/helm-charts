@@ -1,57 +1,60 @@
-{{- if .Values.worker.enabled -}}
+
+{{- range $index, $worker := $.Values.workers }}
+{{- if $worker.enabled }}
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "rails.name" . }}-worker
+  name: {{ include "rails.name" $ }}-worker-{{ $worker.name }}
   labels:
-    app: {{ include "rails.name" . }}-worker
-    app.kubernetes.io/name: {{ include "rails.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/version: {{ include "rails.version" . }}
-    environment: {{ include "rails.environment" . }}
-    product: {{ .Values.product }}
-    helm.sh/chart: {{ include "rails.chart" . }}
+    app: {{ include "rails.name" $ }}-worker
+    app.kubernetes.io/name: {{ include "rails.name" $ }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/version: {{ include "rails.version" $ }}
+    environment: {{ include "rails.environment" $ }}
+    product: {{ $.Values.product }}
+    helm.sh/chart: {{ include "rails.chart" $ }}
 spec:
-  replicas: {{ .Values.worker.replicaCount }}
+  replicas: {{ $worker.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "rails.name" . }}-worker
-      app.kubernetes.io/name: {{ include "rails.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      environment: {{ include "rails.environment" . }}
-      product: {{ .Values.product }}
-  minReadySeconds: {{ .Values.replica.minReadySeconds }}
-  progressDeadlineSeconds: {{ .Values.replica.progressDeadlineSeconds }}
-  revisionHistoryLimit: {{ .Values.replica.revisionHistoryLimit }}
+      app: {{ include "rails.name" $ }}-worker
+      app.kubernetes.io/name: {{ include "rails.name" $ }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
+      environment: {{ include "rails.environment" $ }}
+      product: {{ $.Values.product }}
+  minReadySeconds: {{ $.Values.replica.minReadySeconds }}
+  progressDeadlineSeconds: {{ $.Values.replica.progressDeadlineSeconds }}
+  revisionHistoryLimit: {{ $.Values.replica.revisionHistoryLimit }}
   strategy:
-    type: {{ .Values.replica.strategy }}
+    type: {{ $.Values.replica.strategy }}
   template:
     metadata:
       labels:
-        app: {{ include "rails.name" . }}-worker
-        app.kubernetes.io/name: {{ include "rails.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/version: {{ include "rails.version" . }}
-        environment: {{ include "rails.environment" . }}
-        product: {{ .Values.product }}
-        helm.sh/chart: {{ include "rails.chart" . }}
+        app: {{ include "rails.name" $ }}-worker
+        app.kubernetes.io/name: {{ include "rails.name" $ }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
+        app.kubernetes.io/managed-by: {{ $.Release.Service }}
+        app.kubernetes.io/version: {{ include "rails.version" $ }}
+        environment: {{ include "rails.environment" $ }}
+        product: {{ $.Values.product }}
+        helm.sh/chart: {{ include "rails.chart" $ }}
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
     spec:
       containers:
-      {{- $rails_name := include "rails.name" . -}}
-      {{- $rails_product := include "rails.product" . -}}
-      {{- $rails_version := include "rails.version" . -}}
-      {{- range $index, $command := .Values.worker.command }}
-      - name: {{ $rails_name }}-worker-{{ $index }}
+      {{- $rails_name := include "rails.name" $ -}}
+      {{- $rails_product := include "rails.product" $ -}}
+      {{- $rails_version := include "rails.version" $ }}
+      - name: {{ $rails_name }}-worker
         image: {{ $.Values.image.repository }}
         imagePullPolicy: {{ $.Values.image.pullPolicy }}
-        command: ["sh","-c","{{ $command }}"]
-        {{- if $.Values.worker.lifecycle.enabled }}
+        command: ["sh","-c","{{ $worker.command }}"]
+        {{- if $worker.lifecycle.enabled }}
         lifecycle:
-{{ toYaml $.Values.worker.lifecycle.hooks | indent 10 }}
+{{ toYaml $worker.lifecycle.hooks | indent 10 }}
         {{- end }}
         env:
         - name: SENTRY_RELEASE
@@ -74,55 +77,55 @@ spec:
             readOnly: true
           {{- end }}
         {{- end }}
-        {{- if $.Values.worker.startupProbe.enabled }}
+        {{- if $worker.startupProbe.enabled }}
         startupProbe:
           exec:
-            command: {{ $.Values.worker.startupProbe.command }}
-          initialDelaySeconds: {{ default "0" $.Values.worker.startupProbe.initialDelaySeconds }}
-          timeoutSeconds: {{ $.Values.worker.startupProbe.timeoutSeconds }}
-          periodSeconds: {{ $.Values.worker.startupProbe.periodSeconds }}
-          successThreshold: {{ $.Values.worker.startupProbe.successThreshold }}
-          failureThreshold: {{ $.Values.worker.startupProbe.failureThreshold }}
+            command: {{ $worker.startupProbe.command }}
+          initialDelaySeconds: {{ $worker.startupProbe.initialDelaySeconds | default 5 }}
+          timeoutSeconds: {{ $worker.startupProbe.timeoutSeconds | default 5 }}
+          periodSeconds: {{ $worker.startupProbe.periodSeconds | default 15 }}
+          successThreshold: {{ $worker.startupProbe.successThreshold | default 1 }}
+          failureThreshold: {{ $worker.startupProbe.failureThreshold | default 20 }}
         {{- end }}
-        {{- if $.Values.worker.readinessProbe.enabled }}
+        {{- if $worker.readinessProbe.enabled }}
         readinessProbe:
           exec:
-            command: {{ $.Values.worker.readinessProbe.command }}
-          initialDelaySeconds: {{ $.Values.worker.readinessProbe.initialDelaySeconds }}
-          timeoutSeconds: {{ $.Values.worker.readinessProbe.timeoutSeconds }}
-          periodSeconds: {{ $.Values.worker.readinessProbe.periodSeconds }}
-          successThreshold: {{ $.Values.worker.readinessProbe.successThreshold }}
-          failureThreshold: {{ $.Values.worker.readinessProbe.failureThreshold }}
+            command: {{ $worker.readinessProbe.command }}
+          initialDelaySeconds: {{ $worker.readinessProbe.initialDelaySeconds | default 10 }}
+          timeoutSeconds: {{ $worker.readinessProbe.timeoutSeconds | default 10 }}
+          periodSeconds: {{ $worker.readinessProbe.periodSeconds | default 30 }}
+          successThreshold: {{ $worker.readinessProbe.successThreshold | default 1 }}
+          failureThreshold: {{ $worker.readinessProbe.failureThreshold | default 10 }}
         {{- end }}
-        {{- if $.Values.worker.livenessProbe.enabled }}
+        {{- if $worker.livenessProbe.enabled }}
         livenessProbe:
           exec:
-            command: {{ $.Values.worker.livenessProbe.command }}
-          initialDelaySeconds: {{ $.Values.worker.livenessProbe.initialDelaySeconds }}
-          timeoutSeconds: {{ $.Values.worker.livenessProbe.timeoutSeconds }}
-          periodSeconds: {{ $.Values.worker.livenessProbe.periodSeconds }}
-          successThreshold: {{ $.Values.worker.livenessProbe.successThreshold }}
-          failureThreshold: {{ $.Values.worker.livenessProbe.failureThreshold }}
+            command: {{ $worker.livenessProbe.command }}
+          initialDelaySeconds: {{ $worker.livenessProbe.initialDelaySeconds | default 20 }}
+          timeoutSeconds: {{ $worker.livenessProbe.timeoutSeconds | default 20 }}
+          periodSeconds: {{ $worker.livenessProbe.periodSeconds | default 60 }}
+          successThreshold: {{ $worker.livenessProbe.successThreshold | default 1 }}
+          failureThreshold: {{ $worker.livenessProbe.failureThreshold | default 10 }}
         {{- end }}
         resources:
-{{ toYaml $.Values.worker.resources | indent 10 }}
-      {{- end }}
+{{ toYaml $worker.resources | indent 10 }}
       {{- if $.Values.image_private_registry.enabled }}
       imagePullSecrets:
       - name: {{ $.Values.image_private_registry.secret }}
       {{- end }}
       dnsPolicy: {{ default "ClusterFirst" $.Values.dnsPolicy }}
-      terminationGracePeriodSeconds: {{ default "30" $.Values.worker.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ $worker.terminationGracePeriodSeconds | default 30}}
       securityContext:
-        fsGroup: {{ .Values.securityContextID }}
-        runAsUser: {{ .Values.securityContextID }}
+        fsGroup: {{ $.Values.securityContextID }}
+        runAsUser: {{ $.Values.securityContextID }}
       {{ if $.Values.custom_configs.enabled -}}
       volumes:
         {{- range $index, $config := $.Values.custom_configs.files}}
         - name: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
-          secret:           
+          secret:
             secretName: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
         {{- end }}
-        {{- end }}
+      {{- end }}
 
+{{- end }}
 {{- end }}
