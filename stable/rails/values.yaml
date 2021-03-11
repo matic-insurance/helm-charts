@@ -97,7 +97,7 @@ webserver:
 
 workers:
   - name: default
-    enabled: true
+    enabled: false
     command:
     - "bundle exec sidekiq -q default -c 20"
     replicaCount: 1

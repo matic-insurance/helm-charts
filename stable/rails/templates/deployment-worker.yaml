@@ -1,5 +1,6 @@
 
 {{- range $index, $worker := $.Values.workers }}
+{{- if $worker.enabled }}
 
 ---
 apiVersion: apps/v1
@@ -76,7 +77,6 @@ spec:
             readOnly: true
           {{- end }}
         {{- end }}
-        {{- if $worker.startupProbe }}
         {{- if $worker.startupProbe.enabled }}
         startupProbe:
           exec:
@@ -87,8 +87,6 @@ spec:
           successThreshold: {{ $worker.startupProbe.successThreshold | default 1 }}
           failureThreshold: {{ $worker.startupProbe.failureThreshold | default 20 }}
         {{- end }}
-        {{- end }}
-        {{- if $worker.readinessProbe }}
         {{- if $worker.readinessProbe.enabled }}
         readinessProbe:
           exec:
@@ -99,8 +97,6 @@ spec:
           successThreshold: {{ $worker.readinessProbe.successThreshold | default 1 }}
           failureThreshold: {{ $worker.readinessProbe.failureThreshold | default 10 }}
         {{- end }}
-        {{- end }}
-        {{- if $worker.livenessProbe }}
         {{- if $worker.livenessProbe.enabled }}
         livenessProbe:
           exec:
@@ -110,7 +106,6 @@ spec:
           periodSeconds: {{ $worker.livenessProbe.periodSeconds | default 60 }}
           successThreshold: {{ $worker.livenessProbe.successThreshold | default 1 }}
           failureThreshold: {{ $worker.livenessProbe.failureThreshold | default 10 }}
-        {{- end }}
         {{- end }}
         resources:
 {{ toYaml $worker.resources | indent 10 }}
@@ -130,6 +125,7 @@ spec:
           secret:
             secretName: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
         {{- end }}
-        {{- end }}
+      {{- end }}
 
+{{- end }}
 {{- end }}
