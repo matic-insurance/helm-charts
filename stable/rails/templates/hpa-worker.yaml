@@ -1,6 +1,7 @@
 
 {{- range $index, $worker := $.Values.workers }}
-    {{- if (and $worker.enabled $worker.autoscaling.enabled) }}
+  {{- if $worker.enabled }}
+    {{- if $worker.autoscaling.enabled }}
 
 ---
 apiVersion: autoscaling/v2beta2
@@ -18,5 +19,6 @@ spec:
   - type: {{ $worker.autoscaling.type }}
 {{ toYaml $worker.autoscaling.metrics | indent 4 }}
 
+    {{- end }}
   {{- end }}
 {{- end }}
