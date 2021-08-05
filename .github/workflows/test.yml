@@ -20,9 +20,9 @@ jobs:
           config: test/ct.yaml
 
       - name: Create kind cluster
-        uses: helm/kind-action@v1.0.0
+        uses: helm/kind-action@v1.2.0
         with:
-          node_image: "kindest/node:v1.17.5"
+          node_image: "kindest/node:v1.17.17"
         # Only build a kind cluster if there are chart changes to test.
         if: steps.lint.outputs.changed == 'true'
 
