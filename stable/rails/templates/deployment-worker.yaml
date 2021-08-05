@@ -65,7 +65,7 @@ spec:
             fieldRef:
               fieldPath: status.hostIP
         - name: DD_VERSION
-          value: "{{ include "rails.version" . }}"
+          value: "{{ $rails_version }}"
         {{- end }}
         {{- if $.Values.custom_configs.enabled }}
         envFrom:
