@@ -41,6 +41,7 @@ spec:
                 port:
                   number: {{ $.Values.webserver.port }}
             path: {{ default "/" .path }}
+            pathType: {{ default "Prefix" .pathType }}
 {{- if .tls.enabled }}
   tls:
     - hosts:
