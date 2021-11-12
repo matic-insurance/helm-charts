@@ -69,7 +69,7 @@ spec:
       volumes:
         {{- range $index, $config := $.Values.custom_configs.files}}
         - name: {{ $.Values.product | trunc 18 }}-migrations{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-" | trunc 30 }}-vol
-          secret:           
+          secret:
             secretName: {{ $.Values.product }}-migrations{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
         {{- end }}
       {{- end }}
