@@ -25,7 +25,7 @@ migrations:
   - "bundle exec rake db:migrate"
 
 ingress:
-  enabled: false
+  enabled: true
   list:
     - host: myhost1.local
       type: public
@@ -45,12 +45,14 @@ ingress:
       tls:
         enabled: false
         secret: myhost1.local-tls
+
     - host: myhost2.local
       type: private
       annotations: {}
       tls:
         enabled: false
         secret: myhost2.local-tls
+
 webserver:
   enabled: true
   command: "bundle exec puma"

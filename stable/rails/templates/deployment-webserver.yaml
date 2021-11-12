@@ -124,8 +124,8 @@ spec:
       volumes:
         {{- range $index, $config := .Values.custom_configs.files}}
         - name: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}-vol
-          secret:           
+          secret:
             secretName: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
         {{- end }}
-      {{- end }}    
+      {{- end }}
 {{- end }}
