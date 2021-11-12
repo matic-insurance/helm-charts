@@ -25,7 +25,7 @@ migrations:
   - "bundle exec rake db:migrate"
 
 ingress:
-  enabled: true
+  enabled: false
   list:
     - host: myhost1.local
       type: public
