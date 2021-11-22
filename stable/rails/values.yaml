@@ -157,5 +157,8 @@ service:
 
 securityContextID: 100
 
+  serviceAccount:
+    enabled: false
+
 datadog:
   enabled: false
