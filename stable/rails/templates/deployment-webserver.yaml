@@ -39,29 +39,7 @@ spec:
         helm.sh/chart: {{ include "rails.chart" . }}
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
-        vault.hashicorp.com/agent-inject: "true"
-        vault.hashicorp.com/role: "lo-tools"
-        vault.hashicorp.com/namespace: "admin"
-        vault.hashicorp.com/log-level: "trace"
-        vault.hashicorp.com/agent-inject-secret-export-envs.sh: "secret/lo-tools"
-        vault.hashicorp.com/agent-inject-template-export-envs.sh: |
-          {{`{{ with secret "secret/lo-tools" -}}
-          export DATABASE_URL={{ .Data.data.db_connection_url }}
-          export EXAMPLE_API_KEY={{ .Data.data.example_api_key }}
-          {{ end -}} `}}
-        vault.hashicorp.com/agent-inject-secret-database.yaml: "secret/lo-tools"
-        vault.hashicorp.com/agent-inject-template-database.yaml: |
-          {{`staging:
-          {{- with secret "secret/lo-tools" }}
-            url: {{ .Data.data.db_connection_url }}
-          {{ end -}}`}}
-        vault.hashicorp.com/agent-inject-secret-all-secrets.txt: "secret/lo-tools"
-        vault.hashicorp.com/agent-inject-template-all-secrets.txt: |
-          {{`{{ with secret "secret/lo-tools" -}}
-          {{ range $k, $v := .Data.data -}}
-          {{ $k }}: {{ $v }}
-          {{ end -}}
-          {{ end -}}`}}
+{{ toYaml .Values.webserver.annotations | indent 8 }}
     spec:
       serviceAccountName: {{ .Values.product }}
       containers:
