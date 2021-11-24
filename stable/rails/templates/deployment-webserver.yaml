@@ -41,7 +41,9 @@ spec:
         rollme: {{ randAlphaNum 5 | quote }}
 {{ toYaml .Values.webserver.annotations | indent 8 }}
     spec:
+{{- if .Values.serviceAccount.enabled }}
       serviceAccountName: {{ .Values.product }}
+{{- end }}
       containers:
       - name: {{ include "rails.name" . }}-webserver
         image: {{ .Values.image.repository }}
