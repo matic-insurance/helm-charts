@@ -45,7 +45,7 @@ spec:
         rollme: {{ randAlphaNum 5 | quote }}
 {{ toYaml $worker.annotations | indent 8 }}
     spec:
-{{- if .Values.serviceAccount.enabled }}
+{{- if $.Values.serviceAccount.enabled }}
       serviceAccountName: {{ $.Values.product }}
 {{- end }}
       containers:
