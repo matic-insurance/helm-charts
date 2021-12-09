@@ -126,8 +126,8 @@ spec:
       - name: get-vault-token
         image: {{ $.Values.vault.initImage }}
         command:
-        - echo
-        - test111
+        - sh
+        - /get_vault_token.sh
         envFrom:
         - secretRef:
             name: {{ $.Values.product }}-envvars
