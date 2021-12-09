@@ -39,7 +39,9 @@ spec:
         helm.sh/chart: {{ include "rails.chart" . }}
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
-{{ toYaml .Values.webserver.annotations | indent 8 }}
+        {{- range $key, $value := .Values.webserver.annotations }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
 {{- if .Values.serviceAccount.enabled }}
       serviceAccountName: {{ .Values.product }}
@@ -79,6 +81,10 @@ spec:
             subPath: {{ base $config }}
             readOnly: true
           {{- end }}
+{{- if .Values.vault.enabled }}
+          - name: vault-token
+            mountPath: /vault-k8s-init-dir
+{{- end }}
         {{- end }}
         {{- if .Values.webserver.startupProbe.enabled }}
         startupProbe:
@@ -115,6 +121,20 @@ spec:
         {{- end }}
         resources:
 {{ toYaml .Values.webserver.resources | indent 10 }}
+{{- if .Values.vault.enabled }}
+      initContainers:
+      - name: get-vault-token
+        image: {{ .Values.vault.initImage }}
+        command:
+        - sh
+        - /get_vault_token.sh
+        envFrom:
+        - secretRef:
+           name: {{ .Values.product }}-envvars
+        volumeMounts:
+          - name: vault-token
+            mountPath: /vault-k8s-init-dir
+{{- end }}
       dnsPolicy: {{ default "ClusterFirst" .Values.dnsPolicy }}
       terminationGracePeriodSeconds: {{ default "30" $.Values.webserver.terminationGracePeriodSeconds }}
       securityContext:
@@ -132,4 +152,8 @@ spec:
             secretName: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
         {{- end }}
       {{- end }}
+{{- if .Values.vault.enabled }}
+        - name: vault-token
+          emptyDir: {}
+{{- end }}
 {{- end }}

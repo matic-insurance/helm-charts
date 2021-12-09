@@ -23,6 +23,7 @@ migrations:
   enabled: false
   commands:
   - "bundle exec rake db:migrate"
+  annotations: {}
 
 ingress:
   enabled: false
@@ -155,11 +156,13 @@ replica:
 
 service:
   type: ClusterIP
-  annotations: {}
 
 securityContextID: 100
 
 serviceAccount:
+  enabled: false
+
+vault:
   enabled: false
 
 datadog:

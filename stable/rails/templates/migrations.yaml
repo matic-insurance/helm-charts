@@ -15,6 +15,9 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation
+    {{- range $key, $value := .Values.migrations.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
   backoffLimit: 0
   template:
