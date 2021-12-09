@@ -23,6 +23,7 @@ migrations:
   enabled: false
   commands:
   - "bundle exec rake db:migrate"
+  annotations: {}
 
 ingress:
   enabled: false
@@ -96,6 +97,7 @@ webserver:
     enabled: false
   lifecycle:
     enabled: false
+  annotations: {}
 
 workers:
   - name: default
@@ -144,6 +146,7 @@ workers:
       periodSeconds: 60
       successThreshold: 1
       failureThreshold: 10
+    annotations: {}
 
 replica:
   minReadySeconds: 1  # minimum number of seconds before Kubernetes starts considering the Pods healthy
@@ -156,6 +159,12 @@ service:
   annotations: {}
 
 securityContextID: 100
+
+serviceAccount:
+  enabled: false
+
+vault:
+  enabled: false
 
 datadog:
   enabled: false

@@ -43,7 +43,13 @@ spec:
         helm.sh/chart: {{ include "rails.chart" $ }}
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
+        {{- range $key, $value := $worker.annotations }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
     spec:
+{{- if $.Values.serviceAccount.enabled }}
+      serviceAccountName: {{ $.Values.product }}
+{{- end }}
       containers:
       {{- $rails_name := include "rails.name" $ -}}
       {{- $rails_product := include "rails.product" $ -}}
@@ -78,6 +84,10 @@ spec:
             subPath: {{ base $config }}
             readOnly: true
           {{- end }}
+{{- if $.Values.vault.enabled }}
+          - name: vault-token
+            mountPath: /vault-k8s-init-dir
+{{- end }}
         {{- end }}
         {{- if $worker.startupProbe.enabled }}
         startupProbe:
@@ -111,6 +121,20 @@ spec:
         {{- end }}
         resources:
 {{ toYaml $worker.resources | indent 10 }}
+{{- if $.Values.vault.enabled }}
+      initContainers:
+      - name: get-vault-token
+        image: {{ $.Values.vault.initImage }}
+        command:
+        - sh
+        - /get_vault_token.sh
+        envFrom:
+        - secretRef:
+            name: {{ $.Values.product }}-envvars
+        volumeMounts:
+          - name: vault-token
+            mountPath: /vault-k8s-init-dir
+{{- end }}
       {{- if $.Values.image_private_registry.enabled }}
       imagePullSecrets:
       - name: {{ $.Values.image_private_registry.secret }}
@@ -128,6 +152,9 @@ spec:
             secretName: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
         {{- end }}
       {{- end }}
-
+{{- if $.Values.vault.enabled }}
+        - name: vault-token
+          emptyDir: {}
+{{- end }}
 {{- end }}
 {{- end }}
