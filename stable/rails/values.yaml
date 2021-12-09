@@ -164,7 +164,8 @@ serviceAccount:
   enabled: false
 
 vault:
-  enabled: false
+  enabled: true
+  initImage: public.ecr.aws/matic/vault-k8s-init
 
 datadog:
   enabled: false
