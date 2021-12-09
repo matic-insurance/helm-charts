@@ -14,7 +14,7 @@ image_private_registry:
   secret: docker-login
 
 custom_configs:
-  enabled: false
+  enabled: true
   files:
   - /app/settings.yml
   - /app/some_config.yml
