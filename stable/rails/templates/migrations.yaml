@@ -32,6 +32,9 @@ spec:
         product: {{ .Values.product }}
         helm.sh/chart: {{ include "rails.chart" . }}
     spec:
+{{- if .Values.serviceAccount.enabled }}
+      serviceAccountName: {{ .Values.product }}
+{{- end }}
       containers:
       {{- $rails_name := include "rails.name" . -}}
       {{- $rails_product := include "rails.product" . -}}
@@ -60,9 +63,27 @@ spec:
             subPath: {{ base $config }}
             readOnly: true
           {{- end }}
+{{- if $.Values.vault.enabled }}
+          - name: vault-token
+            mountPath: /vault-k8s-init-dir
+{{- end }}
         {{- end }}
       {{- end }}
       restartPolicy: Never
+{{- if .Values.vault.enabled }}
+      initContainers:
+      - name: get-vault-token
+        image: {{ .Values.vault.initImage }}
+        command:
+        - sh
+        - /get_vault_token.sh
+        envFrom:
+        - secretRef:
+           name: {{ .Values.product }}-envvars
+        volumeMounts:
+          - name: vault-token
+            mountPath: /vault-k8s-init-dir
+{{- end }}
       dnsPolicy: {{ default "ClusterFirst" .Values.dnsPolicy }}
       {{- if $.Values.image_private_registry.enabled }}
       imagePullSecrets:
@@ -76,4 +97,8 @@ spec:
             secretName: {{ $.Values.product }}-migrations{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
         {{- end }}
       {{- end }}
+{{- if .Values.vault.enabled }}
+        - name: vault-token
+          emptyDir: {}
+{{- end }}
 {{- end }}
