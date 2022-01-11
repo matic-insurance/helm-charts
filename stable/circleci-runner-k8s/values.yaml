@@ -19,10 +19,10 @@ configSecret:
 
 # Refers to the resource class you created for your runner. See:
 # https://circleci.com/docs/2.0/runner-installation/?section=executors-and-images#authentication
-resourceClass: ""
+resourceClass: "test"
 # Runner API token. See:
 # https://circleci.com/docs/2.0/runner-installation/
-runnerToken: ""
+runnerToken: "test"
 
 # The agent version to use for CircleCI Enterprise installations
 agentVersion: ""
@@ -54,9 +54,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-resourceClass: "matic/runner"
-
-runnerToken: "test-token"
-
-namespace: "matic"
