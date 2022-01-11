@@ -48,6 +48,14 @@ spec:
               value: "{{ .Values.agentVersion }}"
 
             {{- end }}
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - ps -ef | grep circleci-launch-agent
+            initialDelaySeconds: 3
+            periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
