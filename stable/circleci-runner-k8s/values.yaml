@@ -54,3 +54,9 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+resourceClass: "matic/runner"
+
+runnerToken: "test-token"
+
+namespace: "matic"
