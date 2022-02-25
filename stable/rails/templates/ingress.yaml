@@ -6,7 +6,6 @@ kind: Ingress
 metadata:
   name: {{ include "rails.name" $ }}-ingress-{{ .type }}-{{ $index }}
   annotations:
-    kubernetes.io/ingress.class: {{ .type | quote  }}
     {{- range $key, $value := .annotations }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
@@ -31,6 +30,7 @@ metadata:
     product: {{ $.Values.product }}
     helm.sh/chart: {{ include "rails.chart" $ }}
 spec:
+  ingressClassName: {{ .type | quote  }}
   rules:
     - host: {{ .host }}
       http:
