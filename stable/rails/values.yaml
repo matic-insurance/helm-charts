@@ -6,7 +6,7 @@ product: myproduct
 environment: staging
 
 image:
-  repository: bitnami/ruby-example:0.0.1
+  repository: bitnami/ruby
   pullPolicy: IfNotPresent
 
 image_private_registry:
