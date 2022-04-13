@@ -99,7 +99,7 @@ webserver:
     enabled: false
   annotations: {}
   metrics:
-    enabled: true
+    enabled: false
     port: 3001
 
 workers:
