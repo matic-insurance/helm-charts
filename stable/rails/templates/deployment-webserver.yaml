@@ -62,13 +62,16 @@ spec:
           value: "{{ include "rails.product" . }}-{{ include "rails.version" . }}"
         - name: PORT
           value: {{ .Values.webserver.port | quote }}
-        {{ if .Values.datadog.enabled }}
+        {{- if .Values.datadog.enabled }}
         - name: DD_AGENT_HOST
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
         - name: DD_VERSION
           value: "{{ include "rails.version" . }}"
+        {{- end }}
+        {{- if .Values.webserver.extraEnvs }}
+{{ toYaml .Values.webserver.extraEnvs | indent 8 }}
         {{- end }}
         {{- if .Values.custom_configs.enabled }}
         envFrom:
