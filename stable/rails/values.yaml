@@ -99,8 +99,8 @@ webserver:
     enabled: false
   annotations: {}
   extraEnvs:
-   - name: FOO
-     value: BAR
+   - name: TEST
+     value: VALUE
 
 workers:
   - name: default
