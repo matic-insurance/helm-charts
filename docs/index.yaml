@@ -3,9 +3,9 @@ entries:
   circleci-runner:
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2022-05-18T11:46:54.855709+03:00"
+    created: "2022-05-18T09:28:56.609442032Z"
     description: A Helm chart for Kubernetes
-    digest: cdf57549100c0a555bad34fe9c823970ed65ec7d270048128d9a97735d423039
+    digest: ecc651592f3a4e7c25c1c06bb108ae53bd1d85a7f90c1cc49b714445689e75ac
     home: https://matic-insurance.github.io/helm-charts
     name: circleci-runner
     type: application
@@ -14,7 +14,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2022-05-18T11:46:54.855338+03:00"
+    created: "2022-05-18T09:28:56.608902928Z"
     description: A Helm chart for Kubernetes
     digest: e55553a8a8f67877a22c2e15d98c5e432ef223636d17cadf694570d4e8befddb
     home: https://matic-insurance.github.io/helm-charts
@@ -26,9 +26,9 @@ entries:
   namespaces:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2022-05-18T11:46:54.855841+03:00"
+    created: "2022-05-18T09:28:56.609606534Z"
     description: A Helm chart for creation Kubernetes Namespaces
-    digest: 110904f163ccf17be4939013284c1030ca6d8c5335138d8505a987a13e4e250d
+    digest: 5c523ae50366684b74a30eeeaafc8f44af4beac85922643cef2f89a66a649187
     name: namespaces
     type: application
     urls:
@@ -37,9 +37,9 @@ entries:
   nginx:
   - apiVersion: v2
     appVersion: 1.1.1
-    created: "2022-05-18T11:46:54.856119+03:00"
+    created: "2022-05-18T09:28:56.610021538Z"
     description: A Nginx Helm chart for Kubernetes
-    digest: afe1207d6d13a75029578d3cbbca44ee07b014067178da8876f7da7f13549b13
+    digest: 4123b78a1f6be10a9aa5829b306c3f6733b92906bb0e5a8fc91d564b731c7a2f
     home: https://matic-insurance.github.io/helm-charts
     name: nginx
     type: application
@@ -48,8 +48,19 @@ entries:
     version: 1.1.1
   rails:
   - apiVersion: v2
+    appVersion: 2.3.0
+    created: "2022-05-18T09:28:56.622290446Z"
+    description: A Helm chart deploying Ruby on Rails app to Kubernetes
+    digest: 76ac8f03fe3d7243c263d7f451a32ffc150caf2ff8a0269256a985b57825fe12
+    home: https://matic-insurance.github.io/helm-charts
+    name: rails
+    type: application
+    urls:
+    - https://matic-insurance.github.io/helm-charts/rails-2.3.0.tgz
+    version: 2.3.0
+  - apiVersion: v2
     appVersion: 2.2.0
-    created: "2022-05-18T11:46:54.864056+03:00"
+    created: "2022-05-18T09:28:56.621412738Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 60c9076e1ea85ec1a9d294fa9058a8126540bad7c7dd589ff52f431e0e0b774c
     home: https://matic-insurance.github.io/helm-charts
@@ -60,7 +71,7 @@ entries:
     version: 2.2.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2022-05-18T11:46:54.86346+03:00"
+    created: "2022-05-18T09:28:56.62052413Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: af2a8ffdd71bcb6e5b7c0dc6707a624a059546f918719de764d78ac8b0399b59
     home: https://matic-insurance.github.io/helm-charts
@@ -71,7 +82,7 @@ entries:
     version: 2.1.3
   - apiVersion: v2
     appVersion: 2.1.1
-    created: "2022-05-18T11:46:54.862859+03:00"
+    created: "2022-05-18T09:28:56.619685223Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 1cf97fe3314b917202bcf8b3ab513f80bff205713b367d41961e349bdb67104f
     home: https://matic-insurance.github.io/helm-charts
@@ -82,7 +93,7 @@ entries:
     version: 2.1.1
   - apiVersion: v2
     appVersion: 2.0.1
-    created: "2022-05-18T11:46:54.862215+03:00"
+    created: "2022-05-18T09:28:56.618865916Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 47806f46ba2cea336bea367bc9670dc60294d7b4e02b4f733f7623c8c9d4059c
     home: https://matic-insurance.github.io/helm-charts
@@ -93,7 +104,7 @@ entries:
     version: 2.1.0
   - apiVersion: v2
     appVersion: 2.0.1
-    created: "2022-05-18T11:46:54.861184+03:00"
+    created: "2022-05-18T09:28:56.618008708Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 703f18ec1e0fc356154a6081d0dcc2102837d62c57d9d5b08200ecec7a3f1553
     home: https://matic-insurance.github.io/helm-charts
@@ -104,7 +115,7 @@ entries:
     version: 2.0.1
   - apiVersion: v2
     appVersion: 2.0.0
-    created: "2022-05-18T11:46:54.86061+03:00"
+    created: "2022-05-18T09:28:56.617143001Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 63402b2277571bc562ab6fc62e758d4c2321d8ad46b212cb537ddd28e821dd4b
     home: https://matic-insurance.github.io/helm-charts
@@ -115,7 +126,7 @@ entries:
     version: 2.0.0
   - apiVersion: v2
     appVersion: 1.9.4
-    created: "2022-05-18T11:46:54.859885+03:00"
+    created: "2022-05-18T09:28:56.615042282Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 67da79ae6a1b9a6d46ede263993a0cde0618998c7789125465a95441cbfb68ad
     home: https://matic-insurance.github.io/helm-charts
@@ -126,7 +137,7 @@ entries:
     version: 1.9.4
   - apiVersion: v2
     appVersion: 1.9.3
-    created: "2022-05-18T11:46:54.85919+03:00"
+    created: "2022-05-18T09:28:56.614269975Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 69c74090f0201dab9982d6b80e22ba5ee7bb82190b0c850683e6d6143300c998
     home: https://matic-insurance.github.io/helm-charts
@@ -137,7 +148,7 @@ entries:
     version: 1.9.3
   - apiVersion: v2
     appVersion: 1.9.2
-    created: "2022-05-18T11:46:54.85857+03:00"
+    created: "2022-05-18T09:28:56.613452568Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 67561dbc2bb49bee2bab1aa275ce95144468efad3f56245a4fd81b9a6be5c0f0
     home: https://matic-insurance.github.io/helm-charts
@@ -148,7 +159,7 @@ entries:
     version: 1.9.2
   - apiVersion: v2
     appVersion: 1.9.1
-    created: "2022-05-18T11:46:54.857979+03:00"
+    created: "2022-05-18T09:28:56.612675261Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 8b2f1abb01a4ccd1f0c618f7bb5936201abfe9bdcbaa5e452bd7b62c5f0b056c
     home: https://matic-insurance.github.io/helm-charts
@@ -159,7 +170,7 @@ entries:
     version: 1.9.1
   - apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-05-18T11:46:54.857251+03:00"
+    created: "2022-05-18T09:28:56.611882854Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 584fcca2e520467806f79793e9d6ca25e1f464a98a6e6f8d23558c2437123dda
     home: https://matic-insurance.github.io/helm-charts
@@ -170,7 +181,7 @@ entries:
     version: 1.9.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2022-05-18T11:46:54.856518+03:00"
+    created: "2022-05-18T09:28:56.611106747Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: a22b49ab6eb61e7c8c238f091c73e796643002a84f6b21bcf44f27d5f476daa4
     home: https://matic-insurance.github.io/helm-charts
@@ -181,9 +192,9 @@ entries:
   secrets:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2022-05-18T11:46:54.864552+03:00"
+    created: "2022-05-18T09:28:56.622814451Z"
     description: A Helm chart for Kubernetes
-    digest: 653d97bae3d7d7a5d9b3e29ebcdc91c2864650e06a6f056804a192709c3905b6
+    digest: ab1eebb8ec3be191596b477bbbac5ce5726f59b7eb288dfc827aab519cebaed6
     name: secrets
     type: application
     urls:
@@ -191,7 +202,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2022-05-18T11:46:54.86442+03:00"
+    created: "2022-05-18T09:28:56.622650049Z"
     description: A Helm chart for Kubernetes
     digest: 0a70ad4ca334eba70176e29b013a8301e35e7ecc238bbcc85e8d68bc95e3f9d3
     name: secrets
@@ -201,7 +212,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2022-05-18T11:46:54.864256+03:00"
+    created: "2022-05-18T09:28:56.622481748Z"
     description: A Helm chart for Kubernetes
     digest: 0f2b7412a2a68514528328330222a8de583be9da45bd7bdeabc0a9cc5826b995
     name: secrets
@@ -209,4 +220,4 @@ entries:
     urls:
     - https://matic-insurance.github.io/helm-charts/secrets-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-18T11:46:54.854407+03:00"
+generated: "2022-05-18T09:28:56.608218222Z"
