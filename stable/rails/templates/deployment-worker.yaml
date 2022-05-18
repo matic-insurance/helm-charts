@@ -73,6 +73,9 @@ spec:
         - name: DD_VERSION
           value: "{{ $rails_version }}"
         {{- end }}
+        {{- if $worker.extraEnvs }}
+{{ toYaml $worker.extraEnvs | indent 8 }}
+        {{- end }}
         {{- if $.Values.custom_configs.enabled }}
         envFrom:
         - secretRef:
