@@ -97,6 +97,17 @@ webserver:
     enabled: true
     minReplicas: 1
     maxReplicas: 1
+    metrics:
+    - type: External
+      external:
+        metric:
+          name: trace.nginx.rps
+          selector:
+            matchLabels:
+              env: test
+        target:
+          type: Value
+          value: 100m
   lifecycle:
     enabled: false
   annotations: {}
