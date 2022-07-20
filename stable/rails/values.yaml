@@ -94,7 +94,7 @@ webserver:
     successThreshold: 1
     failureThreshold: 10
   autoscaling:
-    enabled: false
+    enabled: true
   lifecycle:
     enabled: false
   annotations: {}
