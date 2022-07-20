@@ -13,4 +13,6 @@ spec:
   metrics:
   - type: {{ .Values.webserver.autoscaling.type }}
 {{ toYaml .Values.webserver.autoscaling.metrics | indent 4 }}
+  behavior:
+{{ toYaml .Values.webserver.autoscaling.behavior | indent 4 }}
 {{- end }}
