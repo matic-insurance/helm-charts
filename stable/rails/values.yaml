@@ -95,6 +95,8 @@ webserver:
     failureThreshold: 10
   autoscaling:
     enabled: true
+    minReplicas: 1
+    maxReplicas: 1
   lifecycle:
     enabled: false
   annotations: {}
