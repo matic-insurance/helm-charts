@@ -11,17 +11,14 @@ spec:
   minReplicas: {{ .Values.webserver.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.webserver.autoscaling.maxReplicas }}
   metrics:
-  - type: External
-    external:
-      metric:
-        name: trace.nginx.rps
-        selector:
-          matchLabels:
-            env: test
-      target:
-        type: Value
-        value: 100m
+  - type: {{ .Values.webserver.autoscaling.type }}
+{{ toYaml .Values.webserver.autoscaling.metrics | indent 4 }}
+
+{{- if .Values.webserver.autoscaling.behavior -}}
+  {{- with .Values.webserver.autoscaling.behavior }}
   behavior:
-    scaleDown:
-      stabilizationWindowSeconds: 300
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+
 {{- end }}
