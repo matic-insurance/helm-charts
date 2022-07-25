@@ -94,23 +94,7 @@ webserver:
     successThreshold: 1
     failureThreshold: 10
   autoscaling:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 1
-    type: External
-    metrics:
-      external:
-        metric:
-          name: trace.nginx.rps
-          selector:
-            matchLabels:
-              env: test
-        target:
-          type: Value
-          value: 100m
-    behavior:
-      scaleDown:
-        stabilizationWindowSeconds: 300
+    enabled: false
   lifecycle:
     enabled: false
   annotations: {}
