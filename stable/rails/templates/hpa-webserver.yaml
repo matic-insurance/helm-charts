@@ -10,10 +10,18 @@ spec:
     name: {{ include "rails.name" . }}-webserver
   minReplicas: {{ .Values.webserver.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.webserver.autoscaling.maxReplicas }}
-{{- if .Values.webserver.autoscaling.metrics -}}
   metrics:
-{{ toYaml .Values.webserver.autoscaling.metrics | indent 4 }}
-{{- end }}
+  - type: External
+    external:
+      metric:
+        name: trace.nginx.rps
+        selector:
+          matchLabels:
+            env: test
+      target:
+        type: Value
+        value: 100m
   behavior:
-{{ toYaml .Values.webserver.autoscaling.behavior | indent 4 }}
+    scaleDown:
+      stabilizationWindowSeconds: 300
 {{- end }}
