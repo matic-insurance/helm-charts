@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "clamav-api.fullname" . }}
+  name: {{ include "clamav.fullname" . }}
   labels:
-    {{- include "clamav-api.labels" . | nindent 4 }}
+    {{- include "clamav.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "clamav-api.selectorLabels" . | nindent 6 }}
+      {{- include "clamav.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "clamav-api.selectorLabels" . | nindent 8 }}
+        {{- include "clamav.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "clamav-api.serviceAccountName" . }}
+      serviceAccountName: {{ include "clamav.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -34,17 +34,15 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 80
+            - name: http-api
+              containerPort: 9000
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+            - name: https-api
+              containerPort: 9443
+              protocol: TCP
+          # volumeMounts:
+          #   - name: "clamdb"
+          #     mountPath: "/var/lib/clamav/daily.cld"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -59,3 +57,13 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      # volumes:
+      #   # You set volumes at the Pod level, then mount them into containers inside that Pod
+      #   - name: "clamdb"
+      #     configMap:
+      #       # Provide the name of the ConfigMap you want to mount.
+      #       name: "clamdb"
+      #       # An array of keys from the ConfigMap to create as files
+      #       items:
+      #       - key: "clamdb"
+      #         path: /var/lib/clamav/daily.cld

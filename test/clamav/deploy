@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+helm upgrade -i clamav-daemon . \
+	--values "values.yaml" \
+	--namespace staging # --debug --dry-run

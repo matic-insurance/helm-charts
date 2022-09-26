@@ -1,0 +1,122 @@
+# Default values for clamav-api.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ajilaag/clamav-rest # ajilaag/clamav-rest
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "20220822"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+# readinessProbe:
+#   periodSeconds: 3
+#   tcpSocket:
+#     port: 3310
+
+service:
+  type: ClusterIP
+  port: 3310
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# clamdConfig: |
+#   Foreground yes
+#   Debug no
+#   LeaveTemporaryFiles no
+#   LogFile /dev/stdout
+#   LogFileMaxSize 0
+#   LogTime yes
+#   LogClean no
+#   TCPSocket 3310
+#   TCPAddr 0.0.0.0
+#   ExcludePath ^/proc/
+#   ExcludePath ^/sys/
+#   ExcludePath ^/host/proc/
+#   ExcludePath ^/host/sys/
+#   MaxDirectoryRecursion 64
+#   FollowDirectorySymlinks no
+#   FollowFileSymlinks no
+#   CrossFilesystems no
+#   AllowAllMatchScan no
+#   HeuristicAlerts no
+#   HeuristicScanPrecedence no
+#   ScanELF yes
+#   ScanPDF yes
+#   ScanSWF yes
+#   ScanXMLDOCS yes
+#   ScanArchive yes
+
+# freshclamConfig: |
+#   Foreground yes
+#   DatabaseDirectory /var/lib/clamav
+#   UpdateLogFile /dev/stdout
+#   Debug no
+#   LogFileMaxSize 0
+#   LogTime yes
+#   DatabaseOwner root
+#   DNSDatabaseInfo current.cvd.clamav.net
+#   DatabaseMirror database.clamav.net
+#   MaxAttempts 3
+#   ScriptedUpdates yes
+#   CompressLocalDatabase no
+#   TestDatabases yes
+#   SafeBrowsing no
+#   Bytecode no
+#   Checks 12
+#   NotifyClamd /etc/clamav/clamd.conf
+#   ConnectTimeout 30
+#   ReceiveTimeout 60
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 3072Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
