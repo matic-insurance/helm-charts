@@ -172,3 +172,6 @@ vault:
 
 datadog:
   enabled: false
+
+dynamic_sa_token:
+  enabled: false
