@@ -166,7 +166,7 @@ spec:
             sources:
             - serviceAccountToken:
                 path: dynamic-sa-token
-                expirationSeconds: 600
+                expirationSeconds: {{ .Values.dynamic_sa_token.expirationSeconds }}
 {{- end }}
 {{- if .Values.vault.enabled }}
         - name: vault-token

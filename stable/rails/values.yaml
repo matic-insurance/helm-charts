@@ -175,3 +175,4 @@ datadog:
 
 dynamic_sa_token:
   enabled: false
+  expirationSeconds: 600

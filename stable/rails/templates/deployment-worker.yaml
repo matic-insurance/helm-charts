@@ -87,6 +87,11 @@ spec:
             subPath: {{ base $config }}
             readOnly: true
           {{- end }}
+{{- if $.Values.dynamic_sa_token.enabled }}
+          - name: dynamic-sa-token
+            mountPath: /var/run/secrets/tokens
+            readOnly: true
+{{- end }}
 {{- if $.Values.vault.enabled }}
           - name: vault-token
             mountPath: /vault-k8s-init-dir
@@ -155,6 +160,14 @@ spec:
             secretName: {{ $.Values.product }}{{ $config | replace "/" "-" | replace "." "-" | replace "_" "-"}}
         {{- end }}
       {{- end }}
+{{- if $.Values.dynamic_sa_token.enabled }}
+        - name: dynamic-sa-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                path: dynamic-sa-token
+                expirationSeconds: {{ $.Values.dynamic_sa_token.expirationSeconds }}
+{{- end }}
 {{- if $.Values.vault.enabled }}
         - name: vault-token
           emptyDir: {}
