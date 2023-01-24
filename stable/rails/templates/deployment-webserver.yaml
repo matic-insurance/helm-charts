@@ -173,7 +173,3 @@ spec:
           emptyDir: {}
 {{- end }}
 {{- end }}
-{{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-{{- end }}

@@ -98,7 +98,6 @@ webserver:
   lifecycle:
     enabled: false
   annotations: {}
-  affinity: {}
   extraEnvs:
     - name: TEST
       value: VALUE
