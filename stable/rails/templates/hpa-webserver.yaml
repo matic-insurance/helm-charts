@@ -1,88 +1,27 @@
-#apiVersion: datadoghq.com/v1alpha1
-#kind: DatadogMetric
-  #metadata:
-  #  name: amp-p95-latency
-  #spec:
-  #  query: p95:trace.nginx.handle{env:production,resource_name:/,service:amp-nginx,!http.status_code:101}.rollup(avg, 60)
-  #
-  #---
-  #
-  #apiVersion: autoscaling/v2
-  #kind: HorizontalPodAutoscaler
-  #metadata:
-  #  name: amp-rails-webserver-autoscaling
-  #  namespace: production
-  #spec:
-  #  minReplicas: 3
-  #  maxReplicas: 10
-  #  metrics:
-  #  - type: External
-  #    external:
-  #      metric:
-  #        name: datadogmetric@production:amp-p95-latency
-  #      target:
-  #        type: Value
-  #        value: 400m
-  #  scaleTargetRef:
-  #    apiVersion: apps/v1
-  #    kind: Deployment
-  #    name: amp-rails-webserver
-
-#      autoscaling:
-  #      enabled: true
-  #      minReplicas: 1
-  #      maxReplicas: 6
-  #      metrics:
-  #        - type: Datadog
-  #          name: amp-p95-latency
-  #          query: trace.nginx.handle{env:production,service:origin}.rollup(60)
-  #          target:
-  #            type: Value
-  #            value: 200m
-  #        - type: Datadog
-  #          name: amp-requests-count
-  #          query: trace.nginx.handle.hits{env:production,service:origin}.rollup(60)
-  #          target:
-  #            type: AverageValue
-  #            averageValue: 1000
-  #      behavior:
-  #        scaleDown:
-  #          stabilizationWindowSeconds: 3600
-
-
-{{ if (and .Values.webserver.enabled .Values.webserver.autoscaling.enabled) -}}
-{{- range $index, $list := .Values.webserver.autoscaling.metrics }}
----
-apiVersion: datadoghq.com/v1alpha1
-kind: DatadogMetric
-metadata:
-  name: {{ .name }}
-spec:
-  query: {{ .query }}
-
-{{- end }}
----
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "rails.name" . }}-webserver-autoscaling
-spec:
-  scaleTargetRef:
+	@@ -7,22 +8,17 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "rails.name" . }}-webserver
-  minReplicas: {{ .Values.webserver.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.webserver.autoscaling.maxReplicas }}
-  {{- if .Values.webserver.autoscaling.metrics -}}
+  minReplicas: {{ .Values.webserver.autoscaling.minReplicas }}
+  {{ if .Values.webserver.autoscaling.metrics -}}
   metrics:
-  {{ toYaml .Values.webserver.autoscaling.metrics }}
-
-
-{{- if .Values.webserver.autoscaling.behavior -}}
+  {{- range $index, $list := .Values.webserver.autoscaling.metrics }}
+  - type: External
+    external:
+      metric:
+        name: {{ .name }}
+      target:
+        {{- toYaml .target | nindent 8 }}
+  {{- end }}
+  {{- end }}
+ {{- if .Values.webserver.autoscaling.behavior -}}
   {{- with .Values.webserver.autoscaling.behavior }}
   behavior:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-{{- end }}
-
 {{- end }}
