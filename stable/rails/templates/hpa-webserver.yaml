@@ -62,7 +62,7 @@ spec:
 
 {{- end }}
 ---
-apiVersion: autoscaling/v2beta2
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "rails.name" . }}-webserver-autoscaling
@@ -73,9 +73,10 @@ spec:
     name: {{ include "rails.name" . }}-webserver
   minReplicas: {{ .Values.webserver.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.webserver.autoscaling.maxReplicas }}
+  {{- if .Values.webserver.autoscaling.metrics -}}
   metrics:
-  - type: {{ .Values.webserver.autoscaling.type }}
-{{ toYaml .Values.webserver.autoscaling.metrics | indent 4 }}
+  {{ toYaml .Values.webserver.autoscaling.metrics }}
+
 
 {{- if .Values.webserver.autoscaling.behavior -}}
   {{- with .Values.webserver.autoscaling.behavior }}
