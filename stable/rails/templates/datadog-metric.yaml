@@ -1,0 +1,12 @@
+{{ if (and .Values.webserver.enabled .Values.webserver.autoscaling.enabled) -}}
+{{- range $index, $list := .Values.webserver.autoscaling.metrics }}
+---
+apiVersion: datadoghq.com/v1alpha1
+kind: DatadogMetric
+metadata:
+  name: {{ .name }}
+spec:
+  query: {{ .query }}
+
+{{- end }}
+{{- end }}
