@@ -1,4 +1,5 @@
-apiVersion: autoscaling/v2
+{{ if (and .Values.webserver.enabled .Values.webserver.autoscaling.enabled) -}}
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "rails.name" . }}-webserver-autoscaling
@@ -7,22 +8,17 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "rails.name" . }}-webserver
-  maxReplicas: {{ .Values.webserver.autoscaling.maxReplicas }}
   minReplicas: {{ .Values.webserver.autoscaling.minReplicas }}
-  {{ if .Values.webserver.autoscaling.metrics -}}
+  maxReplicas: {{ .Values.webserver.autoscaling.maxReplicas }}
   metrics:
-  {{- range $index, $list := .Values.webserver.autoscaling.metrics }}
-  - type: External
-    external:
-      metric:
-        name: {{ .name }}
-      target:
-        {{- toYaml .target | nindent 8 }}
-  {{- end }}
-  {{- end }}
- {{- if .Values.webserver.autoscaling.behavior -}}
+  - type: {{ .Values.webserver.autoscaling.type }}
+{{ toYaml .Values.webserver.autoscaling.metrics | indent 4 }}
+
+{{- if .Values.webserver.autoscaling.behavior -}}
   {{- with .Values.webserver.autoscaling.behavior }}
   behavior:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+{{- end }}
+
 {{- end }}
