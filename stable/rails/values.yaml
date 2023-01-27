@@ -148,7 +148,7 @@ websocket:
   annotations: {}
   extraEnvs:
     - name: TEST
-      value: VALUE      
+      value: VALUE
 
 workers:
   - name: default
