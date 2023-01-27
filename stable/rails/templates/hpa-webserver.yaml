@@ -16,7 +16,7 @@ spec:
   - type: External
     external:
       metric:
-        name: {{ .name }}
+        name: datadogmetric@{{ $.Values.environment  }}:{{ .name }}
       target:
         {{- toYaml .target | nindent 8 }}
   {{- end }}
