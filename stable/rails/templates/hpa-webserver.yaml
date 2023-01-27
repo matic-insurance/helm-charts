@@ -1,3 +1,55 @@
+#apiVersion: datadoghq.com/v1alpha1
+#kind: DatadogMetric
+  #metadata:
+  #  name: amp-p95-latency
+  #spec:
+  #  query: p95:trace.nginx.handle{env:production,resource_name:/,service:amp-nginx,!http.status_code:101}.rollup(avg, 60)
+  #
+  #---
+  #
+  #apiVersion: autoscaling/v2
+  #kind: HorizontalPodAutoscaler
+  #metadata:
+  #  name: amp-rails-webserver-autoscaling
+  #  namespace: production
+  #spec:
+  #  minReplicas: 3
+  #  maxReplicas: 10
+  #  metrics:
+  #  - type: External
+  #    external:
+  #      metric:
+  #        name: datadogmetric@production:amp-p95-latency
+  #      target:
+  #        type: Value
+  #        value: 400m
+  #  scaleTargetRef:
+  #    apiVersion: apps/v1
+  #    kind: Deployment
+  #    name: amp-rails-webserver
+
+#      autoscaling:
+  #      enabled: true
+  #      minReplicas: 1
+  #      maxReplicas: 6
+  #      metrics:
+  #        - type: Datadog
+  #          name: amp-p95-latency
+  #          query: trace.nginx.handle{env:production,service:origin}.rollup(60)
+  #          target:
+  #            type: Value
+  #            value: 200m
+  #        - type: Datadog
+  #          name: amp-requests-count
+  #          query: trace.nginx.handle.hits{env:production,service:origin}.rollup(60)
+  #          target:
+  #            type: AverageValue
+  #            averageValue: 1000
+  #      behavior:
+  #        scaleDown:
+  #          stabilizationWindowSeconds: 3600
+
+
 {{ if (and .Values.webserver.enabled .Values.webserver.autoscaling.enabled) -}}
 {{- range $index, $list := .Values.webserver.autoscaling.metrics }}
 ---
