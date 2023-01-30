@@ -37,7 +37,7 @@ spec:
         paths:
           - backend:
               service:
-                name: {{ include "rails.name" $ }}
+                name: {{ default (include "rails.name" $) .serviceName }}
                 port:
                   number: {{ $.Values.webserver.port }}
             path: {{ default "/" .path }}

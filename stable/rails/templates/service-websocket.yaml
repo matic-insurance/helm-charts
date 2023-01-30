@@ -1,0 +1,29 @@
+{{- if .Values.websocket.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "rails.name" . }}-websocket
+  labels:
+    app: {{ include "rails.name" . }}-websocket
+    app.kubernetes.io/name: {{ include "rails.name" . }}-websocket
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/version: {{ include "rails.version" . }}
+    environment: {{ include "rails.environment" . }}
+    product: {{ .Values.product }}
+    helm.sh/chart: {{ include "rails.chart" . }}
+  annotations:
+{{ toYaml .Values.service.annotations | indent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ .Values.websocket.port }}
+    targetPort: {{ .Values.websocket.port }}
+    protocol: TCP
+  selector:
+    app: {{ include "rails.name" . }}-websocket
+    app.kubernetes.io/name: {{ include "rails.name" . }}-websocket
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    environment: {{ include "rails.environment" . }}
+    product: {{ .Values.product }}
+{{- end }}
