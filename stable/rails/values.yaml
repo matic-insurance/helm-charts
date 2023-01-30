@@ -102,6 +102,54 @@ webserver:
     - name: TEST
       value: VALUE
 
+websocket:
+  enabled: false
+  command: "bundle exec puma cable_config.ru"
+  replicaCount: 1
+  port: 3000
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 256Mi
+      cpu: 100m
+  startupProbe:
+    enabled: false
+    path: /welcome/index
+    port: 3000
+    initialDelaySeconds: 5
+    timeoutSeconds: 5
+    periodSeconds: 15
+    successThreshold: 1
+    failureThreshold: 20
+  readinessProbe:
+    enabled: false
+    path: /welcome/index
+    port: 3000
+    initialDelaySeconds: 10
+    timeoutSeconds: 10
+    periodSeconds: 30
+    successThreshold: 1
+    failureThreshold: 10
+  livenessProbe:
+    enabled: false
+    path: /welcome/index
+    port: 3000
+    initialDelaySeconds: 20
+    timeoutSeconds: 20
+    periodSeconds: 60
+    successThreshold: 1
+    failureThreshold: 10
+  autoscaling:
+    enabled: false
+  lifecycle:
+    enabled: false
+  annotations: {}
+  extraEnvs:
+    - name: TEST
+      value: VALUE
+
 workers:
   - name: default
     enabled: false
