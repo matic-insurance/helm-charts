@@ -101,6 +101,11 @@ webserver:
   extraEnvs:
     - name: TEST
       value: VALUE
+  topologySpreadConstraints:
+    enabled: false
+    maxSkew: 1
+    topologyKey: lifecycle
+    whenUnsatisfiable: ScheduleAnyway
 
 workers:
   - name: default

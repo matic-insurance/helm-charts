@@ -176,4 +176,13 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
 {{- end }}
+{{- if .Values.webserver.topologySpreadConstraints.enabled }}
+      topologySpreadConstraints:
+      - maxSkew: {{ .Values.topologySpreadConstraints.maxSkew }}
+        topologyKey: {{ .Values.topologySpreadConstraints.topologyKey }}
+        whenUnsatisfiable: {{ .Values.topologySpreadConstraints.whenUnsatisfiable }}
+        labelSelector:
+          matchLabels:
+            app: {{ include "rails.name" . }}-webserver
+{{- end }}
 {{- end }}
