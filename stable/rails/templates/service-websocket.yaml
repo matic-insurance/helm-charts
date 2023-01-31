@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "rails.name" . }}-websocket
+  name: {{ include "rails.name" . }}
   labels:
     app: {{ include "rails.name" . }}-websocket
-    app.kubernetes.io/name: {{ include "rails.name" . }}-websocket
+    app.kubernetes.io/name: {{ include "rails.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/version: {{ include "rails.version" . }}
@@ -22,7 +22,7 @@ spec:
     protocol: TCP
   selector:
     app: {{ include "rails.name" . }}-websocket
-    app.kubernetes.io/name: {{ include "rails.name" . }}-websocket
+    app.kubernetes.io/name: {{ include "rails.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     environment: {{ include "rails.environment" . }}
     product: {{ .Values.product }}
