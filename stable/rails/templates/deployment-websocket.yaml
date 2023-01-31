@@ -5,7 +5,7 @@ metadata:
   name: {{ include "rails.name" . }}-websocket
   labels:
     app: {{ include "rails.name" . }}-websocket
-    app.kubernetes.io/name: {{ include "rails.name" . }}
+    app.kubernetes.io/name: {{ include "rails.name" . }}-websocket
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/version: {{ include "rails.version" . }}
@@ -17,7 +17,7 @@ spec:
   selector:
     matchLabels:
       app: {{ include "rails.name" . }}-websocket
-      app.kubernetes.io/name: {{ include "rails.name" . }}
+      app.kubernetes.io/name: {{ include "rails.name" . }}-websocket
       app.kubernetes.io/instance: {{ .Release.Name }}
       environment: {{ include "rails.environment" . }}
       product: {{ .Values.product }}
@@ -30,7 +30,7 @@ spec:
     metadata:
       labels:
         app: {{ include "rails.name" . }}-websocket
-        app.kubernetes.io/name: {{ include "rails.name" . }}
+        app.kubernetes.io/name: {{ include "rails.name" . }}-websocket
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/version: {{ include "rails.version" . }}
