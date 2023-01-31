@@ -178,9 +178,9 @@ spec:
 {{- end }}
 {{- if .Values.webserver.topologySpreadConstraints.enabled }}
       topologySpreadConstraints:
-      - maxSkew: {{ .Values.topologySpreadConstraints.maxSkew }}
-        topologyKey: {{ .Values.topologySpreadConstraints.topologyKey }}
-        whenUnsatisfiable: {{ .Values.topologySpreadConstraints.whenUnsatisfiable }}
+      - maxSkew: {{ .Values.webserver.topologySpreadConstraints.maxSkew }}
+        topologyKey: {{ .Values.webserver.topologySpreadConstraints.topologyKey }}
+        whenUnsatisfiable: {{ .Values.webserver.topologySpreadConstraints.whenUnsatisfiable }}
         labelSelector:
           matchLabels:
             app: {{ include "rails.name" . }}-webserver
