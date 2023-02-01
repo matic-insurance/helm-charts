@@ -1,0 +1,150 @@
+enabled: true
+product: olb
+environment: production
+version: 1.2.3
+
+image:
+  repository: matic/olb:release-01-01-23-25
+  pullPolicy: IfNotPresent
+
+image_private_registry:
+  enabled: false
+  secret: docker-login
+
+custom_configs:
+  enabled: true
+  files:
+    - /app/config/app_settings.local.yml
+
+migrations:
+  enabled: true
+  commands:
+    - "bundle exec rake db:migrate db:seed"
+
+ingress:
+  enabled: true
+  list:
+    - host: olb.matic.link
+      type: internal
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+        external-dns.alpha.kubernetes.io/hostname: olb.matic.link
+        external-dns.alpha.kubernetes.io/ttl: "60"
+      tls:
+        enabled: true
+        secret: matic.link-tls
+
+    - host: olb.matic.com
+      type: external
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+        nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent
+        nginx.ingress.kubernetes.io/proxy-next-upstream-tries: 2
+        external-dns.alpha.kubernetes.io/hostname: olb.matic.com
+        external-dns.alpha.kubernetes.io/ttl: "60"
+      deny_locations:
+        - /admin
+      tls:
+        enabled: true
+        secret: matic.com-tls
+
+webserver:
+  enabled: true
+  command: "bundle exec puma -t 8:8"
+  replicaCount: 2
+  port: 9292
+  resources:
+    requests:
+      memory: 200Mi
+      cpu: 100m
+    limits:
+      memory: 700Mi
+      cpu: 300m
+  startupProbe:
+    enabled: true
+    path: /healthz/webserver
+    port: 9292
+  readinessProbe:
+    enabled: true
+    path: /healthz/webserver
+    port: 9292
+  livenessProbe:
+    enabled: true
+    path: /healthz/webserver
+    port: 9292
+  autoscaling:
+    enabled: false
+  lifecycle:
+    enabled: false
+
+workers:
+  - name: default
+    enabled: true
+    command: "bundle exec sidekiq --concurrency 19"
+    replicaCount: 1
+    resources:
+      requests:
+        memory: 200Mi
+        cpu: 100m
+      limits:
+        memory: 700Mi
+        cpu: 300m
+    startupProbe:
+      enabled: true
+      command:
+        - /app/ops/scripts/check_sidekiq.sh
+    readinessProbe:
+      enabled: true
+      command:
+        - /app/ops/scripts/check_sidekiq.sh
+    livenessProbe:
+      enabled: false
+    autoscaling:
+      enabled: false
+    lifecycle:
+      enabled: false
+
+  - name: karafka
+    enabled: true
+    command: "bundle exec karafka server"
+    replicaCount: 1
+    resources:
+      requests:
+        memory: 200Mi
+        cpu: 100m
+      limits:
+        memory: 700Mi
+        cpu: 300m
+    startupProbe:
+      enabled: false
+    readinessProbe:
+      enabled: false
+    livenessProbe:
+      enabled: false
+    autoscaling:
+      enabled: false
+    lifecycle:
+      enabled: false
+
+replica:
+  minReadySeconds: 1 #minimum number of seconds before Kubernetes starts considering the Pods healthy
+  progressDeadlineSeconds: 60 #how much the Deployment has to wait before it deduces that it cannot progress due to a failure to run a Pod”
+  revisionHistoryLimit: 5 #number of ReplicaSet we can rollback
+  strategy: RollingUpdate
+
+service:
+  type: ClusterIP
+
+securityContextID: 1000
+
+serviceAccount:
+  enabled: true
+
+datadog:
+  enabled: true
+
+vault:
+  enabled: false
+
+dynamic_sa_token:
+  enabled: true
