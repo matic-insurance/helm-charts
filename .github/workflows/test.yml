@@ -19,6 +19,22 @@ jobs:
           command: lint
           config: test/ct.yaml
 
+      - name: Install Test Dependencies
+        uses: asdf-vm/actions/install@v1
+
+      - name: Install Go Modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Run Unit Tests
+        run: go test ./...
+
       - name: Create kind cluster
         uses: helm/kind-action@v1.2.0
         with:
