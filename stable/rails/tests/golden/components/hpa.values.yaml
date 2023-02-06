@@ -5,7 +5,6 @@ version: 1.2.3
 
 image:
   repository: matic/helm-charts:release-01-01-23-25
-  pullPolicy: IfNotPresent
 
 webserver:
   enabled: true

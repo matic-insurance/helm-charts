@@ -1,11 +1,10 @@
 enabled: true
-product: hpa-test
+product: ingress-test
 environment: production
 version: 1.2.3
 
 image:
   repository: matic/helm-charts:release-01-01-23-25
-  pullPolicy: IfNotPresent
 
 ingress:
   enabled: true
@@ -72,3 +71,5 @@ ingress:
         secret: matic.com-tls
       serviceName: amp-rails-websocket
 
+webserver:
+  enabled: true

@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hpa-test-rails-ingress-internal-0
+  name: ingress-test-rails-ingress-internal-0
   annotations:
     kubernetes.io/ingress.class: "internal"
     external-dns.alpha.kubernetes.io/hostname: "admin.matic.com, admin-live.matic.com, amp.matic.com, amp-live.matic.com, broker.matic.com, broker-live.matic.com"
@@ -14,13 +14,13 @@ metadata:
     nginx.ingress.kubernetes.io/server-alias: "admin.matic.com, admin-live.matic.com, amp-live.matic.com, broker.matic.com, broker-live.matic.com"
     nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
   labels:
-    app: hpa-test-rails-ingress
-    app.kubernetes.io/name: hpa-test-rails
+    app: ingress-test-rails-ingress
+    app.kubernetes.io/name: ingress-test-rails
     app.kubernetes.io/instance: rails-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/version: release-01-01-23-25
     environment: production
-    product: hpa-test
+    product: ingress-test
 spec:
   rules:
     - host: amp.matic.com
@@ -28,7 +28,7 @@ spec:
         paths:
           - backend:
               service:
-                name: hpa-test-rails
+                name: ingress-test-rails
                 port:
                   number: 3000
             path: /
@@ -42,7 +42,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hpa-test-rails-ingress-internal-1
+  name: ingress-test-rails-ingress-internal-1
   annotations:
     kubernetes.io/ingress.class: "internal"
     deny_locations: "[/uploads/document]"
@@ -55,13 +55,13 @@ metadata:
     nginx.ingress.kubernetes.io/server-alias: "admin.maticinsurance.com, broker.maticinsurance.com"
     nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
   labels:
-    app: hpa-test-rails-ingress
-    app.kubernetes.io/name: hpa-test-rails
+    app: ingress-test-rails-ingress
+    app.kubernetes.io/name: ingress-test-rails
     app.kubernetes.io/instance: rails-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/version: release-01-01-23-25
     environment: production
-    product: hpa-test
+    product: ingress-test
 spec:
   rules:
     - host: amp.maticinsurance.com
@@ -69,7 +69,7 @@ spec:
         paths:
           - backend:
               service:
-                name: hpa-test-rails
+                name: ingress-test-rails
                 port:
                   number: 3000
             path: /
@@ -83,7 +83,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hpa-test-rails-ingress-external-2
+  name: ingress-test-rails-ingress-external-2
   annotations:
     kubernetes.io/ingress.class: "external"
     external-dns.alpha.kubernetes.io/hostname: "ams360.matic.com"
@@ -91,13 +91,13 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
     nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"
   labels:
-    app: hpa-test-rails-ingress
-    app.kubernetes.io/name: hpa-test-rails
+    app: ingress-test-rails-ingress
+    app.kubernetes.io/name: ingress-test-rails
     app.kubernetes.io/instance: rails-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/version: release-01-01-23-25
     environment: production
-    product: hpa-test
+    product: ingress-test
 spec:
   rules:
     - host: ams360.matic.com
@@ -105,7 +105,7 @@ spec:
         paths:
           - backend:
               service:
-                name: hpa-test-rails
+                name: ingress-test-rails
                 port:
                   number: 3000
             path: /api/ams360/notification_events
@@ -119,7 +119,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hpa-test-rails-ingress-internal-3
+  name: ingress-test-rails-ingress-internal-3
   annotations:
     kubernetes.io/ingress.class: "internal"
     external-dns.alpha.kubernetes.io/hostname: "broker-wss.matic.com"
@@ -131,13 +131,13 @@ metadata:
     nginx.ingress.kubernetes.io/server-snippet: |
       location /uploads/document { deny all; }
   labels:
-    app: hpa-test-rails-ingress
-    app.kubernetes.io/name: hpa-test-rails
+    app: ingress-test-rails-ingress
+    app.kubernetes.io/name: ingress-test-rails
     app.kubernetes.io/instance: rails-test
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/version: release-01-01-23-25
     environment: production
-    product: hpa-test
+    product: ingress-test
 spec:
   rules:
     - host: broker-wss.matic.com
