@@ -1,0 +1,83 @@
+---
+# Source: rails/templates/hpa-worker.yaml
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-test-rails-worker-default-autoscaling
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hpa-test-rails-worker-default
+  minReplicas: 4
+  maxReplicas: 16
+  metrics:
+  - type: External
+    external:
+      metric:
+        name: sidekiq.queue.size
+        selector:
+          matchLabels:
+            environment: production
+            product: origin
+      target:
+        type: Value
+        value: 500
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 3600
+---
+# Source: rails/templates/hpa-webserver.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-test-rails-webserver-autoscaling
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hpa-test-rails-webserver
+  maxReplicas: 10
+  minReplicas: 3
+  metrics:
+  - type: External
+    external:
+      metric:
+        name: datadogmetric@production:amp-p95-latency
+      target:
+        type: Value
+        value: 1000m
+  - type: External
+    external:
+      metric:
+        name: datadogmetric@production:amp-sum-requests-last-minute
+      target:
+        averageValue: 1000
+        type: AverageValue
+  behavior:
+    scaleDown:
+      policies:
+      - periodSeconds: 300
+        type: Pods
+        value: 1
+    scaleUp:
+      policies:
+      - periodSeconds: 60
+        type: Pods
+        value: 2
+---
+# Source: rails/templates/datadog-metric.yaml
+apiVersion: datadoghq.com/v1alpha1
+kind: DatadogMetric
+metadata:
+  name: amp-p95-latency
+spec:
+  query: p95:trace.nginx.handle{env:production,resource_name:/,service:amp-nginx,!http.status_code:101}.rollup(avg, 60)
+---
+# Source: rails/templates/datadog-metric.yaml
+apiVersion: datadoghq.com/v1alpha1
+kind: DatadogMetric
+metadata:
+  name: amp-sum-requests-last-minute
+spec:
+  query: sum:trace.nginx.handle.hits{env:production,service:amp-nginx}.as_count().rollup(sum, 60)

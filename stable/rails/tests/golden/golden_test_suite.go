@@ -44,7 +44,7 @@ func (s *GoldenTestSuite) RenderTemplates() string {
     namespace := s.Release + strings.ToLower(random.UniqueId())
     options := &helm.Options{
         KubectlOptions: k8s.NewKubectlOptions("test", "", namespace),
-        ValuesFiles:    append([]string{s.ChartPath + "/values.yaml"}, s.ValuesFiles...),
+        ValuesFiles:    s.ValuesFiles,
     }
     template := helm.RenderTemplate(s.T(), options, s.ChartPath, s.Release, s.Templates)
     template = stripRandomData(template)
