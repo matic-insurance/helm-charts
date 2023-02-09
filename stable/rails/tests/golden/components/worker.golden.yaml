@@ -1,0 +1,138 @@
+---
+# Source: rails/templates/deployment-worker.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workers-test-rails-worker-default
+  labels:
+    app: workers-test-rails-worker
+    app.kubernetes.io/name: workers-test-rails
+    app.kubernetes.io/instance: rails-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: release-01-01-23-25
+    environment: production
+    product: workers-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workers-test-rails-worker
+      app.kubernetes.io/name: workers-test-rails
+      app.kubernetes.io/instance: rails-test
+      environment: production
+      product: workers-test
+  minReadySeconds: 1
+  progressDeadlineSeconds: 120
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: workers-test-rails-worker
+        app.kubernetes.io/name: workers-test-rails
+        app.kubernetes.io/instance: rails-test
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: release-01-01-23-25
+        environment: production
+        product: workers-test
+      annotations:
+        rollme: "123abc"
+    spec:
+      containers:
+      - name: workers-test-rails-worker
+        image: matic/helm-charts:release-01-01-23-25
+        imagePullPolicy: IfNotPresent
+        command: ["sh","-c","bundle exec sidekiq --concurrency 19"]
+        env:
+        - name: SENTRY_RELEASE
+          value: "workers-test-release-01-01-23-25"
+        startupProbe:
+          exec:
+            command: [/app/ops/scripts/check_sidekiq.sh]
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 15
+          successThreshold: 1
+          failureThreshold: 20
+        readinessProbe:
+          exec:
+            command: [/app/ops/scripts/check_sidekiq.sh]
+          initialDelaySeconds: 10
+          timeoutSeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          failureThreshold: 10
+        resources:
+          limits:
+            cpu: 300m
+            memory: 700Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        fsGroup: 100
+        runAsUser: 100
+---
+# Source: rails/templates/deployment-worker.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workers-test-rails-worker-karafka
+  labels:
+    app: workers-test-rails-worker
+    app.kubernetes.io/name: workers-test-rails
+    app.kubernetes.io/instance: rails-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: release-01-01-23-25
+    environment: production
+    product: workers-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workers-test-rails-worker
+      app.kubernetes.io/name: workers-test-rails
+      app.kubernetes.io/instance: rails-test
+      environment: production
+      product: workers-test
+  minReadySeconds: 1
+  progressDeadlineSeconds: 120
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: workers-test-rails-worker
+        app.kubernetes.io/name: workers-test-rails
+        app.kubernetes.io/instance: rails-test
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: release-01-01-23-25
+        environment: production
+        product: workers-test
+      annotations:
+        rollme: "123abc"
+    spec:
+      containers:
+      - name: workers-test-rails-worker
+        image: matic/helm-charts:release-01-01-23-25
+        imagePullPolicy: IfNotPresent
+        command: ["sh","-c","bundle exec karafka server"]
+        env:
+        - name: SENTRY_RELEASE
+          value: "workers-test-release-01-01-23-25"
+        resources:
+          limits:
+            cpu: 300m
+            memory: 700Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        fsGroup: 100
+        runAsUser: 100

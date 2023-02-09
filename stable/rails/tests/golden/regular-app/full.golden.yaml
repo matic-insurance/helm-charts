@@ -1,0 +1,495 @@
+---
+# Source: rails/templates/service-webserver.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: olb-rails
+  labels:
+    app: olb-rails-webserver
+    app.kubernetes.io/name: olb-rails
+    app.kubernetes.io/instance: rails-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: release-01-01-23-25
+    environment: production
+    product: olb
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9292
+    targetPort: 9292
+    protocol: TCP
+  selector:
+    app: olb-rails-webserver
+    app.kubernetes.io/name: olb-rails
+    app.kubernetes.io/instance: rails-test
+    environment: production
+    product: olb
+---
+# Source: rails/templates/deployment-webserver.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: olb-rails-webserver
+  labels:
+    app: olb-rails-webserver
+    app.kubernetes.io/name: olb-rails
+    app.kubernetes.io/instance: rails-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: release-01-01-23-25
+    environment: production
+    product: olb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: olb-rails-webserver
+      app.kubernetes.io/name: olb-rails
+      app.kubernetes.io/instance: rails-test
+      environment: production
+      product: olb
+  minReadySeconds: 1
+  progressDeadlineSeconds: 60
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: olb-rails-webserver
+        app.kubernetes.io/name: olb-rails
+        app.kubernetes.io/instance: rails-test
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: release-01-01-23-25
+        environment: production
+        product: olb
+      annotations:
+        rollme: "123abc"
+    spec:
+      serviceAccountName: olb
+      containers:
+      - name: olb-rails-webserver
+        image: matic/olb:release-01-01-23-25
+        imagePullPolicy: IfNotPresent
+        command: ["sh","-c","bundle exec puma -t 8:8"]
+        ports:
+        - containerPort: 9292
+        env:
+        - name: SENTRY_RELEASE
+          value: "olb-release-01-01-23-25"
+        - name: PORT
+          value: "9292"
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: DD_VERSION
+          value: "release-01-01-23-25"
+        - name: TEST
+          value: VALUE
+        envFrom:
+        - secretRef:
+           name: olb-envvars
+        volumeMounts:
+          - name: olb-app-config-app-settings-local-yml-vol
+            mountPath: /app/config/app_settings.local.yml
+            subPath: app_settings.local.yml
+            readOnly: true
+          - name: dynamic-sa-token
+            mountPath: /var/run/secrets/tokens
+            readOnly: true
+        startupProbe:
+          httpGet:
+            path: /healthz/webserver
+            port: 9292
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 15
+          successThreshold: 1
+          failureThreshold: 20
+        readinessProbe:
+          httpGet:
+            path: /healthz/webserver
+            port: 9292
+          initialDelaySeconds: 10
+          timeoutSeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          failureThreshold: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz/webserver
+            port: 9292
+          initialDelaySeconds: 20
+          timeoutSeconds: 20
+          periodSeconds: 60
+          successThreshold: 1
+          failureThreshold: 10
+        resources:
+          limits:
+            cpu: 300m
+            memory: 700Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+      volumes:
+        - name: olb-app-config-app-settings-local-yml-vol
+          secret:
+            secretName: olb-app-config-app-settings-local-yml
+        - name: dynamic-sa-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                path: dynamic-sa-token
+                expirationSeconds: 600
+---
+# Source: rails/templates/deployment-worker.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: olb-rails-worker-default
+  labels:
+    app: olb-rails-worker
+    app.kubernetes.io/name: olb-rails
+    app.kubernetes.io/instance: rails-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: release-01-01-23-25
+    environment: production
+    product: olb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: olb-rails-worker
+      app.kubernetes.io/name: olb-rails
+      app.kubernetes.io/instance: rails-test
+      environment: production
+      product: olb
+  minReadySeconds: 1
+  progressDeadlineSeconds: 60
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: olb-rails-worker
+        app.kubernetes.io/name: olb-rails
+        app.kubernetes.io/instance: rails-test
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: release-01-01-23-25
+        environment: production
+        product: olb
+      annotations:
+        rollme: "123abc"
+    spec:
+      serviceAccountName: olb
+      containers:
+      - name: olb-rails-worker
+        image: matic/olb:release-01-01-23-25
+        imagePullPolicy: IfNotPresent
+        command: ["sh","-c","bundle exec sidekiq --concurrency 19"]
+        env:
+        - name: SENTRY_RELEASE
+          value: "olb-release-01-01-23-25"
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: DD_VERSION
+          value: "release-01-01-23-25"
+        envFrom:
+        - secretRef:
+           name: olb-envvars
+        volumeMounts:
+          - name: olb-app-config-app-settings-local-yml-vol
+            mountPath: /app/config/app_settings.local.yml
+            subPath: app_settings.local.yml
+            readOnly: true
+          - name: dynamic-sa-token
+            mountPath: /var/run/secrets/tokens
+            readOnly: true
+        startupProbe:
+          exec:
+            command: [/app/ops/scripts/check_sidekiq.sh]
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 15
+          successThreshold: 1
+          failureThreshold: 20
+        readinessProbe:
+          exec:
+            command: [/app/ops/scripts/check_sidekiq.sh]
+          initialDelaySeconds: 10
+          timeoutSeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          failureThreshold: 10
+        resources:
+          limits:
+            cpu: 300m
+            memory: 700Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+      volumes:
+        - name: olb-app-config-app-settings-local-yml-vol
+          secret:
+            secretName: olb-app-config-app-settings-local-yml
+        - name: dynamic-sa-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                path: dynamic-sa-token
+                expirationSeconds: 600
+---
+# Source: rails/templates/deployment-worker.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: olb-rails-worker-karafka
+  labels:
+    app: olb-rails-worker
+    app.kubernetes.io/name: olb-rails
+    app.kubernetes.io/instance: rails-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: release-01-01-23-25
+    environment: production
+    product: olb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: olb-rails-worker
+      app.kubernetes.io/name: olb-rails
+      app.kubernetes.io/instance: rails-test
+      environment: production
+      product: olb
+  minReadySeconds: 1
+  progressDeadlineSeconds: 60
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: olb-rails-worker
+        app.kubernetes.io/name: olb-rails
+        app.kubernetes.io/instance: rails-test
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: release-01-01-23-25
+        environment: production
+        product: olb
+      annotations:
+        rollme: "123abc"
+    spec:
+      serviceAccountName: olb
+      containers:
+      - name: olb-rails-worker
+        image: matic/olb:release-01-01-23-25
+        imagePullPolicy: IfNotPresent
+        command: ["sh","-c","bundle exec karafka server"]
+        env:
+        - name: SENTRY_RELEASE
+          value: "olb-release-01-01-23-25"
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: DD_VERSION
+          value: "release-01-01-23-25"
+        envFrom:
+        - secretRef:
+           name: olb-envvars
+        volumeMounts:
+          - name: olb-app-config-app-settings-local-yml-vol
+            mountPath: /app/config/app_settings.local.yml
+            subPath: app_settings.local.yml
+            readOnly: true
+          - name: dynamic-sa-token
+            mountPath: /var/run/secrets/tokens
+            readOnly: true
+        resources:
+          limits:
+            cpu: 300m
+            memory: 700Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+      volumes:
+        - name: olb-app-config-app-settings-local-yml-vol
+          secret:
+            secretName: olb-app-config-app-settings-local-yml
+        - name: dynamic-sa-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                path: dynamic-sa-token
+                expirationSeconds: 600
+---
+# Source: rails/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: olb-rails-ingress-internal-0
+  annotations:
+    kubernetes.io/ingress.class: "internal"
+    external-dns.alpha.kubernetes.io/hostname: "olb.matic.link"
+    external-dns.alpha.kubernetes.io/ttl: "60"
+    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+  labels:
+    app: olb-rails-ingress
+    app.kubernetes.io/name: olb-rails
+    app.kubernetes.io/instance: rails-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: release-01-01-23-25
+    environment: production
+    product: olb
+spec:
+  rules:
+    - host: olb.matic.link
+      http:
+        paths:
+          - backend:
+              service:
+                name: olb-rails
+                port:
+                  number: 9292
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - olb.matic.link
+      secretName: matic.link-tls
+---
+# Source: rails/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: olb-rails-ingress-external-1
+  annotations:
+    kubernetes.io/ingress.class: "external"
+    external-dns.alpha.kubernetes.io/hostname: "olb.matic.com"
+    external-dns.alpha.kubernetes.io/ttl: "60"
+    nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
+    nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "2"
+    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location /admin { deny all; }
+  labels:
+    app: olb-rails-ingress
+    app.kubernetes.io/name: olb-rails
+    app.kubernetes.io/instance: rails-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: release-01-01-23-25
+    environment: production
+    product: olb
+spec:
+  rules:
+    - host: olb.matic.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: olb-rails
+                port:
+                  number: 9292
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - olb.matic.com
+      secretName: matic.com-tls
+---
+# Source: rails/templates/service-account.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: olb
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/resource-policy": keep
+automountServiceAccountToken: true
+---
+# Source: rails/templates/migrations.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: olb-rails-migrations
+  labels:
+    app: olb-rails-migrations
+    app.kubernetes.io/name: olb-rails
+    app.kubernetes.io/instance: rails-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: release-01-01-23-25
+    environment: production
+    product: olb
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: olb-rails-migrations
+        app.kubernetes.io/name: olb-rails
+        app.kubernetes.io/instance: rails-test
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: release-01-01-23-25
+        environment: production
+        product: olb
+    spec:
+      serviceAccountName: olb
+      containers:
+      - name: olb-rails-migrations-0
+        image: matic/olb:release-01-01-23-25
+        command: ["sh","-c","bundle exec rake db:migrate db:seed"]
+        
+        env:
+        - name: SENTRY_RELEASE
+          value: "olb-release-01-01-23-25"
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        envFrom:
+        - secretRef:
+           name: olb-envvars
+        volumeMounts:
+          - name: olb-migrations-app-config-app-settings-local-vol
+            mountPath: /app/config/app_settings.local.yml
+            subPath: app_settings.local.yml
+            readOnly: true
+          - name: dynamic-sa-token
+            mountPath: /var/run/secrets/tokens
+            readOnly: true
+      restartPolicy: Never
+      dnsPolicy: ClusterFirst
+      volumes:
+        - name: olb-migrations-app-config-app-settings-local-vol
+          secret:
+            secretName: olb-migrations-app-config-app-settings-local-yml
+        - name: dynamic-sa-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                path: dynamic-sa-token
+                expirationSeconds: 600

@@ -1,0 +1,36 @@
+enabled: true
+product: webserver-test
+environment: production
+version: 1.2.3
+
+image:
+  repository: matic/helm-charts:release-01-01-23-25
+
+webserver:
+  enabled: true
+  command: "bundle exec puma -t 8:8"
+  replicaCount: 2
+  port: 9292
+  resources:
+    requests:
+      memory: 200Mi
+      cpu: 100m
+    limits:
+      memory: 700Mi
+      cpu: 300m
+  startupProbe:
+    enabled: true
+    path: /healthz/webserver
+    port: 9292
+  readinessProbe:
+    enabled: true
+    path: /healthz/webserver
+    port: 9292
+  livenessProbe:
+    enabled: true
+    path: /healthz/webserver
+    port: 9292
+  autoscaling:
+    enabled: false
+  lifecycle:
+    enabled: false

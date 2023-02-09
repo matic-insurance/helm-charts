@@ -1,0 +1,17 @@
+enabled: true
+product: migrations-test
+environment: production
+version: 1.2.3
+
+image:
+  repository: matic/helm-charts:release-01-01-23-25
+
+migrations:
+  enabled: true
+  commands:
+    - "bundle exec rake db:migrate"
+  annotations:
+    golden: test
+
+webserver:
+  enabled: false

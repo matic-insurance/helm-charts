@@ -1,0 +1,39 @@
+---
+# Source: rails/templates/migrations.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrations-test-rails-migrations
+  labels:
+    app: migrations-test-rails-migrations
+    app.kubernetes.io/name: migrations-test-rails
+    app.kubernetes.io/instance: rails-test
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: release-01-01-23-25
+    environment: production
+    product: migrations-test
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+    golden: "test"
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: migrations-test-rails-migrations
+        app.kubernetes.io/name: migrations-test-rails
+        app.kubernetes.io/instance: rails-test
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: release-01-01-23-25
+        environment: production
+        product: migrations-test
+    spec:
+      containers:
+      - name: migrations-test-rails-migrations-0
+        image: matic/helm-charts:release-01-01-23-25
+        command: ["sh","-c","bundle exec rake db:migrate"]
+        
+        
+      restartPolicy: Never
+      dnsPolicy: ClusterFirst
