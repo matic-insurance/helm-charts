@@ -1,12 +1,26 @@
 {{ if (and .Values.webserver.enabled .Values.webserver.autoscaling.enabled) -}}
 {{- range $index, $list := .Values.webserver.autoscaling.metrics }}
----
+--- # Webserver autoscaling
 apiVersion: datadoghq.com/v1alpha1
 kind: DatadogMetric
 metadata:
   name: {{ .name }}
 spec:
   query: {{ .query }}
-
 {{- end }}
+{{- end }}
+{{- range $index, $worker := $.Values.workers }}
+  {{- if $worker.enabled }}
+    {{- if $worker.autoscaling.enabled }}
+      {{- range $index, $list := $worker.autoscaling.metrics }}
+--- # Worker autoscaling
+apiVersion: datadoghq.com/v1alpha1
+kind: DatadogMetric
+metadata:
+  name: {{ .name }}
+spec:
+  query: {{ .query }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}
