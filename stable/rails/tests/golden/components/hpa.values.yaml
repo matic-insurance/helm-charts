@@ -46,19 +46,24 @@ workers:
       maxReplicas: 16
       type: External
       metrics:
-        external:
-          metric:
-            name: sidekiq.queue.size
-            selector:
-              matchLabels:
-                product: origin
-                environment: production
+        - name: amp-sidekiq-queue-size
+          query: avg:sidekiq.queue.size{product:amp,queue_name:default}
           target:
-            type: Value
-            value: 500
+            type: AverageValue
+            value: 1000
       behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 15
+          policies:
+            - type: Pods
+              value: 2
+              periodSeconds: 60
         scaleDown:
-          stabilizationWindowSeconds: 3600
+          stabilizationWindowSeconds: 180
+          policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 300
     startupProbe:
       enabled: false
     readinessProbe:
@@ -73,7 +78,16 @@ workers:
     command: "bundle exec karafka server"
     replicaCount: 1
     autoscaling:
-      enabled: false
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 3
+      type: External
+      metrics:
+        - name: amp-kafka-queue-size
+          query: avg:aws.kafka.sum_offset_lag{consumer_group:amp_default}
+          target:
+            type: AverageValue
+            value: 100
     startupProbe:
       enabled: false
     readinessProbe:
