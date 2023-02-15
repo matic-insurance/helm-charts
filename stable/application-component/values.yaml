@@ -8,7 +8,7 @@ environment: staging
 # Application version
 version: '0.0.0'
 
-# Pod image configuration
+# Docker image configuration
 image:
   # Repo where image tags are located
   repository: bitnami/ruby
@@ -19,20 +19,37 @@ image:
   # Custom secret to authenticate pulling from private registries
   pullSecret: ""
 
+# Pod configurations
+pod:
+  # Custom annotations to be added to the pod
+  annotations: {}
+
+  # Security context configuration for pod. No need to change
+  securityContext:
+    fsGroup: 100
+    runAsUser: 100
+
+  # Pod resources. Must be changed
+  resources:
+    # Minimal requirements for pod
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    # Maximum resources for pod
+    limits:
+      memory: 256Mi
+      cpu: 200m
+
+  # Scheduling options
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  topologySpreadConstraints: {}
+
+
+
 replicaCount: 1
 
-podAnnotations: {}
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
 service:
   type: ClusterIP
@@ -54,17 +71,6 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
 
 autoscaling:
   enabled: false
@@ -73,11 +79,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-nodeSelector: {}
 
-tolerations: []
-
-affinity: {}
 
 serviceAccount:
   # Specifies whether a service account should be created

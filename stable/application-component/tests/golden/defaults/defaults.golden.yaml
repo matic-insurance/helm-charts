@@ -48,11 +48,10 @@ spec:
     spec:
       serviceAccountName: myproduct
       securityContext:
-        {}
+        fsGroup: 100
+        runAsUser: 100
       containers:
         - name: application-component
-          securityContext:
-            {}
           image: "bitnami/ruby:0.0.0"
           imagePullPolicy: IfNotPresent
           ports:
@@ -68,7 +67,12 @@ spec:
               path: /
               port: http
           resources:
-            {}
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
 ---
 # Source: application-component/templates/tests/test-connection.yaml
 apiVersion: v1

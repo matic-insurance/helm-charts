@@ -1,21 +1,4 @@
 ---
-# Source: application-component/templates/serviceaccount.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: myproduct
-  labels:
-    app.kubernetes.io/name: myproduct
-    app.kubernetes.io/instance: myproduct-webserver
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: webserver
-    app.kubernetes.io/part-of: myproduct
-    app.kubernetes.io/version: "0.0.0"
-  annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-weight": "-5"
-    "helm.sh/resource-policy": keep
----
 # Source: application-component/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -42,8 +25,8 @@ spec:
     spec:
       serviceAccountName: myproduct
       securityContext:
-        fsGroup: 100
-        runAsUser: 100
+        fsGroup: 1000
+        runAsUser: 1000
       containers:
         - name: application-component
           image: "bitnami/ruby:0.0.0"
@@ -62,8 +45,44 @@ spec:
               port: http
           resources:
             limits:
+              cpu: 400m
+              memory: 512Mi
+            requests:
               cpu: 200m
               memory: 256Mi
-            requests:
-              cpu: 100m
-              memory: 128Mi
+      nodeSelector:
+        disktype: ssd
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: another-node-label-key
+                operator: In
+                values:
+                - another-node-label-value
+            weight: 1
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: topology.kubernetes.io/zone
+                operator: In
+                values:
+                - antarctica-east1
+                - antarctica-west1
+      tolerations:
+        - effect: NoSchedule
+          key: key1
+          operator: Equal
+          value: value1
+        - effect: NoExecute
+          key: key2
+          operator: Equal
+          value: value2
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: myproduct-webserver
+          maxSkew: 1
+          topologyKey: lifecycle
+          whenUnsatisfiable: DoNotSchedule
