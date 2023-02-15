@@ -20,6 +20,7 @@ spec:
   template:
     metadata:
       annotations:
+        rollme: "123abc"
         test: true
       labels:
         app.kubernetes.io/name: myproduct

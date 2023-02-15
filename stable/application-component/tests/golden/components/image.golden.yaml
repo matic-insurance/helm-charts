@@ -19,6 +19,8 @@ spec:
       app.kubernetes.io/instance: myproduct-webserver
   template:
     metadata:
+      annotations:
+        rollme: "123abc"
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-webserver

@@ -16,10 +16,11 @@ spec:
       {{- include "application-component.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.pod.annotations }}
       annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+        {{- with .Values.pod.annotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
       labels:
         {{- include "application-component.selectorLabels" . | nindent 8 }}
         {{- if .Values.datadog.enabled }}
