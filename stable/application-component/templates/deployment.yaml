@@ -9,14 +9,14 @@ metadata:
     {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.pod.replicas }}
   {{- end }}
   selector:
     matchLabels:
       {{- include "application-component.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.pod.annotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -26,7 +26,7 @@ spec:
         {{- include "application-component.datadog-labels" . | nindent 8 }}
         {{- end }}
     spec:
-      {{- if ne .Values.image.pullSecret "" }}
+      {{- if .Values.image.pullSecret }}
       imagePullSecrets:
         - name: {{ .Values.image.pullSecret }}
       {{- end }}
@@ -36,7 +36,22 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.version }}"
+          {{- if .Values.pod.command }}
+          command: ["sh","-c","{{ .Values.pod.command }}"]
+          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.pod.env }}
+          env:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          {{- with .Values.pod.envFrom }}
+          envFrom:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          {{- with .Values.pod.volumeMounts }}
+          volumeMounts:
+{{ toYaml . | indent 12 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 80

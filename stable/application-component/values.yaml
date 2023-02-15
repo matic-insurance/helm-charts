@@ -21,6 +21,26 @@ image:
 
 # Pod configurations
 pod:
+  # Command to execute inside of container `bundle exec puma`
+  command: ""
+  # Number of pods to run. Ignored when autoscaling enabled
+  replicas: 1
+
+  # Additional environment variables in k8s format:
+  # - name: TEST
+  #   value: true
+  env: []
+
+  # Additional environment variables to mount from config map or secrets:
+  # - secretRef:
+  #   name: test-secret-envvars
+  envFrom: []
+
+  # Additional volumes to mount
+  # - name: test-vol
+  #   mountPath: /app/config/test
+  volumeMounts: []
+
   # Custom annotations to be added to the pod
   annotations: {}
 
@@ -45,11 +65,6 @@ pod:
   tolerations: []
   affinity: {}
   topologySpreadConstraints: {}
-
-
-
-replicaCount: 1
-
 
 service:
   type: ClusterIP
