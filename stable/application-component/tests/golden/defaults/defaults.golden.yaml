@@ -1,0 +1,98 @@
+---
+# Source: application-component/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-component-test-application-component
+  labels:
+    app.kubernetes.io/name: application-component
+    app.kubernetes.io/instance: app-component-test
+    app.kubernetes.io/version: "0.0.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: application-component/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-component-test-application-component
+  labels:
+    app.kubernetes.io/name: application-component
+    app.kubernetes.io/instance: app-component-test
+    app.kubernetes.io/version: "0.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: application-component
+    app.kubernetes.io/instance: app-component-test
+---
+# Source: application-component/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-component-test-application-component
+  labels:
+    app.kubernetes.io/name: application-component
+    app.kubernetes.io/instance: app-component-test
+    app.kubernetes.io/version: "0.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: application-component
+      app.kubernetes.io/instance: app-component-test
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: application-component
+        app.kubernetes.io/instance: app-component-test
+    spec:
+      serviceAccountName: app-component-test-application-component
+      securityContext:
+        {}
+      containers:
+        - name: application-component
+          securityContext:
+            {}
+          image: "nginx:0.0.0"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {}
+---
+# Source: application-component/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "app-component-test-application-component-test-connection"
+  labels:
+    app.kubernetes.io/name: application-component
+    app.kubernetes.io/instance: app-component-test
+    app.kubernetes.io/version: "0.0.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['app-component-test-application-component:80']
+  restartPolicy: Never
