@@ -39,6 +39,10 @@ func TestGoldenTemplates(t *testing.T) {
 	        GoldenFileName: "defaults/defaults.golden.yaml",
 	        ValuesFiles: []string{"defaults/defaults.values.yaml"},
 	    },
+	    {
+	        GoldenFileName: "datadog/full.golden.yaml",
+	        ValuesFiles: []string{"datadog/full.values.yaml"},
+	    },
 	}
 
 	for _, testCase := range testCases {

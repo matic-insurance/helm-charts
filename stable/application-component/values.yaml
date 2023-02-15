@@ -86,3 +86,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+datadog:
+  enabled: false

@@ -34,6 +34,14 @@ helm.sh/chart: {{ include "application-component.chart" . }}
 {{- end }}
 
 {{/*
+Datadog unfied tags: https://docs.datadoghq.com/getting_started/tagging/unified_service_tagging/?tab=kubernetes
+*/}}
+{{- define "application-component.datadog-labels" -}}
+tags.datadoghq.com/env: {{ .Values.environment }}
+tags.datadoghq.com/service: {{ .Values.application }}
+tags.datadoghq.com/version: {{ .Values.version | quote }}
+{{- end }}
+{{/*
 Selector labels
 */}}
 {{- define "application-component.selectorLabels" -}}

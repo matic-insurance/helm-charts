@@ -4,6 +4,9 @@ metadata:
   name: {{ include "application-component.fullname" . }}
   labels:
     {{- include "application-component.labels" . | nindent 4 }}
+    {{- if .Values.datadog.enabled }}
+    {{- include "application-component.datadog-labels" . | nindent 4 }}
+    {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -19,6 +22,9 @@ spec:
       {{- end }}
       labels:
         {{- include "application-component.selectorLabels" . | nindent 8 }}
+        {{- if .Values.datadog.enabled }}
+        {{- include "application-component.datadog-labels" . | nindent 8 }}
+        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
