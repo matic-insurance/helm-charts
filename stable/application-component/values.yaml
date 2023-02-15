@@ -8,6 +8,7 @@ environment: staging
 # Application version
 version: '0.0.0'
 
+# Pod image configuration
 image:
   # Repo where image tags are located
   repository: bitnami/ruby
@@ -15,8 +16,8 @@ image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the Values.version.
   tag: ""
-
-imagePullSecrets: []
+  # Custom secret to authenticate pulling from private registries
+  pullSecret: ""
 
 replicaCount: 1
 

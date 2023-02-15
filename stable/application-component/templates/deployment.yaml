@@ -26,9 +26,9 @@ spec:
         {{- include "application-component.datadog-labels" . | nindent 8 }}
         {{- end }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- if ne .Values.image.pullSecret "" }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+        - name: {{ .Values.image.pullSecret }}
       {{- end }}
       serviceAccountName: {{ include "application-component.serviceAccountName" . }}
       securityContext:
@@ -37,7 +37,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.version }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
