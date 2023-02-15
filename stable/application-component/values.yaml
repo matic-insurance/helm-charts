@@ -3,18 +3,20 @@
 application: myproduct
 # Application component that is deployed
 component: webserver
+# Application environment that it is running in
+environment: staging
+# Application version
+version: '0.0.0'
 
 image:
   # Repo where image tags are located
   repository: bitnami/ruby
   # How image should be pulled from registry
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
+  # Overrides the image tag whose default is the Values.version.
   tag: ""
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created

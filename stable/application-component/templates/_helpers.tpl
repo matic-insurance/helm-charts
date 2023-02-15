@@ -2,7 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "application-component.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- .Values.application | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 
 {{/*
@@ -11,16 +11,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "application-component.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
+{{- printf "%s-%s"  .Values.application .Values.component | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 
 {{/*
@@ -34,12 +25,12 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "application-component.labels" -}}
-helm.sh/chart: {{ include "application-component.chart" . }}
 {{ include "application-component.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/component: {{ .Values.component }}
+app.kubernetes.io/part-of: {{ .Values.application }}
+app.kubernetes.io/version: {{ .Values.version | quote }}
+helm.sh/chart: {{ include "application-component.chart" . }}
 {{- end }}
 
 {{/*
@@ -47,7 +38,7 @@ Selector labels
 */}}
 {{- define "application-component.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "application-component.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/instance: {{ include "application-component.fullname" . }}
 {{- end }}
 
 {{/*
