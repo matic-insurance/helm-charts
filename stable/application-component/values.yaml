@@ -1,13 +1,13 @@
 # Default values for application-component.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# Application name
 application: myproduct
+# Application component that is deployed
 component: webserver
 
-replicaCount: 1
-
 image:
-  repository: nginx
+  # Repo where image tags are located
+  repository: bitnami/ruby
+  # How image should be pulled from registry
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -24,6 +24,8 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
+
+replicaCount: 1
 
 podAnnotations: {}
 

@@ -60,7 +60,7 @@ spec:
         - name: application-component
           securityContext:
             {}
-          image: "nginx:0.0.0"
+          image: "bitnami/ruby:0.0.0"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
