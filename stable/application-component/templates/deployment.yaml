@@ -42,10 +42,7 @@ spec:
           {{- end }}
           {{- if .Values.service.enabled }}
           ports:
-            {{- range $name, $port := .Values.service.ports }}
-            - containerPort: {{ $port }}
-              name: {{ $name }}
-            {{- end }}
+            - containerPort: {{ .Values.service.port }}
           {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- with .Values.pod.env }}

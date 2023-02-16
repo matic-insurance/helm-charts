@@ -34,9 +34,6 @@ spec:
           image: "bitnami/ruby:0.0.0"
           ports:
             - containerPort: 9292
-              name: http
-            - containerPort: 9293
-              name: websocket
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -77,10 +74,6 @@ spec:
       targetPort: 9292
       protocol: TCP
       name: http
-    - port: 9293
-      targetPort: 9293
-      protocol: TCP
-      name: websocket
   selector:
     app.kubernetes.io/name: myproduct
     app.kubernetes.io/instance: myproduct-webserver

@@ -72,9 +72,8 @@ service:
   enabled: false
   # Type of the service
   type: ClusterIP
-  # Pod ports to listen and expose
-  ports:
-    http: 9292
+  # Pod port to listen and expose
+  port: 9292
 
 ingress:
   enabled: false

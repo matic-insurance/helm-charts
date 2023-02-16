@@ -72,5 +72,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['myproduct-webserver:']
+      args: ['myproduct-webserver:9292']
   restartPolicy: Never

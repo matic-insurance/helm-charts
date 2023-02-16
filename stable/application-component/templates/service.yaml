@@ -8,12 +8,10 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    {{- range $name, $port := .Values.service.ports }}
-    - port: {{ $port }}
-      targetPort: {{ $port }}
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }}
       protocol: TCP
-      name: {{ $name }}
-    {{- end }}
+      name: http
   selector:
     {{- include "application-component.selectorLabels" . | nindent 4 }}
   {{- end }}
