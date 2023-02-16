@@ -32,6 +32,11 @@ spec:
       containers:
         - name: application-component
           image: "bitnami/ruby:0.0.0"
+          ports:
+            - containerPort: 9292
+              name: http
+            - containerPort: 9293
+              name: websocket
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -53,11 +58,11 @@ spec:
               cpu: 100m
               memory: 128Mi
 ---
-# Source: application-component/templates/tests/test-connection.yaml
+# Source: application-component/templates/service.yaml
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
-  name: "myproduct-webserver-test-connection"
+  name: myproduct-webserver
   labels:
     app.kubernetes.io/name: myproduct
     app.kubernetes.io/instance: myproduct-webserver
@@ -65,12 +70,17 @@ metadata:
     app.kubernetes.io/component: webserver
     app.kubernetes.io/part-of: myproduct
     app.kubernetes.io/version: "0.0.0"
-  annotations:
-    "helm.sh/hook": test
 spec:
-  containers:
-    - name: wget
-      image: busybox
-      command: ['wget']
-      args: ['myproduct-webserver:']
-  restartPolicy: Never
+  type: ClusterIP
+  ports:
+    - port: 9292
+      targetPort: 9292
+      protocol: TCP
+      name: http
+    - port: 9293
+      targetPort: 9293
+      protocol: TCP
+      name: websocket
+  selector:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver

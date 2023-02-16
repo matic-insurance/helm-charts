@@ -40,6 +40,13 @@ spec:
           {{- if .Values.pod.command }}
           command: ["sh","-c","{{ .Values.pod.command }}"]
           {{- end }}
+          {{- if .Values.service.enabled }}
+          ports:
+            {{- range $name, $port := .Values.service.ports }}
+            - containerPort: {{ $port }}
+              name: {{ $name }}
+            {{- end }}
+          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- with .Values.pod.env }}
           env:

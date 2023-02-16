@@ -63,6 +63,11 @@ func TestGoldenTemplates(t *testing.T) {
 	        ValuesFiles: []string{"components/pod-runtime.values.yaml"},
 	        Templates: []string{"templates/deployment.yaml"},
 	    },
+	    {
+	        GoldenFileName: "components/service.golden.yaml",
+	        ValuesFiles: []string{"components/service.values.yaml"},
+	        Templates: []string{"templates/deployment.yaml", "templates/service.yaml"},
+	    },
 	}
 
 	for _, testCase := range testCases {

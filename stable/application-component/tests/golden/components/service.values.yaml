@@ -1,0 +1,5 @@
+service:
+  enabled: true
+  ports:
+    http: 9292
+    websocket: 9293

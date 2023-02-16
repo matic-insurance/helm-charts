@@ -1,27 +1,4 @@
 ---
-# Source: application-component/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myproduct-webserver
-  labels:
-    app.kubernetes.io/name: myproduct
-    app.kubernetes.io/instance: myproduct-webserver
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: webserver
-    app.kubernetes.io/part-of: myproduct
-    app.kubernetes.io/version: "0.0.0"
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: myproduct
-    app.kubernetes.io/instance: myproduct-webserver
----
 # Source: application-component/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -101,5 +78,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['myproduct-webserver:80']
+      args: ['myproduct-webserver:']
   restartPolicy: Never

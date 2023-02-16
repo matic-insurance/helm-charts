@@ -1,3 +1,4 @@
+{{- if .Values.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,9 +8,12 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    {{- range $name, $port := .Values.service.ports }}
+    - port: {{ $port }}
+      targetPort: {{ $port }}
       protocol: TCP
-      name: http
+      name: {{ $name }}
+    {{- end }}
   selector:
     {{- include "application-component.selectorLabels" . | nindent 4 }}
+  {{- end }}

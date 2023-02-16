@@ -66,9 +66,15 @@ pod:
   affinity: {}
   topologySpreadConstraints: {}
 
+# Service configuration for the pods
 service:
+  # Should we create the service
+  enabled: false
+  # Type of the service
   type: ClusterIP
-  port: 80
+  # Pod ports to listen and expose
+  ports:
+    http: 9292
 
 ingress:
   enabled: false
