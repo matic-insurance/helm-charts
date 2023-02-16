@@ -6,10 +6,24 @@ kind: Ingress
 metadata:
   name: {{ include "application-component.fullname" $ }}-ingress-{{ $ingress.type }}-{{ $index }}
   annotations:
-    kubernetes.io/ingress.class: {{ $ingress.type | quote  }}
-    {{- range $key, $value := $ingress.annotations }}
+    kubernetes.io/ingress.class: {{ required "Ingress type must be specified" $ingress.type | quote  }}
+    {{- /* Get default annotations and merge them with one provided in config. Empty annotations discarded*/}}
+    {{- $ingress_annotations := $ingress.annotations | default dict }}
+    {{- $annotations := merge $ingress_annotations $.Values.ingress.default.annotations }}
+    {{- range $key, $value := $annotations }}
+    {{- if $value }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
+    {{- end }}
+    {{- /* Insert dns annotations related to host/additional host unless previously defined */}}
+    {{- $additional_hosts := $ingress.additional_hosts | default $.Values.ingress.default.additional_hosts }}
+    {{- if and ($additional_hosts) (not (hasKey $ingress_annotations "external-dns.alpha.kubernetes.io/hostname")) }}
+    nginx.ingress.kubernetes.io/server-alias: {{ $additional_hosts | join ", " | quote }}
+    {{- end }}
+    {{- if not (hasKey $ingress_annotations "external-dns.alpha.kubernetes.io/hostname") }}
+    external-dns.alpha.kubernetes.io/hostname: {{ append $additional_hosts $ingress.host | join ", " | quote }}
+    {{- end }}
+    {{- /* Insert custom server snippet and/or deny locations */}}
     {{- if or $ingress.deny_locations $ingress.server_snippet }}
     nginx.ingress.kubernetes.io/server-snippet: |
     {{- if $ingress.deny_locations }}
@@ -25,21 +39,23 @@ metadata:
     {{- include "application-component.labels" $ | nindent 4 }}
 spec:
   rules:
-    - host: {{ $ingress.host }}
+    - host: {{ required "Ingress host must be specified" $ingress.host }}
       http:
         paths:
+          {{- range $path := ($ingress.allow_locations | default $.Values.ingress.default.allow_locations) }}
           - backend:
               service:
                 name: {{ include "application-component.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
-            path: {{ default "/" $ingress.path }}
-            pathType: {{ default "Prefix" $ingress.pathType }}
+            path: {{ $path }}
+            pathType: Prefix
+          {{- end }}
 {{- if $ingress.tls }}
   tls:
     - hosts:
         - {{ $ingress.host }}
       secretName: {{ $ingress.tls }}
 {{- end }}
-{{ end }}
+{{- end }}
 {{- end }}

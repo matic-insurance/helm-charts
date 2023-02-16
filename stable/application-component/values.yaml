@@ -87,6 +87,17 @@ ingress:
       additional_hosts: []
       # Type of ingress: external(public)/internal(private)
       type: external
+      # List of allowed locations. Default "/"
+      allow_locations:
+        - /api
+        - /upload
+      # List of locations to block. Default empty
+      deny_locations:
+        - /admin
+        - /internal_api
+        - /etc
+      # Secret that have certificate information. Otherwise it tls will be disabled
+      tls: myhost1.local-tls
       # Additional annotations for ingress
       annotations: {}
       # Custom nginx snippets
@@ -98,20 +109,12 @@ ingress:
         location /foldername-b {
           proxy_set_header X-Forwarded-Host $http_host;
         }
-      # List of allowed locations
-      allow_locations:
-        - /api
-        - /upload
-      # List of locations to block
-      deny_locations:
-        - /admin
-        - /internal_api
-        - /etc
-      # Secret that have certificate information. Otherwise it tls will be disabled
-      tls: myhost1.local-tls
 
-  # Default ingress configurations
+  # Default ingress settings for every ingress instance
   default:
+    allow_locations:
+      - /
+    additional_hosts: []
     annotations:
       nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
       nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent

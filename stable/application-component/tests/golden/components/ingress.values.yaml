@@ -6,74 +6,54 @@ ingress:
   enabled: true
   list:
     - host: amp.matic.com
+      additional_hosts:
+        - admin.matic.com
+        - admin-live.matic.com
+        - amp-live.matic.com
+        - broker.matic.com
+        - broker-live.matic.com
       type: internal
-      annotations:
-        nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
-        nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent
-        nginx.ingress.kubernetes.io/proxy-next-upstream-tries: 8
-        nginx.ingress.kubernetes.io/proxy-body-size: 256m
-        nginx.ingress.kubernetes.io/server-alias: "admin.matic.com, admin-live.matic.com, amp-live.matic.com, broker.matic.com, broker-live.matic.com"
-        external-dns.alpha.kubernetes.io/hostname: "admin.matic.com, admin-live.matic.com, amp.matic.com, amp-live.matic.com, broker.matic.com, broker-live.matic.com"
-        external-dns.alpha.kubernetes.io/ttl: "60"
+      server_snippet: |
+        location /secret/document { deny all; }
       deny_locations:
         - /uploads/document
       tls: matic.com-tls
 
     - host: amp.maticinsurance.com
+      additional_hosts:
+        - admin.maticinsurance.com
+        - broker.maticinsurance.com
       type: internal
       annotations:
-        nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
-        nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent
-        nginx.ingress.kubernetes.io/proxy-next-upstream-tries: 8
-        nginx.ingress.kubernetes.io/proxy-body-size: 256m
-        nginx.ingress.kubernetes.io/server-alias: "admin.maticinsurance.com, broker.maticinsurance.com"
         nginx.ingress.kubernetes.io/configuration-snippet: |
           rewrite ^/crm/static/css/main.(.+).chunk.css$ /crm/static/css/main.chunk.css break;
           rewrite ^/crm/static/css/2.(.+).chunk.css$ /crm/static/css/2.chunk.css break;
           opentracing_tag "service.name" "amp-nginx";
-        external-dns.alpha.kubernetes.io/hostname: "admin.maticinsurance.com, amp.maticinsurance.com, broker.maticinsurance.com"
-        external-dns.alpha.kubernetes.io/ttl: "60"
-        deny_locations:
+      deny_locations:
           - /uploads/document
       tls: maticinsurance.com-tls
 
     - host: ams360.matic.com
       type: external
-      path: /api/ams360/notification_events
+      allow_locations:
+        - /api/ams360/notification_events
       annotations:
-        nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent
-        nginx.ingress.kubernetes.io/proxy-next-upstream-tries: 8
         external-dns.alpha.kubernetes.io/hostname: ams360.matic.com
-        external-dns.alpha.kubernetes.io/ttl: "60"
+        nginx.ingress.kubernetes.io/ssl-ciphers: ""
       tls: matic.com-tls
 
-    - host: scim.matic.com
+    - host: amp-notifications.matic.com
       type: external
-      path: /scim/v2
-      annotations:
-        nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
-        nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent
-        nginx.ingress.kubernetes.io/proxy-next-upstream-tries: 8
-        external-dns.alpha.kubernetes.io/hostname: scim.matic.com
-        external-dns.alpha.kubernetes.io/ttl: "60"
+      allow_locations:
+        - /scim/v2
+        - /api/mailgun/docusign_envelope
+      deny_locations:
+        - /scim/v2/internal
       tls: matic.com-tls
 
-    - host: mailgun.matic.com
+    - host: no-tls.matic.com
       type: external
-      path: /api/mailgun/docusign_envelope
+      allow_locations:
+        - /api/plain
       annotations:
-        nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
-        nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent
-        nginx.ingress.kubernetes.io/proxy-next-upstream-tries: 8
-        external-dns.alpha.kubernetes.io/hostname: mailgun.matic.com
-        external-dns.alpha.kubernetes.io/ttl: "60"
-      tls: matic.com-tls
-
-    - host: notls.matic.com
-      type: external
-      path: /api/plain
-      annotations:
-        nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent
-        nginx.ingress.kubernetes.io/proxy-next-upstream-tries: 8
         external-dns.alpha.kubernetes.io/hostname: notls.matic.com
-        external-dns.alpha.kubernetes.io/ttl: "60"
