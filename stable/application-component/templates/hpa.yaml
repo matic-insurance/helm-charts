@@ -1,5 +1,5 @@
-{{- if .Values.autoscaling.enabled }}
-apiVersion: autoscaling/v2beta1
+{{ if (and .Values.autoscaling.enabled) -}}
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "application-component.fullname" . }}
@@ -12,17 +12,29 @@ spec:
     name: {{ include "application-component.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  {{ if .Values.autoscaling.metrics -}}
   metrics:
-    {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
+  {{- range $index, $metric := .Values.autoscaling.metrics }}
+    {{- if eq $metric.type "Datadog"}}
+    - type: External
+      external:
+        metric:
+          name: datadogmetric@{{ $.Values.environment  }}:{{ $metric.name }}
+        target:
+        {{- toYaml $metric.target | nindent 10 }}
+    {{- else if eq $metric.type "External" }}
+    - type: External
+      external:
+        {{- toYaml $metric.external | nindent 8 }}
+    {{- else if eq $metric.type "Resource" }}
     - type: Resource
       resource:
-        name: cpu
-        targetAverageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+        {{- toYaml $metric.resource | nindent 8 }}
     {{- end }}
-    {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
-    - type: Resource
-      resource:
-        name: memory
-        targetAverageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
-    {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- with .Values.autoscaling.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}

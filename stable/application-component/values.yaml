@@ -122,14 +122,42 @@ ingress:
       nginx.ingress.kubernetes.io/proxy-body-size: 256m
       external-dns.alpha.kubernetes.io/ttl: "60"
 
+# Autoscaling configuration
 autoscaling:
   enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
-
+  # Maximum number of pods to scale
+  maxReplicas: 6
+  # Min number of pods to scale
+  minReplicas: 2
+  # Metrics that used to evaluate target pods
+  metrics: {}
+    # Example datadog metrics
+#    - name: origin-p95-latency
+#      query: p95:trace.nginx.handle{env:production,resource_name:/,service:origin-nginx}.rollup(avg, 60)
+#      target:
+#        type: Value # desiredReplicas = ceil[currentReplicas * ( currentMetricValue / desiredMetricValue )] - number of pods should double if latency is 1 second
+#        value: 500m # p95 nginx latency goes above 500ms
+#    - name: origin-requests-per-second
+#      query: ewma_10(avg:nginx_ingress.controller.requests{service:origin-rails}.as_count().rollup(avg, 60))
+#      target:
+#        type: AverageValue # desiredReplicas = ceil[( currentMetricValue / desiredMetricValue )] - if nginx receives 60 requests per second - it should have 5 pods to process them
+#        averageValue: 12 # Assuming every thread processing 2 requests per second, and every pod has 6 threads
+  # Autoscaling behaviour
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 15 # Scale up target selected rolling max based on rolling max of last 15 seconds
+      policies:
+        # Allows to scale up 2 pods at most every minute (periodSeconds)
+        - type: Pods
+          value: 2
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 60 # Scale down target selected based on rolling max of last minute
+      policies:
+        # Allows to scale down 1 pods at most every 3 minutes (periodSeconds)
+        - type: Pods
+          value: 1
+          periodSeconds: 180
 
 serviceAccount:
   # Specifies whether a service account should be created

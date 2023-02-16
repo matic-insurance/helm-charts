@@ -74,6 +74,11 @@ func TestGoldenTemplates(t *testing.T) {
 	        ValuesFiles: []string{"components/ingress.values.yaml"},
 	        Templates: []string{"templates/ingress.yaml", "templates/service.yaml"},
 	    },
+	    {
+	        GoldenFileName: "components/hpa.golden.yaml",
+	        ValuesFiles: []string{"components/hpa.values.yaml"},
+	        Templates: []string{"templates/hpa.yaml", "templates/datadog-metric.yaml"},
+	    },
 	}
 
 	for _, testCase := range testCases {
