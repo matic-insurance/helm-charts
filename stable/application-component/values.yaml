@@ -75,22 +75,49 @@ service:
   # Pod port to listen and expose
   port: 9292
 
+# Ingress configuration
+# Ingress will forward all requests to the service configured above. Ingress is not created when service disabled
 ingress:
   enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  # List of ingress resources to create
+  list:
+      # Domain for ingress
+    - host: myhost1.local
+      # List of additional domains to support by this ingress
+      additional_hosts: []
+      # Type of ingress: external(public)/internal(private)
+      type: external
+      # Additional annotations for ingress
+      annotations: {}
+      # Custom nginx snippets
+      server_snippet: |
+        location /foldername-a {
+          proxy_http_version 1.1;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        location /foldername-b {
+          proxy_set_header X-Forwarded-Host $http_host;
+        }
+      # List of allowed locations
+      allow_locations:
+        - /api
+        - /upload
+      # List of locations to block
+      deny_locations:
+        - /admin
+        - /internal_api
+        - /etc
+      # Secret that have certificate information. Otherwise it tls will be disabled
+      tls: myhost1.local-tls
 
+  # Default ingress configurations
+  default:
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+      nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent
+      nginx.ingress.kubernetes.io/proxy-next-upstream-tries: 8
+      nginx.ingress.kubernetes.io/proxy-body-size: 256m
+      external-dns.alpha.kubernetes.io/ttl: "60"
 
 autoscaling:
   enabled: false

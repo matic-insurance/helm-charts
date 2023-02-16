@@ -1,61 +1,45 @@
-{{- if .Values.ingress.enabled -}}
-{{- $fullName := include "application-component.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
-{{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
-  {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
-  {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
-  {{- end }}
-{{- end }}
-{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+{{ if (and .Values.service.enabled .Values.ingress.enabled) }}
+{{- range $index, $ingress := .Values.ingress.list }}
+---
 apiVersion: networking.k8s.io/v1
-{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
-apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
-apiVersion: extensions/v1beta1
-{{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
-  labels:
-    {{- include "application-component.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
+  name: {{ include "application-component.fullname" $ }}-ingress-{{ $ingress.type }}-{{ $index }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-spec:
-  {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
-  ingressClassName: {{ .Values.ingress.className }}
-  {{- end }}
-  {{- if .Values.ingress.tls }}
-  tls:
-    {{- range .Values.ingress.tls }}
-    - hosts:
-        {{- range .hosts }}
-        - {{ . | quote }}
-        {{- end }}
-      secretName: {{ .secretName }}
+    kubernetes.io/ingress.class: {{ $ingress.type | quote  }}
+    {{- range $key, $value := $ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
     {{- end }}
-  {{- end }}
+    {{- if or $ingress.deny_locations $ingress.server_snippet }}
+    nginx.ingress.kubernetes.io/server-snippet: |
+    {{- if $ingress.deny_locations }}
+    {{- range $ingress.deny_locations }}
+      location {{ . }} { deny all; }
+    {{- end }}
+    {{- end }}
+    {{- if $ingress.server_snippet }}
+{{ toYaml $ingress.server_snippet | trimAll "|" | indent 4 }}
+    {{- end }}
+    {{- end }}
+  labels:
+    {{- include "application-component.labels" $ | nindent 4 }}
+spec:
   rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ $ingress.host }}
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
-            pathType: {{ .pathType }}
-            {{- end }}
-            backend:
-              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+          - backend:
               service:
-                name: {{ $fullName }}
+                name: {{ include "application-component.fullname" $ }}
                 port:
-                  number: {{ $svcPort }}
-              {{- else }}
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
-              {{- end }}
-          {{- end }}
-    {{- end }}
+                  number: {{ $.Values.service.port }}
+            path: {{ default "/" $ingress.path }}
+            pathType: {{ default "Prefix" $ingress.pathType }}
+{{- if $ingress.tls }}
+  tls:
+    - hosts:
+        - {{ $ingress.host }}
+      secretName: {{ $ingress.tls }}
+{{- end }}
+{{ end }}
 {{- end }}
