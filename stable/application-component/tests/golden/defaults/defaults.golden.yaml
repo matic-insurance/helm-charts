@@ -62,25 +62,3 @@ spec:
             requests:
               cpu: 100m
               memory: 128Mi
----
-# Source: application-component/templates/tests/test-connection.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: "myproduct-webserver-test-connection"
-  labels:
-    app.kubernetes.io/name: myproduct
-    app.kubernetes.io/instance: myproduct-webserver
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: webserver
-    app.kubernetes.io/part-of: myproduct
-    app.kubernetes.io/version: "0.0.0"
-  annotations:
-    "helm.sh/hook": test
-spec:
-  containers:
-    - name: wget
-      image: busybox
-      command: ['wget']
-      args: ['myproduct-webserver:9292']
-  restartPolicy: Never
