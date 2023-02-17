@@ -215,14 +215,16 @@ autoscaling:
   # Autoscaling behaviour
   behavior:
     scaleUp:
-      stabilizationWindowSeconds: 15 # Scale up target selected rolling max based on rolling max of last 15 seconds
+      # Scale up target selected rolling max based on rolling max of last 15 seconds
+      stabilizationWindowSeconds: 15
       policies:
         # Allows to scale up 2 pods at most every minute (periodSeconds)
         - type: Pods
           value: 2
           periodSeconds: 60
     scaleDown:
-      stabilizationWindowSeconds: 60 # Scale down target selected based on rolling max of last minute
+      # Scale down target selected based on rolling max of last minute
+      stabilizationWindowSeconds: 60
       policies:
         # Allows to scale down 1 pods at most every 3 minutes (periodSeconds)
         - type: Pods
