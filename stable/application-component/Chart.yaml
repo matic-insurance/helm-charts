@@ -1,6 +1,7 @@
 apiVersion: v2
 name: application-component
 description: Deployment of single application component
+home: https://matic-insurance.github.io/helm-charts
 
 # A chart can be either an 'application' or a 'library' chart.
 #
