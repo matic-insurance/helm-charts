@@ -1,0 +1,132 @@
+---
+# Source: application-component/templates/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myproduct-webserver
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myproduct-webserver
+  minReplicas: 2
+  maxReplicas: 16
+  metrics:
+    - type: External
+      external:
+        metric:
+          name: datadogmetric@staging:origin-p95-latency
+        target:
+          type: Value
+          value: 500m
+    - type: External
+      external:
+        metric:
+          name: datadogmetric@staging:origin-requests-per-second
+        target:
+          averageValue: 12
+          type: AverageValue
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          averageUtilization: 60
+          type: Utilization
+    - type: External
+      external:
+        metric:
+          name: sidekiq.queue.size
+          selector:
+            matchLabels:
+              environment: production
+              product: servicing
+        target:
+          type: Value
+          value: 2000
+  behavior:
+    scaleDown:
+      policies:
+      - periodSeconds: 300
+        type: Pods
+        value: 1
+      stabilizationWindowSeconds: 180
+    scaleUp:
+      policies:
+      - periodSeconds: 60
+        type: Pods
+        value: 2
+      stabilizationWindowSeconds: 15
+---
+# Source: application-component/templates/datadog-metric.yaml
+apiVersion: datadoghq.com/v1alpha1
+kind: DatadogMetric
+metadata:
+  name: origin-p95-latency
+spec:
+  query: p95:trace.nginx.handle{env:production,resource_name:/,service:origin-nginx}.rollup(avg, 60)
+---
+# Source: application-component/templates/datadog-metric.yaml
+apiVersion: datadoghq.com/v1alpha1
+kind: DatadogMetric
+metadata:
+  name: origin-requests-per-second
+spec:
+  query: ewma_10(avg:nginx_ingress.controller.requests{service:origin-rails}.as_count().rollup(avg, 60))
+---
+# Source: application-component/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myproduct-webserver
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
+spec:
+  minReadySeconds: 1
+  progressDeadlineSeconds: 120
+  revisionHistoryLimit: 5
+  strategy:
+    rollingUpdate:
+      maxSurge: 3
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: myproduct
+      app.kubernetes.io/instance: myproduct-webserver
+  template:
+    metadata:
+      annotations:
+        rollme: "123abc"
+      labels:
+        app.kubernetes.io/name: myproduct
+        app.kubernetes.io/instance: myproduct-webserver
+    spec:
+      serviceAccountName: myproduct
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        fsGroup: 100
+        runAsUser: 100
+      containers:
+        - name: application-component
+          image: "bitnami/ruby:0.0.0"
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi

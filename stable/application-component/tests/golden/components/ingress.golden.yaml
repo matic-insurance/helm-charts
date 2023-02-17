@@ -1,0 +1,222 @@
+---
+# Source: application-component/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myproduct-webserver-ingress-internal-0
+  annotations:
+    kubernetes.io/ingress.class: "internal"
+    external-dns.alpha.kubernetes.io/ttl: "60"
+    nginx.ingress.kubernetes.io/proxy-body-size: "256m"
+    nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
+    nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"
+    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+    nginx.ingress.kubernetes.io/server-alias: "admin.matic.com, admin-live.matic.com, amp-live.matic.com, broker.matic.com, broker-live.matic.com"
+    external-dns.alpha.kubernetes.io/hostname: "admin.matic.com, admin-live.matic.com, amp-live.matic.com, broker.matic.com, broker-live.matic.com, amp.matic.com"
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location /uploads/document { deny all; }
+    
+      location /secret/document { deny all; }
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
+spec:
+  rules:
+    - host: amp.matic.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: myproduct-webserver
+                port:
+                  number: 3010
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - amp.matic.com
+      secretName: matic.com-tls
+---
+# Source: application-component/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myproduct-webserver-ingress-internal-1
+  annotations:
+    kubernetes.io/ingress.class: "internal"
+    external-dns.alpha.kubernetes.io/ttl: "60"
+    nginx.ingress.kubernetes.io/configuration-snippet: "rewrite ^/crm/static/css/main.(.+).chunk.css$ /crm/static/css/main.chunk.css break;\nrewrite ^/crm/static/css/2.(.+).chunk.css$ /crm/static/css/2.chunk.css break;\nopentracing_tag \"service.name\" \"amp-nginx\";\n"
+    nginx.ingress.kubernetes.io/proxy-body-size: "256m"
+    nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
+    nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"
+    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+    nginx.ingress.kubernetes.io/server-alias: "admin.maticinsurance.com, broker.maticinsurance.com"
+    external-dns.alpha.kubernetes.io/hostname: "admin.maticinsurance.com, broker.maticinsurance.com, amp.maticinsurance.com"
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location /uploads/document { deny all; }
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
+spec:
+  rules:
+    - host: amp.maticinsurance.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: myproduct-webserver
+                port:
+                  number: 3010
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - amp.maticinsurance.com
+      secretName: maticinsurance.com-tls
+---
+# Source: application-component/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myproduct-webserver-ingress-external-2
+  annotations:
+    kubernetes.io/ingress.class: "external"
+    external-dns.alpha.kubernetes.io/hostname: "ams360.matic.com"
+    external-dns.alpha.kubernetes.io/ttl: "60"
+    nginx.ingress.kubernetes.io/proxy-body-size: "256m"
+    nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
+    nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"
+    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
+spec:
+  rules:
+    - host: ams360.matic.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: myproduct-webserver
+                port:
+                  number: 3010
+            path: /api/ams360/notification_events
+            pathType: Prefix
+  tls:
+    - hosts:
+        - ams360.matic.com
+      secretName: matic.com-tls
+---
+# Source: application-component/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myproduct-webserver-ingress-external-3
+  annotations:
+    kubernetes.io/ingress.class: "external"
+    external-dns.alpha.kubernetes.io/ttl: "60"
+    nginx.ingress.kubernetes.io/proxy-body-size: "256m"
+    nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
+    nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"
+    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+    external-dns.alpha.kubernetes.io/hostname: "amp-notifications.matic.com"
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location /scim/v2/internal { deny all; }
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
+spec:
+  rules:
+    - host: amp-notifications.matic.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: myproduct-webserver
+                port:
+                  number: 3010
+            path: /scim/v2
+            pathType: Prefix
+          - backend:
+              service:
+                name: myproduct-webserver
+                port:
+                  number: 3010
+            path: /api/mailgun/docusign_envelope
+            pathType: Prefix
+  tls:
+    - hosts:
+        - amp-notifications.matic.com
+      secretName: matic.com-tls
+---
+# Source: application-component/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myproduct-webserver-ingress-external-4
+  annotations:
+    kubernetes.io/ingress.class: "external"
+    external-dns.alpha.kubernetes.io/hostname: "notls.matic.com"
+    external-dns.alpha.kubernetes.io/ttl: "60"
+    nginx.ingress.kubernetes.io/proxy-body-size: "256m"
+    nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
+    nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"
+    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
+spec:
+  rules:
+    - host: no-tls.matic.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: myproduct-webserver
+                port:
+                  number: 3010
+            path: /api/plain
+            pathType: Prefix
+---
+# Source: application-component/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myproduct-webserver
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3010
+      targetPort: 3010
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver

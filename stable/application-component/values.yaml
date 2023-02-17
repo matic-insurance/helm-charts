@@ -1,0 +1,244 @@
+# Default values for application-component.
+# Application name
+product: myproduct
+# Application component that is deployed
+component: webserver
+# Application environment that it is running in
+environment: staging
+# Application version
+version: '0.0.0'
+
+# Docker image configuration
+image:
+  # Repo where image tags are located
+  repository: bitnami/ruby
+  # How image should be pulled from registry
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the Values.version.
+  tag: ""
+  # Custom secret to authenticate pulling from private registries
+  pullSecret: ""
+
+# Deployment configurations
+deployment:
+  # Command to execute inside of container `bundle exec puma`
+  command: ""
+  # Number of pods to run. Ignored when autoscaling enabled
+  replicas: 1
+
+  # Additional environment variables in k8s format:
+  # - name: TEST
+  #   value: true
+  env: []
+
+  # Additional environment variables to mount from config map or secrets:
+  # - secretRef:
+  #   name: test-secret-envvars
+  envFrom: []
+
+  # Additional volumes to mount
+  # - name: test-vol
+  #   mountPath: /app/config/test
+  volumeMounts: []
+
+  # Custom annotations to be added to the pod
+  annotations: {}
+
+  # Pod resources. Must be changed
+  resources:
+    # Minimal requirements for pod
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    # Maximum resources for pod
+    limits:
+      memory: 256Mi
+      cpu: 200m
+
+  # Pod health probes configurations
+  # Check if pod successfully started
+  # Passing probe - will mark pod as alive and start sending traffic to it.
+  # Failing probe - pod killed and new one will be started
+  # Default configuration designed to wait up to 3 minutes for pod to start responding
+  startupProbe:
+    enabled: false
+    # How health will be evaluated.
+    path: /healthz/webserver
+    # Specify command if you want probe to use exec
+    command:
+    # Specify port if you want to override default service port
+#    port: 3000
+    # How long to wait before sending first probe
+    initialDelaySeconds: 1
+    # What is the timeout of request
+    timeoutSeconds: 5
+    # What is the delay between requests
+    periodSeconds: 5
+    # How many checks should be successful to mark pod alive
+    successThreshold: 1
+    # How many checks before pod considered dead
+    failureThreshold: 40
+  # Check if pod is ready to accept traffic.
+  # This probe does not restart the pod but simply removes it from accepting additional traffic
+  # Intention of readiness probe is to temporary remove pod from balancer if it was overloaded by requests
+  # Default configuration check if pod is not responding during one minute and removes it from balancer
+  readinessProbe:
+    enabled: false
+    path: /healthz/webserver
+    # Specify command if you want probe to use exec
+    command:
+    initialDelaySeconds: 0
+    timeoutSeconds: 10
+    periodSeconds: 15
+    successThreshold: 1
+    failureThreshold: 4
+  # Check if pod is alive.
+  # If pod is not alive - pod is replaced with new pod
+  # Default configuration checks if pod is not responding for 2 minutes and kills it
+  # Liveness probe has bigger timeouts and periods so k8s first remove pod from balancer and if it is not recovered - kills it.
+  livenessProbe:
+    enabled: false
+    path: /healthz/webserver
+    # Specify command if you want probe to use exec
+    command:
+    initialDelaySeconds: 60
+    timeoutSeconds: 20
+    periodSeconds: 30
+    successThreshold: 1
+    failureThreshold: 4
+
+  # Advanced deployment options
+  # How pods resolve DNS records
+  dnsPolicy: ClusterFirst
+
+  # Security context configuration for pod.
+  securityContext:
+    fsGroup: 100
+    runAsUser: 100
+
+  # Time before deployment starts checking for pod lifecycle
+  minReadySeconds: 1
+  # Time after which deployment considered failed if no progress is made
+  progressDeadlineSeconds: 120
+  # How long k8s waits for pod to terminate
+  terminationGracePeriodSeconds: 30
+  # How many old ReplicaSets for this Deployment you want to retain
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+      maxUnavailable: 1
+
+  # Scheduling options
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  topologySpreadConstraints: {}
+
+# Service configuration for the pods
+service:
+  # Should we create the service
+  enabled: false
+  # Type of the service
+  type: ClusterIP
+  # Pod port to listen and expose
+  port: 9292
+
+# Ingress configuration
+# Ingress will forward all requests to the service configured above. Ingress is not created when service disabled
+ingress:
+  enabled: false
+  # List of ingress resources to create
+  list:
+      # Domain for ingress
+    - host: myhost1.local
+      # List of additional domains to support by this ingress
+      additional_hosts: []
+      # Type of ingress: external(public)/internal(private)
+      type: external
+      # List of allowed locations. Default "/"
+      allow_locations:
+        - /api
+        - /upload
+      # List of locations to block. Default empty
+      deny_locations:
+        - /admin
+        - /internal_api
+        - /etc
+      # Secret that have certificate information. Otherwise it tls will be disabled
+      tls: myhost1.local-tls
+      # Additional annotations for ingress
+      annotations: {}
+      # Custom nginx snippets
+      server_snippet: |
+        location /foldername-a {
+          proxy_http_version 1.1;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        location /foldername-b {
+          proxy_set_header X-Forwarded-Host $http_host;
+        }
+
+  # Default ingress settings for every ingress instance
+  default:
+    allow_locations:
+      - /
+    additional_hosts: []
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+      nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent
+      nginx.ingress.kubernetes.io/proxy-next-upstream-tries: 8
+      nginx.ingress.kubernetes.io/proxy-body-size: 256m
+      external-dns.alpha.kubernetes.io/ttl: "60"
+
+# Autoscaling configuration
+autoscaling:
+  enabled: false
+  # Maximum number of pods to scale
+  maxReplicas: 6
+  # Min number of pods to scale
+  minReplicas: 2
+  # Metrics that used to evaluate target pods
+  metrics: {}
+    # Example datadog metrics
+#    - name: origin-p95-latency
+#      query: p95:trace.nginx.handle{env:production,resource_name:/,service:origin-nginx}.rollup(avg, 60)
+#      target:
+#        type: Value # desiredReplicas = ceil[currentReplicas * ( currentMetricValue / desiredMetricValue )] - number of pods should double if latency is 1 second
+#        value: 500m # p95 nginx latency goes above 500ms
+#    - name: origin-requests-per-second
+#      query: ewma_10(avg:nginx_ingress.controller.requests{service:origin-rails}.as_count().rollup(avg, 60))
+#      target:
+#        type: AverageValue # desiredReplicas = ceil[( currentMetricValue / desiredMetricValue )] - if nginx receives 60 requests per second - it should have 5 pods to process them
+#        averageValue: 12 # Assuming every thread processing 2 requests per second, and every pod has 6 threads
+  # Autoscaling behaviour
+  behavior:
+    scaleUp:
+      # Scale up target selected rolling max based on rolling max of last 15 seconds
+      stabilizationWindowSeconds: 15
+      policies:
+        # Allows to scale up 2 pods at most every minute (periodSeconds)
+        - type: Pods
+          value: 2
+          periodSeconds: 60
+    scaleDown:
+      # Scale down target selected based on rolling max of last minute
+      stabilizationWindowSeconds: 60
+      policies:
+        # Allows to scale down 1 pods at most every 3 minutes (periodSeconds)
+        - type: Pods
+          value: 1
+          periodSeconds: 180
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  enabled: false
+  # The name of the service account to use.
+  # If not set a name is generated using the name template
+  name: ""
+  # Additional Annotations to add to the service account when creating
+  annotations: {}
+
+datadog:
+  enabled: false

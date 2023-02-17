@@ -1,0 +1,59 @@
+service:
+  enabled: true
+  port: 3010
+
+ingress:
+  enabled: true
+  list:
+    - host: amp.matic.com
+      additional_hosts:
+        - admin.matic.com
+        - admin-live.matic.com
+        - amp-live.matic.com
+        - broker.matic.com
+        - broker-live.matic.com
+      type: internal
+      server_snippet: |
+        location /secret/document { deny all; }
+      deny_locations:
+        - /uploads/document
+      tls: matic.com-tls
+
+    - host: amp.maticinsurance.com
+      additional_hosts:
+        - admin.maticinsurance.com
+        - broker.maticinsurance.com
+      type: internal
+      annotations:
+        nginx.ingress.kubernetes.io/configuration-snippet: |
+          rewrite ^/crm/static/css/main.(.+).chunk.css$ /crm/static/css/main.chunk.css break;
+          rewrite ^/crm/static/css/2.(.+).chunk.css$ /crm/static/css/2.chunk.css break;
+          opentracing_tag "service.name" "amp-nginx";
+      deny_locations:
+          - /uploads/document
+      tls: maticinsurance.com-tls
+
+    - host: ams360.matic.com
+      type: external
+      allow_locations:
+        - /api/ams360/notification_events
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: ams360.matic.com
+        nginx.ingress.kubernetes.io/ssl-ciphers: ""
+      tls: matic.com-tls
+
+    - host: amp-notifications.matic.com
+      type: external
+      allow_locations:
+        - /scim/v2
+        - /api/mailgun/docusign_envelope
+      deny_locations:
+        - /scim/v2/internal
+      tls: matic.com-tls
+
+    - host: no-tls.matic.com
+      type: external
+      allow_locations:
+        - /api/plain
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: notls.matic.com

@@ -1,0 +1,58 @@
+---
+# Source: application-component/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myproduct-webserver
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
+    tags.datadoghq.com/env: staging
+    tags.datadoghq.com/service: myproduct
+    tags.datadoghq.com/version: "0.0.0"
+spec:
+  replicas: 1
+  minReadySeconds: 1
+  progressDeadlineSeconds: 120
+  revisionHistoryLimit: 5
+  strategy:
+    rollingUpdate:
+      maxSurge: 3
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: myproduct
+      app.kubernetes.io/instance: myproduct-webserver
+  template:
+    metadata:
+      annotations:
+        rollme: "123abc"
+      labels:
+        app.kubernetes.io/name: myproduct
+        app.kubernetes.io/instance: myproduct-webserver
+        tags.datadoghq.com/env: staging
+        tags.datadoghq.com/service: myproduct
+        tags.datadoghq.com/version: "0.0.0"
+    spec:
+      serviceAccountName: myproduct
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        fsGroup: 100
+        runAsUser: 100
+      containers:
+        - name: application-component
+          image: "bitnami/ruby:0.0.0"
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
