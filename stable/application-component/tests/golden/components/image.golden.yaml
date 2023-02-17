@@ -45,14 +45,6 @@ spec:
         - name: application-component
           image: "matic/olb:1.2.3"
           imagePullPolicy: Always
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           resources:
             limits:
               cpu: 200m

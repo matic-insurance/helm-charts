@@ -64,14 +64,54 @@ spec:
           volumeMounts:
 {{ toYaml . | indent 12 }}
           {{- end }}
-          livenessProbe:
+          {{- if .Values.deployment.startupProbe.enabled }}
+          startupProbe:
+            {{- if .Values.deployment.startupProbe.command }}
+            exec:
+              command: {{ .Values.deployment.startupProbe.command }}
+            {{- else }}
             httpGet:
-              path: /
-              port: http
+              path: {{ .Values.deployment.startupProbe.path }}
+              port: {{ .Values.deployment.port }}
+            {{- end}}
+            initialDelaySeconds: {{ .Values.deployment.startupProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.deployment.startupProbe.timeoutSeconds }}
+            periodSeconds: {{ .Values.deployment.startupProbe.periodSeconds }}
+            successThreshold: {{ .Values.deployment.startupProbe.successThreshold }}
+            failureThreshold: {{ .Values.deployment.startupProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.deployment.readinessProbe.enabled }}
           readinessProbe:
+            {{- if .Values.deployment.readinessProbe.command }}
+            exec:
+              command: {{ .Values.deployment.readinessProbe.command }}
+            {{- else }}
             httpGet:
-              path: /
-              port: http
+              path: {{ .Values.deployment.readinessProbe.path }}
+              port: {{ .Values.deployment.port }}
+            {{- end}}
+            initialDelaySeconds: {{ .Values.deployment.readinessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.deployment.readinessProbe.timeoutSeconds }}
+            periodSeconds: {{ .Values.deployment.readinessProbe.periodSeconds }}
+            successThreshold: {{ .Values.deployment.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.deployment.readinessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.deployment.livenessProbe.enabled }}
+          livenessProbe:
+            {{- if .Values.deployment.livenessProbe.command }}
+            exec:
+              command: {{ .Values.deployment.livenessProbe.command }}
+            {{- else }}
+            httpGet:
+              path: {{ .Values.deployment.livenessProbe.path }}
+              port: {{ .Values.deployment.port }}
+            {{- end}}
+            initialDelaySeconds: {{ .Values.deployment.livenessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.deployment.livenessProbe.timeoutSeconds }}
+            periodSeconds: {{ .Values.deployment.livenessProbe.periodSeconds }}
+            successThreshold: {{ .Values.deployment.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.deployment.livenessProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.deployment.resources | nindent 12 }}
       {{- with .Values.deployment.nodeSelector }}

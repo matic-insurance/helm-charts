@@ -45,14 +45,6 @@ spec:
           ports:
             - containerPort: 9292
           imagePullPolicy: IfNotPresent
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           resources:
             limits:
               cpu: 200m

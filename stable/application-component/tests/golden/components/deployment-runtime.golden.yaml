@@ -60,14 +60,6 @@ spec:
               name: test-vol
               readOnly: true
               subPath: /test.txt
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           resources:
             limits:
               cpu: 200m
