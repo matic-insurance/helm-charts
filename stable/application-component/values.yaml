@@ -60,6 +60,26 @@ pod:
       memory: 256Mi
       cpu: 200m
 
+  # Deployment options
+  deployment:
+    # Time before deployment starts checking for pod lifecycle
+    minReadySeconds: 1
+    # Time after which deployment considered failed if no progress is made
+    progressDeadlineSeconds: 120
+    # How many old ReplicaSets for this Deployment you want to retain
+    revisionHistoryLimit: 5
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 3
+        maxUnavailable: 1
+
+  # Misc options
+  # How pods resolve DNS records
+  dnsPolicy: ClusterFirst
+  # How long k8s waits for pod to terminate
+  terminationGracePeriodSeconds: 30
+
   # Scheduling options
   nodeSelector: {}
   tolerations: []

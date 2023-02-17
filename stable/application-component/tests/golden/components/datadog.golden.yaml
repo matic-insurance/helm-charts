@@ -16,6 +16,14 @@ metadata:
     tags.datadoghq.com/version: "0.0.0"
 spec:
   replicas: 1
+  minReadySeconds: 1
+  progressDeadlineSeconds: 120
+  revisionHistoryLimit: 5
+  strategy:
+      rollingUpdate:
+        maxSurge: 3
+        maxUnavailable: 1
+      type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/name: myproduct
@@ -32,6 +40,8 @@ spec:
         tags.datadoghq.com/version: "0.0.0"
     spec:
       serviceAccountName: myproduct
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
       securityContext:
         fsGroup: 100
         runAsUser: 100

@@ -11,6 +11,11 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.pod.replicas }}
   {{- end }}
+  minReadySeconds: {{ .Values.pod.deployment.minReadySeconds }}
+  progressDeadlineSeconds: {{ .Values.pod.deployment.progressDeadlineSeconds }}
+  revisionHistoryLimit: {{ .Values.pod.deployment.revisionHistoryLimit }}
+  strategy:
+    {{- toYaml .Values.pod.deployment.strategy | nindent 6 }}
   selector:
     matchLabels:
       {{- include "application-component.selectorLabels" . | nindent 6 }}
@@ -32,6 +37,8 @@ spec:
         - name: {{ .Values.image.pullSecret }}
       {{- end }}
       serviceAccountName: {{ include "application-component.serviceAccountName" . }}
+      dnsPolicy: {{ .Values.pod.dnsPolicy }}
+      terminationGracePeriodSeconds: {{ .Values.pod.terminationGracePeriodSeconds }}
       securityContext:
         {{- toYaml .Values.pod.securityContext | nindent 8 }}
       containers:

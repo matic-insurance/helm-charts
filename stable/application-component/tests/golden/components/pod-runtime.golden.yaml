@@ -13,6 +13,14 @@ metadata:
     app.kubernetes.io/version: "0.0.0"
 spec:
   replicas: 2
+  minReadySeconds: 1
+  progressDeadlineSeconds: 120
+  revisionHistoryLimit: 5
+  strategy:
+      rollingUpdate:
+        maxSurge: 3
+        maxUnavailable: 1
+      type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/name: myproduct
@@ -27,6 +35,8 @@ spec:
         app.kubernetes.io/instance: myproduct-webserver
     spec:
       serviceAccountName: myproduct
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
       securityContext:
         fsGroup: 100
         runAsUser: 100
