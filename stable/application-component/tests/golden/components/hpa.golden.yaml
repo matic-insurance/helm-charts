@@ -97,10 +97,10 @@ spec:
   progressDeadlineSeconds: 120
   revisionHistoryLimit: 5
   strategy:
-      rollingUpdate:
-        maxSurge: 3
-        maxUnavailable: 1
-      type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+      maxUnavailable: 1
+    type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/name: myproduct

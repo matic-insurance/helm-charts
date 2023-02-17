@@ -9,13 +9,13 @@ metadata:
     {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.pod.replicas }}
+  replicas: {{ .Values.deployment.replicas }}
   {{- end }}
-  minReadySeconds: {{ .Values.pod.deployment.minReadySeconds }}
-  progressDeadlineSeconds: {{ .Values.pod.deployment.progressDeadlineSeconds }}
-  revisionHistoryLimit: {{ .Values.pod.deployment.revisionHistoryLimit }}
+  minReadySeconds: {{ .Values.deployment.minReadySeconds }}
+  progressDeadlineSeconds: {{ .Values.deployment.progressDeadlineSeconds }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
   strategy:
-    {{- toYaml .Values.pod.deployment.strategy | nindent 6 }}
+    {{- toYaml .Values.deployment.strategy | nindent 4 }}
   selector:
     matchLabels:
       {{- include "application-component.selectorLabels" . | nindent 6 }}
@@ -23,7 +23,7 @@ spec:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
-        {{- with .Values.pod.annotations }}
+        {{- with .Values.deployment.annotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
@@ -37,30 +37,30 @@ spec:
         - name: {{ .Values.image.pullSecret }}
       {{- end }}
       serviceAccountName: {{ include "application-component.serviceAccountName" . }}
-      dnsPolicy: {{ .Values.pod.dnsPolicy }}
-      terminationGracePeriodSeconds: {{ .Values.pod.terminationGracePeriodSeconds }}
+      dnsPolicy: {{ .Values.deployment.dnsPolicy }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
       securityContext:
-        {{- toYaml .Values.pod.securityContext | nindent 8 }}
+        {{- toYaml .Values.deployment.securityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.version }}"
-          {{- if .Values.pod.command }}
-          command: ["sh","-c","{{ .Values.pod.command }}"]
+          {{- if .Values.deployment.command }}
+          command: ["sh","-c","{{ .Values.deployment.command }}"]
           {{- end }}
           {{- if .Values.service.enabled }}
           ports:
             - containerPort: {{ .Values.service.port }}
           {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.pod.env }}
+          {{- with .Values.deployment.env }}
           env:
 {{ toYaml . | indent 12 }}
           {{- end }}
-          {{- with .Values.pod.envFrom }}
+          {{- with .Values.deployment.envFrom }}
           envFrom:
 {{ toYaml . | indent 12 }}
           {{- end }}
-          {{- with .Values.pod.volumeMounts }}
+          {{- with .Values.deployment.volumeMounts }}
           volumeMounts:
 {{ toYaml . | indent 12 }}
           {{- end }}
@@ -77,20 +77,20 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.pod.resources | nindent 12 }}
-      {{- with .Values.pod.nodeSelector }}
+            {{- toYaml .Values.deployment.resources | nindent 12 }}
+      {{- with .Values.deployment.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.pod.affinity }}
+      {{- with .Values.deployment.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.pod.tolerations }}
+      {{- with .Values.deployment.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.pod.topologySpreadConstraints }}
+      {{- with .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
       {{- end }}

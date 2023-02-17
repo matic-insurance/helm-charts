@@ -17,10 +17,10 @@ spec:
   progressDeadlineSeconds: 120
   revisionHistoryLimit: 5
   strategy:
-      rollingUpdate:
-        maxSurge: 3
-        maxUnavailable: 1
-      type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+      maxUnavailable: 1
+    type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/name: myproduct
@@ -37,8 +37,8 @@ spec:
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
       securityContext:
-        fsGroup: 1000
-        runAsUser: 1000
+        fsGroup: 100
+        runAsUser: 100
       containers:
         - name: application-component
           image: "bitnami/ruby:0.0.0"

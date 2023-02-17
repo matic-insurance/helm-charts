@@ -55,13 +55,18 @@ func TestGoldenTemplates(t *testing.T) {
 	        Templates: []string{"templates/deployment.yaml"},
 	    },
 	    {
-	        GoldenFileName: "components/pod-scheduling.golden.yaml",
-	        ValuesFiles: []string{"components/pod-scheduling.values.yaml"},
+	        GoldenFileName: "components/deployment-scheduling.golden.yaml",
+	        ValuesFiles: []string{"components/deployment-scheduling.values.yaml"},
 	        Templates: []string{"templates/deployment.yaml"},
 	    },
 	    {
-	        GoldenFileName: "components/pod-runtime.golden.yaml",
-	        ValuesFiles: []string{"components/pod-runtime.values.yaml"},
+	        GoldenFileName: "components/deployment-runtime.golden.yaml",
+	        ValuesFiles: []string{"components/deployment-runtime.values.yaml"},
+	        Templates: []string{"templates/deployment.yaml"},
+	    },
+	    {
+	        GoldenFileName: "components/deployment-advanced.golden.yaml",
+	        ValuesFiles: []string{"components/deployment-advanced.values.yaml"},
 	        Templates: []string{"templates/deployment.yaml"},
 	    },
 	    {
