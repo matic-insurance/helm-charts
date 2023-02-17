@@ -2,7 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "application-component.name" -}}
-{{- .Values.application | trunc 63 | trimSuffix "-" -}}
+{{- .Values.product | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 
 {{/*
@@ -11,7 +11,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "application-component.fullname" -}}
-{{- printf "%s-%s"  .Values.application .Values.component | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s"  .Values.product .Values.component | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 
 {{/*
@@ -28,7 +28,7 @@ Common labels
 {{ include "application-component.selectorLabels" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/component: {{ .Values.component }}
-app.kubernetes.io/part-of: {{ .Values.application }}
+app.kubernetes.io/part-of: {{ .Values.product }}
 app.kubernetes.io/version: {{ .Values.version | quote }}
 helm.sh/chart: {{ include "application-component.chart" . }}
 {{- end }}
@@ -38,7 +38,7 @@ Datadog unfied tags: https://docs.datadoghq.com/getting_started/tagging/unified_
 */}}
 {{- define "application-component.datadog-labels" -}}
 tags.datadoghq.com/env: {{ .Values.environment }}
-tags.datadoghq.com/service: {{ .Values.application }}
+tags.datadoghq.com/service: {{ .Values.product }}
 tags.datadoghq.com/version: {{ .Values.version | quote }}
 {{- end }}
 {{/*

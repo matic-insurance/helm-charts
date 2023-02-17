@@ -60,10 +60,6 @@ spec:
               name: test-vol
               readOnly: true
               subPath: /test.txt
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
           livenessProbe:
             httpGet:
               path: /

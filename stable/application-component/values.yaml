@@ -1,6 +1,6 @@
 # Default values for application-component.
 # Application name
-application: myproduct
+product: myproduct
 # Application component that is deployed
 component: webserver
 # Application environment that it is running in

@@ -64,10 +64,6 @@ spec:
           volumeMounts:
 {{ toYaml . | indent 12 }}
           {{- end }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
           livenessProbe:
             httpGet:
               path: /
