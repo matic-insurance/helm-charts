@@ -1,0 +1,13 @@
+# Configuration for chart-testing lint. Two configs are required as we do not want to test install of library charts
+# See https://github.com/helm/chart-testing/issues/237
+remote: origin
+target-branch: master
+validate-maintainers: false
+chart-dirs:
+  - stable
+# Do not test library chart
+excluded-charts:
+  - application-helpers
+chart-repos:
+  - stable=https://matic-insurance.github.io/helm-charts
+helm-extra-args: --timeout 10m

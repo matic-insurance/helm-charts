@@ -1,0 +1,4 @@
+global:
+  application:
+    environmentVariables:
+      TEST: "true"
