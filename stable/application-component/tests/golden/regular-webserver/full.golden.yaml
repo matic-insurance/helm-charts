@@ -74,6 +74,13 @@ spec:
           ports:
             - containerPort: 9292
           imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: olb-configs-environment
+          volumeMounts:
+            - name: olb-configs-runtime
+              mountPath: /
+              readOnly: true
           startupProbe:
             httpGet:
               path: /healthz/webserver
@@ -108,6 +115,10 @@ spec:
             requests:
               cpu: 100m
               memory: 200Mi
+      volumes:
+        - name: olb-configs-runtime-vol
+          secret:
+            secretName: olb-configs-runtime
 ---
 # Source: application-component/templates/hpa.yaml
 apiVersion: autoscaling/v2
@@ -134,7 +145,7 @@ spec:
         metric:
           name: datadogmetric@production:olb-requests-per-second
         target:
-          averageValue: 12
+          averageValue: 12000m
           type: AverageValue
   behavior:
     scaleDown:

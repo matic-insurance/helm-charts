@@ -54,15 +54,28 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- with .Values.deployment.env }}
           env:
-{{ toYaml . | indent 12 }}
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.global.application.environmentVariables .Values.deployment.envFrom }}
+          envFrom:
+          {{- with .Values.global.application.environmentVariables }}
+            - secretRef:
+                name: {{ include "application-helpers.configs.environment-variables.volume-name" $ }}
           {{- end }}
           {{- with .Values.deployment.envFrom }}
-          envFrom:
-{{ toYaml . | indent 12 }}
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- end }}
+          {{- if or .Values.global.application.configFiles .Values.deployment.volumeMounts }}
+          volumeMounts:
+          {{- with .Values.global.application.configFiles }}
+            - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
+              mountPath: /
+              readOnly: true
           {{- end }}
           {{- with .Values.deployment.volumeMounts }}
-          volumeMounts:
-{{ toYaml . | indent 12 }}
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- end }}
           {{- if .Values.deployment.startupProbe.enabled }}
           startupProbe:
@@ -114,6 +127,12 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.deployment.resources | nindent 12 }}
+      {{- with .Values.global.application.configFiles }}
+      volumes:
+        - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}-vol
+          secret:
+            secretName: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
+      {{- end }}
       {{- with .Values.deployment.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
