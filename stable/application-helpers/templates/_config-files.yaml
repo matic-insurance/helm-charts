@@ -24,9 +24,9 @@ In final applicaiton chart in order to mount files one should:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "application-helpers.config-files.volume-name" (merge (dict "deployment" "runtime") $) }}
+  name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
   labels:
-    {{ include "application-helpers.labels" $ | nindent 4 }}
+    {{- include "application-helpers.labels" $ | nindent 4 }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-weight": "5"
@@ -37,13 +37,15 @@ data:
   {{- $filePath := printf "%s%s" (tpl $.Values.global.application.configFilePathTemplate $) $path }}
   {{$path | quote}}: {{ $.Files.Get $filePath | b64enc }}
 {{- end -}}
+{{- end -}}
+{{- with $.Values.global.application.configFiles }}
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "application-helpers.config-files.volume-name" (merge (dict "deployment" "migration") $) }}
+  name: {{ include "application-helpers.configs.files-migration.volume-name" $ }}
   labels:
-    {{ include "application-helpers.labels" $ | nindent 4 }}
+    {{- include "application-helpers.labels" $ | nindent 4 }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-weight": "-5"

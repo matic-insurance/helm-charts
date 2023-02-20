@@ -6,7 +6,6 @@ kind: Secret
 metadata:
   name: olb-configs-environment
   labels:
-    
     app.kubernetes.io/name: olb
     app.kubernetes.io/instance: olb-configs
     app.kubernetes.io/managed-by: Helm
@@ -28,7 +27,6 @@ kind: Secret
 metadata:
   name: olb-configs-runtime
   labels:
-    
     app.kubernetes.io/name: olb
     app.kubernetes.io/instance: olb-configs
     app.kubernetes.io/managed-by: Helm
@@ -42,13 +40,14 @@ metadata:
 type: Opaque
 data:
   "/regular-app/config.ini": W2dsb2JhbF0KdGVzdCA9ICJ0cnVlIg==
-  "/regular-app/config.txt": SnVzdCByYW5kb20gdGV4dCBmaWxl---
+  "/regular-app/config.txt": SnVzdCByYW5kb20gdGV4dCBmaWxl
+---
+# Source: application-config/templates/tests/secrets-files.yaml
 apiVersion: v1
 kind: Secret
 metadata:
   name: olb-configs-migration
   labels:
-    
     app.kubernetes.io/name: olb
     app.kubernetes.io/instance: olb-configs
     app.kubernetes.io/managed-by: Helm

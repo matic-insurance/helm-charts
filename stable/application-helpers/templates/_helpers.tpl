@@ -58,4 +58,26 @@ Returns: String
 {{ include "application-helpers.name" . }}-configs-{{ .deployment }}
 {{- end }}
 
+{{/*
+Returns name of environment variables secret/volume
+*/}}
+{{- define "application-helpers.configs.environment-variables.volume-name" -}}
+{{ include "application-helpers.name" . }}-configs-environment
+{{- end }}
+
+{{/*
+Returns name of runtime config files secret/volume
+*/}}
+{{- define "application-helpers.configs.files-runtime.volume-name" -}}
+{{ include "application-helpers.name" . }}-configs-runtime
+{{- end }}
+
+{{/*
+Returns name of migration config files secret/volume
+*/}}
+{{- define "application-helpers.configs.files-migration.volume-name" -}}
+{{ include "application-helpers.name" . }}-configs-migration
+{{- end }}
+
+
 
