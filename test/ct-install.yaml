@@ -5,9 +5,9 @@ target-branch: master
 validate-maintainers: false
 chart-dirs:
   - stable
-# Do not test library chart
 excluded-charts:
-  - application-helpers
+  - application-helpers # Do not install library chart it fails on delete as no resources created
+  - application-config # Do not install conig chart. It somehow does not create resources and fails on delete
 chart-repos:
   - stable=https://matic-insurance.github.io/helm-charts
 helm-extra-args: --timeout 10m

@@ -9,8 +9,8 @@ global:
       ANOTHER_ENV: "false"
 
     configFiles:
-      config_txt: /regular-app/config.txt
-      config_ini: /regular-app/config.ini
+      - /regular-app/config.txt
+      - /regular-app/config.ini
 
     configFilePathTemplate: "tests/{{ $.Values.customFolder }}" # test path templating
 

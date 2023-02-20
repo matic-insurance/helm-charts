@@ -39,8 +39,8 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation
 type: Opaque
 data:
-  "/regular-app/config.ini": W2dsb2JhbF0KdGVzdCA9ICJ0cnVlIg==
   "/regular-app/config.txt": SnVzdCByYW5kb20gdGV4dCBmaWxl
+  "/regular-app/config.ini": W2dsb2JhbF0KdGVzdCA9ICJ0cnVlIg==
 ---
 # Source: application-config/templates/tests/secrets-files.yaml
 apiVersion: v1
@@ -60,5 +60,5 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation
 type: Opaque
 data:
-  "/regular-app/config.ini": W2dsb2JhbF0KdGVzdCA9ICJ0cnVlIg==
   "/regular-app/config.txt": SnVzdCByYW5kb20gdGV4dCBmaWxl
+  "/regular-app/config.ini": W2dsb2JhbF0KdGVzdCA9ICJ0cnVlIg==
