@@ -1,7 +1,11 @@
-product: olb
-component: webserver
-environment: production
-version: release-1.2.3
+global:
+  application:
+    product: olb
+    environment: production
+    version: release-1.2.3
+
+application:
+  component: webserver
 
 image:
   repository: matic/olb

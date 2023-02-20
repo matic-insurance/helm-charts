@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "application-component.fullname" . }}
+  name: {{ include "application-helpers.fullname" . }}
   labels:
-    {{- include "application-component.labels" . | nindent 4 }}
+    {{- include "application-helpers.labels" . | nindent 4 }}
     {{- if .Values.datadog.enabled }}
-    {{- include "application-component.datadog-labels" . | nindent 4 }}
+    {{- include "application-helpers.datadog-labels" . | nindent 4 }}
     {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
@@ -18,7 +18,7 @@ spec:
     {{- toYaml .Values.deployment.strategy | nindent 4 }}
   selector:
     matchLabels:
-      {{- include "application-component.selectorLabels" . | nindent 6 }}
+      {{- include "application-helpers.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -27,23 +27,23 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "application-component.selectorLabels" . | nindent 8 }}
+        {{- include "application-helpers.selectorLabels" . | nindent 8 }}
         {{- if .Values.datadog.enabled }}
-        {{- include "application-component.datadog-labels" . | nindent 8 }}
+        {{- include "application-helpers.datadog-labels" . | nindent 8 }}
         {{- end }}
     spec:
       {{- if .Values.image.pullSecret }}
       imagePullSecrets:
         - name: {{ .Values.image.pullSecret }}
       {{- end }}
-      serviceAccountName: {{ include "application-component.serviceAccountName" . }}
+      serviceAccountName: {{ include "application-components.serviceAccountName" . }}
       dnsPolicy: {{ .Values.deployment.dnsPolicy }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
       securityContext:
         {{- toYaml .Values.deployment.securityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.version }}"
+          image: "{{ .Values.image.repository }}:{{ default .Values.global.application.version .Values.image.tag }}"
           {{- if .Values.deployment.command }}
           command: ["sh","-c","{{ .Values.deployment.command }}"]
           {{- end }}

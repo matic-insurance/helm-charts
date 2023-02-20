@@ -4,7 +4,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "application-component.fullname" $ }}-ingress-{{ $ingress.type }}-{{ $index }}
+  name: {{ include "application-helpers.fullname" $ }}-ingress-{{ $ingress.type }}-{{ $index }}
   annotations:
     kubernetes.io/ingress.class: {{ required "Ingress type must be specified" $ingress.type | quote  }}
     {{- /* Get default annotations and merge them with one provided in config. Empty annotations discarded*/}}
@@ -36,7 +36,7 @@ metadata:
     {{- end }}
     {{- end }}
   labels:
-    {{- include "application-component.labels" $ | nindent 4 }}
+    {{- include "application-helpers.labels" $ | nindent 4 }}
 spec:
   rules:
     - host: {{ required "Ingress host must be specified" $ingress.host }}
@@ -45,7 +45,7 @@ spec:
           {{- range $path := ($ingress.allow_locations | default $.Values.ingress.default.allow_locations) }}
           - backend:
               service:
-                name: {{ include "application-component.fullname" $ }}
+                name: {{ include "application-helpers.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
             path: {{ $path }}
