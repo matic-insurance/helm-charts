@@ -16,4 +16,3 @@ global:
 application:
   # Application component that is deployed
   component: webserver
-

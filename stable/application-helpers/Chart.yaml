@@ -1,6 +1,7 @@
 apiVersion: v2
 name: application-helpers
 description: Library with helper functions for application development
+home: https://matic-insurance.github.io/helm-charts
 
 # A chart can be either an 'application' or a 'library' chart.
 #
