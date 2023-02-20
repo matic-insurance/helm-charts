@@ -1,3 +1,4 @@
+# Configuration for chart-testing lint. Two configs are required as we do not want to test install of library charts
 remote: origin
 target-branch: master
 validate-maintainers: false

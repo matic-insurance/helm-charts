@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "application-component.fullname" . }}
+  name: {{ include "application-helpers.fullname" . }}
   labels:
-    {{- include "application-component.labels" . | nindent 4 }}
+    {{- include "application-helpers.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -13,5 +13,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "application-component.selectorLabels" . | nindent 4 }}
+    {{- include "application-helpers.selectorLabels" . | nindent 4 }}
   {{- end }}

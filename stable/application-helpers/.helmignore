@@ -21,7 +21,3 @@
 .idea/
 *.tmproj
 .vscode/
-
-# Custom files
-ci/
-tests/

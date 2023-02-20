@@ -1,0 +1,34 @@
+global:
+  # Default values for application charts.
+  application:
+    # Product name
+    product: myproduct
+    # Application environment that it is running in
+    environment: staging
+    # Application version
+    version: '0.0.0'
+
+    # Environment variables to be added to every application container
+    environmentVariables: {}
+
+    # Config files to be mounted to application containers
+    # Files will be mounted at the path specified here and resolved from local disk by adding `configFilePathTemplate`
+    # Example:
+    #   /app/config/test.yaml on local disk
+    #   will be resolved at: CHART/configs/{{.Values.global.application.environment}}/app/config/test.yaml
+    #   and mounted at: /app/config/test.yaml
+    # In order for this to work final application chart should create config-files.yaml and invoke config files template:
+    #  `{{ include "application-helpers.config-files.tpl" . }}`
+    configFiles: []
+
+    # Path to config files on local disk.
+    # All files on local disk will be resolved by evaluating this template and adding configFile path.
+    configFilePathTemplate: "configs/{{ $.Values.global.environment }}"
+
+application:
+  # Application component that is deployed
+  component: configs
+
+# Test Settings do not use in production
+tests:
+  renderSecrets:

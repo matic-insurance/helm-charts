@@ -1,12 +1,15 @@
-# Default values for application-component.
-# Application name
-product: myproduct
-# Application component that is deployed
-component: webserver
-# Application environment that it is running in
-environment: staging
-# Application version
-version: '0.0.0'
+global:
+  # Default values for application charts.
+  application:
+    # Product name
+    product: myproduct
+    # Application environment that it is running in
+    environment: staging
+    # Application version
+    version: '0.0.0'
+
+application:
+  component: webserver
 
 # Docker image configuration
 image:

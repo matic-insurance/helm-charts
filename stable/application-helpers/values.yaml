@@ -1,0 +1,18 @@
+global:
+  # Default values for application charts.
+  application:
+    # Product name
+    product: myproduct
+    # Application environment that it is running in
+    environment: staging
+    # Application version
+    version: '0.0.0'
+
+    # Config files to be mounted to application containers
+    configFiles: []
+    # Path to config files on local disk.
+    configFilePathTemplate: "configs/{{ $.Values.global.environment }}"
+
+application:
+  # Application component that is deployed
+  component: webserver

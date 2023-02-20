@@ -1,7 +1,21 @@
-product: olb
-component: webserver
-environment: production
-version: release-1.2.3
+global:
+  application:
+    product: olb
+    environment: production
+    version: release-1.2.3
+
+    environmentVariables:
+      RAILS_ENV: production
+      RAILS_SERVE_STATIC_FILES: "true"
+      VAULT_NAMESPACE: admin
+      VAULT_ROLE: olb
+      VAULT_ADDR: https://vault-st1.matic.link
+      VAULT_AUTH_BACKEND: staging-eks-3
+    configFiles:
+      - /app/config/app_settings.local.yml
+
+application:
+  component: webserver
 
 image:
   repository: matic/olb
@@ -53,7 +67,7 @@ autoscaling:
       query: ewma_10(avg:nginx_ingress.controller.requests{service:olb-webserver}.as_count().rollup(avg, 60))
       target:
         type: AverageValue
-        averageValue: 12
+        averageValue: 12000m
 
 datadog:
   enabled: true

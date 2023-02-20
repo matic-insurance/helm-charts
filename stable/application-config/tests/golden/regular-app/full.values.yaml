@@ -1,0 +1,20 @@
+global:
+  application:
+    product: olb
+    environment: "test"
+    version: "1.2.3"
+
+    environmentVariables:
+      TEST: "true"
+      ANOTHER_ENV: "false"
+
+    configFiles:
+      - /regular-app/config.txt
+      - /regular-app/config.ini
+
+    configFilePathTemplate: "tests/{{ $.Values.customFolder }}" # test path templating
+
+customFolder: "golden"
+
+tests:
+  renderSecrets: true
