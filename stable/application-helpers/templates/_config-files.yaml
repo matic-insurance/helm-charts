@@ -1,0 +1,58 @@
+{{/*
+Render config files as Secret. Config files should be listed `.Values.global.application.configFiles`
+In final applicaiton chart in order to mount files one should:
+  1. create template `config-files.yaml` with following content
+  ```yaml
+  {{ include "application-helpers.config-files.tpl" . }}
+  ```
+
+  2. Define list of files in values:
+  ```yaml
+  global:
+    application:
+      configFiles:
+        - /app/config/app_settings.local.yaml
+        - /app/config/variables.txt
+  ```
+
+
+*/}}
+
+{{- define "application-helpers.config-files.tpl" -}}
+{{- with $.Values.global.application.configFiles }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "application-helpers.config-files.volume-name" (merge (dict "deployment" "runtime") $) }}
+  labels:
+    {{ include "application-helpers.labels" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+type: Opaque
+data:
+{{- range $index, $path := . }}
+  {{- $filePath := printf "%s%s" (tpl $.Values.global.application.configFilePathTemplate $) $path }}
+  {{$path | quote}}: {{ $.Files.Get $filePath | b64enc }}
+{{- end -}}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "application-helpers.config-files.volume-name" (merge (dict "deployment" "migration") $) }}
+  labels:
+    {{ include "application-helpers.labels" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+type: Opaque
+data:
+{{- range $index, $path := . }}
+  {{- $filePath := printf "%s%s" (tpl $.Values.global.application.configFilePathTemplate $) $path }}
+  {{$path | quote}}: {{ $.Files.Get $filePath | b64enc }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
