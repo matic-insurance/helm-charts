@@ -1,0 +1,65 @@
+
+---
+# Source: application-config/templates/secrets-environment.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: olb-configs-environment
+  labels:
+    
+    app.kubernetes.io/name: olb
+    app.kubernetes.io/instance: olb-configs
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: configs
+    app.kubernetes.io/part-of: olb
+    app.kubernetes.io/version: "1.2.3"
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+type: Opaque
+data:
+  ANOTHER_ENV: ImZhbHNlIg==
+  TEST: InRydWUi
+---
+# Source: application-config/templates/tests/secrets-files.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: olb-configs-runtime
+  labels:
+    
+    app.kubernetes.io/name: olb
+    app.kubernetes.io/instance: olb-configs
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: configs
+    app.kubernetes.io/part-of: olb
+    app.kubernetes.io/version: "1.2.3"
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+type: Opaque
+data:
+  "/regular-app/config.ini": W2dsb2JhbF0KdGVzdCA9ICJ0cnVlIg==
+  "/regular-app/config.txt": SnVzdCByYW5kb20gdGV4dCBmaWxl---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: olb-configs-migration
+  labels:
+    
+    app.kubernetes.io/name: olb
+    app.kubernetes.io/instance: olb-configs
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: configs
+    app.kubernetes.io/part-of: olb
+    app.kubernetes.io/version: "1.2.3"
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+type: Opaque
+data:
+  "/regular-app/config.ini": W2dsb2JhbF0KdGVzdCA9ICJ0cnVlIg==
+  "/regular-app/config.txt": SnVzdCByYW5kb20gdGV4dCBmaWxl

@@ -1,0 +1,6 @@
+dependencies:
+- name: application-helpers
+  repository: file://../application-helpers
+  version: 0.1.0
+digest: sha256:f4eda8aa3d7f05897e738467c836e35519fe1b2a00b05168887901cc0ac8263a
+generated: "2023-02-20T12:52:04.199151+02:00"
