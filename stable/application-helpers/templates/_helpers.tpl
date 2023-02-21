@@ -36,11 +36,50 @@ helm.sh/chart: {{ include "application-helpers.chart" . }}
 {{/*
 Datadog unfied tags: https://docs.datadoghq.com/getting_started/tagging/unified_service_tagging/?tab=kubernetes
 */}}
-{{- define "application-helpers.datadog-labels" -}}
+{{- define "application-helpers.monitoring.datadog.labels" -}}
 tags.datadoghq.com/env: {{ .Values.global.application.environment }}
 tags.datadoghq.com/service: {{ .Values.global.application.product }}
 tags.datadoghq.com/version: {{ .Values.global.application.version | quote }}
 {{- end }}
+
+{{/*
+Datadog environment variables to be used by datadog libraries
+*/}}
+{{- define "application-helpers.monitoring.datadog.env" -}}
+- name: DD_AGENT_HOST
+  valueFrom:
+    fieldRef:
+      fieldPath: status.hostIP
+- name: DD_TRACE_AGENT_PORT
+  value: "8126"
+- name: DD_DOGSTATSD_PORT
+  value: "8125"
+- name: DD_ENV
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.labels['tags.datadoghq.com/env']
+- name: DD_SERVICE
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.labels['tags.datadoghq.com/service']
+- name: DD_VERSION
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.labels['tags.datadoghq.com/version']
+- name: DD_TAGS
+  value: "product:{{ .Values.global.application.product}},component:{{ .Values.component }}"
+{{- end }}
+
+{{/*
+Sentry environment variables to be used by libraries
+*/}}
+{{- define "application-helpers.monitoring.sentry.env" -}}
+- name: SENTRY_RELEASE
+  value: "{{ include "application-helpers.name" . }}-{{ .Values.global.application.version }}"
+- name: SENTRY_ENVIRONMENT
+  value: {{ .Values.global.application.environment }}
+{{- end }}
+
 {{/*
 Common Selector labels
 */}}

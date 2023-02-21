@@ -13,5 +13,12 @@ global:
     # Path to config files on local disk.
     configFilePathTemplate: "configs/{{ $.Values.global.environment }}"
 
+  # Global configuration for application monitoring tools
+  applicationMonitoring:
+    # Enable datadog monitoring and include additional labels to deployment
+    datadog: false
+    # Provision environment variables for Sentry exception tracking
+    sentry: false
+
 # Application component that is deployed
 component: webserver

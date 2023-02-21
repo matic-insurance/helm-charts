@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "application-helpers.labels" . | nindent 4 }}
     {{- if .Values.global.applicationMonitoring.datadog }}
-    {{- include "application-helpers.datadog-labels" . | nindent 4 }}
+    {{- include "application-helpers.monitoring.datadog.labels" . | nindent 4 }}
     {{- end }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
@@ -25,7 +25,7 @@ spec:
       labels:
         {{- include "application-helpers.selectorLabels" . | nindent 8 }}
         {{- if .Values.global.applicationMonitoring.datadog }}
-        {{- include "application-helpers.datadog-labels" . | nindent 8 }}
+        {{- include "application-helpers.monitoring.datadog.labels" . | nindent 8 }}
         {{- end }}
     spec:
       {{- if .Values.global.applicationImage.pullSecret }}
@@ -44,13 +44,13 @@ spec:
           command: ["sh","-c","{{ .Values.command }}"]
           {{- end }}
           imagePullPolicy: {{ .Values.global.applicationImage.pullPolicy }}
-          {{- if or .Values.global.applicationMonitoring.sentry .Values.job.env }}
+          {{- if or .Values.global.applicationMonitoring.datadog .Values.global.applicationMonitoring.sentry .Values.job.env }}
           env:
+          {{- if .Values.global.applicationMonitoring.datadog }}
+          {{- include "application-helpers.monitoring.datadog.env" . | nindent 12 }}
+          {{- end }}
           {{- if .Values.global.applicationMonitoring.sentry }}
-            - name: SENTRY_RELEASE
-              value: "{{ include "application-helpers.name" . }}-{{ .Values.global.application.version }}"
-            - name: SENTRY_ENVIRONMENT
-              value: {{ .Values.global.application.environment }}
+          {{- include "application-helpers.monitoring.sentry.env" . | nindent 12 }}
           {{- end }}
           {{- with .Values.job.env }}
           {{- toYaml . | nindent 12 }}

@@ -41,6 +41,28 @@ spec:
           image: "bitnami/ruby:0.0.0"
           imagePullPolicy: IfNotPresent
           env:
+            - name: DD_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: DD_TRACE_AGENT_PORT
+              value: "8126"
+            - name: DD_DOGSTATSD_PORT
+              value: "8125"
+            - name: DD_ENV
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/env']
+            - name: DD_SERVICE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/service']
+            - name: DD_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/version']
+            - name: DD_TAGS
+              value: "product:myproduct,component:migrations"
             - name: SENTRY_RELEASE
               value: "myproduct-0.0.0"
             - name: SENTRY_ENVIRONMENT
