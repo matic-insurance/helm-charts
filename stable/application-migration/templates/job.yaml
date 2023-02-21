@@ -35,6 +35,7 @@ spec:
       serviceAccountName: {{ include "application-helpers.serviceAccountName" . }}
       dnsPolicy: {{ .Values.job.dnsPolicy }}
       terminationGracePeriodSeconds: {{ .Values.job.terminationGracePeriodSeconds }}
+      restartPolicy: Never
       securityContext:
         {{- toYaml .Values.job.securityContext | nindent 8 }}
       containers:

@@ -28,6 +28,7 @@ spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
+      restartPolicy: Never
       securityContext:
         fsGroup: 100
         runAsUser: 100

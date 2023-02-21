@@ -27,6 +27,7 @@ spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirstWithHostNet
       terminationGracePeriodSeconds: 60
+      restartPolicy: Never
       securityContext:
         fsGroup: 1000
         runAsUser: 1000
