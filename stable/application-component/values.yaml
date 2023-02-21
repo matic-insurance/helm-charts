@@ -8,22 +8,22 @@ global:
     # Application version
     version: '0.0.0'
 
+  # Global application docker image configuration
+  applicationImage:
+    # Repo where image tags are located
+    repository: bitnami/ruby
+    # How image should be pulled from registry
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the Values.version.
+    tag: ""
+    # Custom secret to authenticate pulling from private registries
+    pullSecret: ""
+
 # Current Application component that is deployed. Impacts k8s naming/labels
 component: webserver
 
 # Command to execute inside of container `bundle exec puma`
 command: ""
-
-# Docker image configuration
-image:
-  # Repo where image tags are located
-  repository: bitnami/ruby
-  # How image should be pulled from registry
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the Values.version.
-  tag: ""
-  # Custom secret to authenticate pulling from private registries
-  pullSecret: ""
 
 # Deployment configurations
 deployment:

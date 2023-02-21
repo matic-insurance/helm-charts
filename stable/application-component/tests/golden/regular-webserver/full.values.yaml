@@ -14,11 +14,11 @@ global:
     configFiles:
       - /app/config/app_settings.local.yml
 
+  applicationImage:
+    repository: matic/olb
+
 component: webserver
 command: "bundle exec puma -t 8:8"
-
-image:
-  repository: matic/olb
 
 ingress:
   enabled: true

@@ -28,9 +28,9 @@ spec:
         {{- include "application-helpers.datadog-labels" . | nindent 8 }}
         {{- end }}
     spec:
-      {{- if .Values.image.pullSecret }}
+      {{- if .Values.global.applicationImage.pullSecret }}
       imagePullSecrets:
-        - name: {{ .Values.image.pullSecret }}
+        - name: {{ .Values.global.applicationImage.pullSecret }}
       {{- end }}
       serviceAccountName: {{ include "application-helpers.serviceAccountName" . }}
       dnsPolicy: {{ .Values.deployment.dnsPolicy }}
@@ -39,11 +39,11 @@ spec:
         {{- toYaml .Values.deployment.securityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ default .Values.global.application.version .Values.image.tag }}"
+          image: "{{ .Values.global.applicationImage.repository }}:{{ default .Values.global.application.version .Values.global.applicationImage.tag }}"
           {{- if .Values.command }}
           command: ["sh","-c","{{ .Values.command }}"]
           {{- end }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.global.applicationImage.pullPolicy }}
           {{- with .Values.deployment.env }}
           env:
           {{- toYaml . | nindent 12 }}

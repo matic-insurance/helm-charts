@@ -8,21 +8,21 @@ global:
     # Application version
     version: '0.0.0'
 
+  # Global application Docker image configuration
+  applicationImage:
+    # Repo where image tags are located
+    repository: bitnami/ruby
+    # How image should be pulled from registry
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the Values.version.
+    tag: ""
+    # Custom secret to authenticate pulling from private registries
+    pullSecret: ""
+
 # Application component that is deployed
 component: migrations
 # Command to execute inside of container `rails db:migrate`
 command: ""
-
-# Docker image configuration
-image:
-  # Repo where image tags are located
-  repository: bitnami/ruby
-  # How image should be pulled from registry
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the Values.version.
-  tag: ""
-  # Custom secret to authenticate pulling from private registries
-  pullSecret: ""
 
 # Deployment configurations
 deployment:
