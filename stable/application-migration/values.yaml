@@ -49,16 +49,16 @@ job:
   # Custom annotations to be added to the pod
   annotations: {}
 
-  # Pod resources. Must be changed
+  # Pod resources. Default resources should be sufficient for any migration
   resources:
     # Minimal requirements for pod
     requests:
-      memory: 128Mi
-      cpu: 100m
+      memory: 500Mi
+      cpu: 300m
     # Maximum resources for pod
     limits:
-      memory: 256Mi
-      cpu: 200m
+      memory: 1500Mi
+      cpu: 900m
 
   # Advanced deployment options
   # How pods resolve DNS records

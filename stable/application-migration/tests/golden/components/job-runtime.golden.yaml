@@ -52,11 +52,11 @@ spec:
               name: cache-vol
           resources:
             limits:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 900m
+              memory: 1500Mi
             requests:
-              cpu: 100m
-              memory: 128Mi
+              cpu: 300m
+              memory: 500Mi
       volumes:
         - emptyDir: {}
           name: cache-vol
