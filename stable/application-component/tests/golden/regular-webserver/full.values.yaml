@@ -54,7 +54,7 @@ service:
   enabled: true
 
 serviceAccount:
-  enabled: true
+  create: true
 
 autoscaling:
   enabled: true
