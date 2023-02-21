@@ -45,7 +45,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.global.applicationImage.repository }}:{{ default .Values.global.application.version .Values.global.applicationImage.tag }}"
           {{- if .Values.command }}
-          command: ["sh","-c","{{ .Values.command }}"]
+          command: ["sh","-c",{{ .Values.command | quote }}]
           {{- end }}
           {{- if .Values.service.enabled }}
           ports:

@@ -7,7 +7,7 @@ global:
   applicationImage:
     repository: "bitnami/ruby"
 
-command: "ruby -e \"puts 'test'\""
+command: ruby -e "puts 'test'"
 
 serviceAccount:
   name: default

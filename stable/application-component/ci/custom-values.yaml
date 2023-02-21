@@ -8,6 +8,7 @@ global:
     repository: "bitnami/ruby"
 
 component: webserver
+command: ruby -e "loop { puts 'working'; sleep 1}"
 
 serviceAccount:
   name: default

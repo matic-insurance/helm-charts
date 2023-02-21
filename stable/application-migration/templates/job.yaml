@@ -41,7 +41,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: {{ include "application-helpers.docker-image" . | quote }}
           {{- if .Values.command }}
-          command: ["sh","-c","{{ .Values.command }}"]
+          command: ["sh","-c",{{ .Values.command | quote }}]
           {{- end }}
           imagePullPolicy: {{ .Values.global.applicationImage.pullPolicy }}
           {{- if or .Values.global.applicationMonitoring.datadog .Values.global.applicationMonitoring.sentry .Values.job.env }}
