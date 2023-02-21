@@ -2,16 +2,16 @@ global:
   # Default values for application charts.
   application:
     # Product name
-    product: myproduct
+    product: ""
     # Application environment that it is running in
-    environment: staging
+    environment: ""
     # Application version
-    version: '0.0.0'
+    version: ""
 
   # Global application Docker image configuration
   applicationImage:
     # Repo where image tags are located
-    repository: bitnami/ruby
+    repository: ""
     # How image should be pulled from registry
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the Values.version.
@@ -28,8 +28,9 @@ global:
 
 # Application component that is deployed
 component: migrations
+
 # Command to execute inside of container `rails db:migrate`
-command: ""
+command:
 
 # Migration job configurations
 job:

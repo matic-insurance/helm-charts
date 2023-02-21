@@ -1,12 +1,12 @@
 global:
   # Default values for application charts.
   application:
-    # Product name
-    product: myproduct
-    # Application environment that it is running in
-    environment: staging
-    # Application version
-    version: '0.0.0'
+    # Product name (e.g online-bind)
+    product: ""
+    # Application environment that it is running in (staging/production)
+    environment: ""
+    # Application version ("release-2021-03-04-01")
+    version: ""
 
     # Config files to be mounted to application containers
     configFiles: []
@@ -21,4 +21,4 @@ global:
     sentry: false
 
 # Application component that is deployed
-component: webserver
+component: ""

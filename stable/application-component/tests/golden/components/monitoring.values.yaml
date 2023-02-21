@@ -1,4 +1,14 @@
 global:
+  application:
+    product: myproduct
+    environment: staging
+    version: "0.0.0"
+
+  applicationImage:
+    repository: "bitnami/ruby"
+
   applicationMonitoring:
     datadog: true
     sentry: true
+
+component: webserver

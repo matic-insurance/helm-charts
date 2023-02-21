@@ -2,16 +2,16 @@ global:
   # Default values for application charts.
   application:
     # Product name
-    product: myproduct
+    product: ""
     # Application environment that it is running in
-    environment: staging
+    environment: ""
     # Application version
-    version: '0.0.0'
+    version: ""
 
   # Global application docker image configuration
   applicationImage:
-    # Repo where image tags are located
-    repository: bitnami/ruby
+    # docker images repo
+    repository: ""
     # How image should be pulled from registry
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the Values.version.
@@ -27,7 +27,7 @@ global:
     sentry: false
 
 # Current Application component that is deployed. Impacts k8s naming/labels
-component: webserver
+component: ""
 
 # Command to execute inside of container `bundle exec puma`
 command: ""

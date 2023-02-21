@@ -2,13 +2,12 @@ global:
   application:
     product: myproduct
     environment: test
-    version: "0.0.0"
+    version: 3.1.2
 
   applicationImage:
     repository: "bitnami/ruby"
 
-component: webserver
+command: ruby -e "puts 'test'"
 
 serviceAccount:
-  create: true
-  name: test-account
+  name: default

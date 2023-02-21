@@ -39,7 +39,7 @@ spec:
         {{- toYaml .Values.job.securityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.global.applicationImage.repository }}:{{ default .Values.global.application.version .Values.global.applicationImage.tag }}"
+          image: {{ include "application-helpers.docker-image" . | quote }}
           {{- if .Values.command }}
           command: ["sh","-c","{{ .Values.command }}"]
           {{- end }}

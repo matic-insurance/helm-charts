@@ -1,5 +1,7 @@
 global:
   application:
+    product: myproduct
+    environment: test
     version: "1.2.3"
 
   applicationImage:

@@ -2,7 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "application-helpers.name" -}}
-{{- .Values.global.application.product | trunc 63 | trimSuffix "-" -}}
+{{- required ".Values.global.application.product required for deployment" .Values.global.application.product | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 
 {{/*
@@ -11,7 +11,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "application-helpers.fullname" -}}
-{{- printf "%s-%s" .Values.global.application.product .Values.component | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" (include "application-helpers.name" .) (required ".Values.component required for component deployment" .Values.component) | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 
 {{/*
@@ -29,8 +29,10 @@ All Common Labels
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/component: {{ .Values.component }}
 app.kubernetes.io/part-of: {{ .Values.global.application.product }}
-app.kubernetes.io/version: {{ .Values.global.application.version | quote }}
-helm.sh/chart: {{ include "application-helpers.chart" . }}
+app.kubernetes.io/version: {{ (required ".Values.global.application.version is required for applicaiton deployment" .Values.global.application.version) | quote }}
+helm.sh/chart: {{ include "application-helpers.chart" . -}}
+{{/* Just checing for environment configuraiton */}}
+{{- if (required ".Values.global.application.environment" .Values.global.application.environment) -}}{{- end -}}
 {{- end }}
 
 {{/*
@@ -125,5 +127,13 @@ Define the name of the service account to use
 {{- default (include "application-helpers.name" .) .Values.serviceAccount.name }}
 {{- end }}
 
+{{/*
+Construct full docker image
+*/}}
+{{- define "application-helpers.docker-image" }}
+{{- $repository := required ".Values.global.applicationImage.repository is required for application deployment" .Values.global.applicationImage.repository -}}
+{{- $tag := default .Values.global.application.version .Values.global.applicationImage.tag -}}
+{{ printf "%s:%s" $repository $tag }}
+{{- end }}
 
 
