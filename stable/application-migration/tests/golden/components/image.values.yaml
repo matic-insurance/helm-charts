@@ -1,0 +1,8 @@
+global:
+  application:
+    version: "1.2.3"
+
+image:
+  repository: matic/olb
+  pullPolicy: Always
+  pullSecret: docker-login

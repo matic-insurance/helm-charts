@@ -1,0 +1,34 @@
+global:
+  application:
+    product: olb
+    environment: production
+    version: release-1.2.3
+
+    environmentVariables:
+      RAILS_ENV: production
+      RAILS_SERVE_STATIC_FILES: "true"
+      VAULT_NAMESPACE: admin
+      VAULT_ROLE: olb
+      VAULT_ADDR: https://vault-st1.matic.link
+      VAULT_AUTH_BACKEND: staging-eks-3
+    configFiles:
+      - /app/config/app_settings.local.yml
+
+application:
+  component: migration
+
+image:
+  repository: matic/olb
+
+deployment:
+  command: "rails db:migrate"
+  resources:
+    requests:
+      memory: 200Mi
+      cpu: 100m
+    limits:
+      memory: 700Mi
+      cpu: 300m
+
+datadog:
+  enabled: true
