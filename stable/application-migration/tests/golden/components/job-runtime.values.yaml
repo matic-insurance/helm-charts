@@ -1,7 +1,6 @@
 command: "rails db:migrate"
 
-deployment:
-  replicas: 2
+job:
   annotations:
     test: true
   env:

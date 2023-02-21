@@ -10,7 +10,7 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation
-    {{- with .Values.deployment.annotations }}
+    {{- with .Values.job.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
@@ -19,7 +19,7 @@ spec:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
-        {{- with .Values.deployment.annotations }}
+        {{- with .Values.job.annotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
@@ -33,10 +33,10 @@ spec:
         - name: {{ .Values.global.applicationImage.pullSecret }}
       {{- end }}
       serviceAccountName: {{ include "application-helpers.serviceAccountName" . }}
-      dnsPolicy: {{ .Values.deployment.dnsPolicy }}
-      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      dnsPolicy: {{ .Values.job.dnsPolicy }}
+      terminationGracePeriodSeconds: {{ .Values.job.terminationGracePeriodSeconds }}
       securityContext:
-        {{- toYaml .Values.deployment.securityContext | nindent 8 }}
+        {{- toYaml .Values.job.securityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.global.applicationImage.repository }}:{{ default .Values.global.application.version .Values.global.applicationImage.tag }}"
@@ -44,52 +44,52 @@ spec:
           command: ["sh","-c","{{ .Values.command }}"]
           {{- end }}
           imagePullPolicy: {{ .Values.global.applicationImage.pullPolicy }}
-          {{- with .Values.deployment.env }}
+          {{- with .Values.job.env }}
           env:
           {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if or .Values.global.application.environmentVariables .Values.deployment.envFrom }}
+          {{- if or .Values.global.application.environmentVariables .Values.job.envFrom }}
           envFrom:
           {{- with .Values.global.application.environmentVariables }}
             - secretRef:
                 name: {{ include "application-helpers.configs.environment-variables.volume-name" $ }}
           {{- end }}
-          {{- with .Values.deployment.envFrom }}
+          {{- with .Values.job.envFrom }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- end }}
-          {{- if or .Values.global.application.configFiles .Values.deployment.volumeMounts }}
+          {{- if or .Values.global.application.configFiles .Values.job.volumeMounts }}
           volumeMounts:
           {{- with .Values.global.application.configFiles }}
             - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
               mountPath: /
               readOnly: true
           {{- end }}
-          {{- with .Values.deployment.volumeMounts }}
+          {{- with .Values.job.volumeMounts }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- end }}
           resources:
-            {{- toYaml .Values.deployment.resources | nindent 12 }}
+            {{- toYaml .Values.job.resources | nindent 12 }}
       {{- with .Values.global.application.configFiles }}
       volumes:
         - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}-vol
           secret:
             secretName: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
       {{- end }}
-      {{- with .Values.deployment.nodeSelector }}
+      {{- with .Values.job.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.deployment.affinity }}
+      {{- with .Values.job.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.deployment.tolerations }}
+      {{- with .Values.job.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.deployment.topologySpreadConstraints }}
+      {{- with .Values.job.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
       {{- end }}

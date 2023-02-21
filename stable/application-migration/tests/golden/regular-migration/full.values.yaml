@@ -20,7 +20,7 @@ global:
 component: migration
 command: "rails db:setup db:migrate"
 
-deployment:
+job:
   resources:
     requests:
       memory: 200Mi

@@ -24,9 +24,8 @@ component: migrations
 # Command to execute inside of container `rails db:migrate`
 command: ""
 
-# Deployment configurations
-deployment:
-
+# Migration job configurations
+job:
   # Additional environment variables in k8s format:
   # - name: TEST
   #   value: true
