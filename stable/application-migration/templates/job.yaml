@@ -1,0 +1,95 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "application-helpers.fullname" . }}
+  labels:
+    {{- include "application-helpers.labels" . | nindent 4 }}
+    {{- if .Values.datadog.enabled }}
+    {{- include "application-helpers.datadog-labels" . | nindent 4 }}
+    {{- end }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+    {{- with .Values.deployment.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+        {{- with .Values.deployment.annotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "application-helpers.selectorLabels" . | nindent 8 }}
+        {{- if .Values.datadog.enabled }}
+        {{- include "application-helpers.datadog-labels" . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+      {{- end }}
+      serviceAccountName: {{ include "application-helpers.serviceAccountName" . }}
+      dnsPolicy: {{ .Values.deployment.dnsPolicy }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      securityContext:
+        {{- toYaml .Values.deployment.securityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ default .Values.global.application.version .Values.image.tag }}"
+          {{- if .Values.deployment.command }}
+          command: ["sh","-c","{{ .Values.deployment.command }}"]
+          {{- end }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.deployment.env }}
+          env:
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.global.application.environmentVariables .Values.deployment.envFrom }}
+          envFrom:
+          {{- with .Values.global.application.environmentVariables }}
+            - secretRef:
+                name: {{ include "application-helpers.configs.environment-variables.volume-name" $ }}
+          {{- end }}
+          {{- with .Values.deployment.envFrom }}
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- end }}
+          {{- if or .Values.global.application.configFiles .Values.deployment.volumeMounts }}
+          volumeMounts:
+          {{- with .Values.global.application.configFiles }}
+            - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
+              mountPath: /
+              readOnly: true
+          {{- end }}
+          {{- with .Values.deployment.volumeMounts }}
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.deployment.resources | nindent 12 }}
+      {{- with .Values.global.application.configFiles }}
+      volumes:
+        - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}-vol
+          secret:
+            secretName: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
+      {{- end }}
+      {{- with .Values.deployment.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.deployment.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.deployment.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.deployment.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

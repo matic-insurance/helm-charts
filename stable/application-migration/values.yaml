@@ -1,0 +1,77 @@
+global:
+  # Default values for application charts.
+  application:
+    # Product name
+    product: myproduct
+    # Application environment that it is running in
+    environment: staging
+    # Application version
+    version: '0.0.0'
+
+application:
+  component: migrations
+
+# Docker image configuration
+image:
+  # Repo where image tags are located
+  repository: bitnami/ruby
+  # How image should be pulled from registry
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the Values.version.
+  tag: ""
+  # Custom secret to authenticate pulling from private registries
+  pullSecret: ""
+
+# Deployment configurations
+deployment:
+  # Command to execute inside of container `rails db:migrate`
+  command: ""
+
+  # Additional environment variables in k8s format:
+  # - name: TEST
+  #   value: true
+  env: []
+
+  # Custom annotations to be added to the pod
+  annotations: {}
+
+  # Pod resources. Must be changed
+  resources:
+    # Minimal requirements for pod
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    # Maximum resources for pod
+    limits:
+      memory: 256Mi
+      cpu: 200m
+
+  # Advanced deployment options
+  # How pods resolve DNS records
+  dnsPolicy: ClusterFirst
+
+  # Security context configuration for pod.
+  securityContext:
+    fsGroup: 100
+    runAsUser: 100
+
+  # How long k8s waits for pod to terminate
+  terminationGracePeriodSeconds: 30
+
+  # Scheduling options
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  topologySpreadConstraints: { }
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  enabled: false
+  # The name of the service account to use.
+  # If not set a name is generated using the name template
+  name: ""
+  # Additional Annotations to add to the service account when creating
+  annotations: {}
+
+datadog:
+  enabled: false

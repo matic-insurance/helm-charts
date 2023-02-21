@@ -1,62 +1,32 @@
+
 ---
-# Source: application-component/templates/service.yaml
-apiVersion: v1
-kind: Service
+# Source: application-migration/templates/job.yaml
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: olb-webserver
+  name: olb-migration
   labels:
     app.kubernetes.io/name: olb
-    app.kubernetes.io/instance: olb-webserver
+    app.kubernetes.io/instance: olb-migration
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: webserver
-    app.kubernetes.io/part-of: olb
-    app.kubernetes.io/version: "release-1.2.3"
-spec:
-  type: ClusterIP
-  ports:
-    - port: 9292
-      targetPort: 9292
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: olb
-    app.kubernetes.io/instance: olb-webserver
----
-# Source: application-component/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: olb-webserver
-  labels:
-    app.kubernetes.io/name: olb
-    app.kubernetes.io/instance: olb-webserver
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: webserver
+    app.kubernetes.io/component: migration
     app.kubernetes.io/part-of: olb
     app.kubernetes.io/version: "release-1.2.3"
     tags.datadoghq.com/env: production
     tags.datadoghq.com/service: olb
     tags.datadoghq.com/version: "release-1.2.3"
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
-  minReadySeconds: 1
-  progressDeadlineSeconds: 120
-  revisionHistoryLimit: 5
-  strategy:
-    rollingUpdate:
-      maxSurge: 3
-      maxUnavailable: 1
-    type: RollingUpdate
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: olb
-      app.kubernetes.io/instance: olb-webserver
+  backoffLimit: 0
   template:
     metadata:
       annotations:
         rollme: "123abc"
       labels:
         app.kubernetes.io/name: olb
-        app.kubernetes.io/instance: olb-webserver
+        app.kubernetes.io/instance: olb-migration
         tags.datadoghq.com/env: production
         tags.datadoghq.com/service: olb
         tags.datadoghq.com/version: "release-1.2.3"
@@ -68,11 +38,9 @@ spec:
         fsGroup: 100
         runAsUser: 100
       containers:
-        - name: application-component
+        - name: application-migration
           image: "matic/olb:release-1.2.3"
-          command: ["sh","-c","bundle exec puma -t 8:8"]
-          ports:
-            - containerPort: 9292
+          command: ["sh","-c","rails db:migrate"]
           imagePullPolicy: IfNotPresent
           envFrom:
             - secretRef:
@@ -81,33 +49,6 @@ spec:
             - name: olb-configs-runtime
               mountPath: /
               readOnly: true
-          startupProbe:
-            httpGet:
-              path: /healthz/webserver
-              port: 9292
-            initialDelaySeconds: 1
-            timeoutSeconds: 5
-            periodSeconds: 5
-            successThreshold: 1
-            failureThreshold: 40
-          readinessProbe:
-            httpGet:
-              path: /healthz/webserver
-              port: 9292
-            initialDelaySeconds: 0
-            timeoutSeconds: 10
-            periodSeconds: 15
-            successThreshold: 1
-            failureThreshold: 4
-          livenessProbe:
-            httpGet:
-              path: /healthz/webserver
-              port: 9292
-            initialDelaySeconds: 60
-            timeoutSeconds: 20
-            periodSeconds: 30
-            successThreshold: 1
-            failureThreshold: 4
           resources:
             limits:
               cpu: 300m
@@ -119,145 +60,3 @@ spec:
         - name: olb-configs-runtime-vol
           secret:
             secretName: olb-configs-runtime
----
-# Source: application-component/templates/hpa.yaml
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: olb-webserver
-  labels:
-    app.kubernetes.io/name: olb
-    app.kubernetes.io/instance: olb-webserver
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: webserver
-    app.kubernetes.io/part-of: olb
-    app.kubernetes.io/version: "release-1.2.3"
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: olb-webserver
-  minReplicas: 2
-  maxReplicas: 4
-  metrics:
-    - type: External
-      external:
-        metric:
-          name: datadogmetric@production:olb-requests-per-second
-        target:
-          averageValue: 12000m
-          type: AverageValue
-  behavior:
-    scaleDown:
-      policies:
-      - periodSeconds: 180
-        type: Pods
-        value: 1
-      stabilizationWindowSeconds: 60
-    scaleUp:
-      policies:
-      - periodSeconds: 60
-        type: Pods
-        value: 2
-      stabilizationWindowSeconds: 15
----
-# Source: application-component/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: olb-webserver-ingress-internal-0
-  annotations:
-    kubernetes.io/ingress.class: "internal"
-    external-dns.alpha.kubernetes.io/ttl: "60"
-    nginx.ingress.kubernetes.io/proxy-body-size: "256m"
-    nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
-    nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"
-    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
-    external-dns.alpha.kubernetes.io/hostname: "olb.matic.link"
-  labels:
-    app.kubernetes.io/name: olb
-    app.kubernetes.io/instance: olb-webserver
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: webserver
-    app.kubernetes.io/part-of: olb
-    app.kubernetes.io/version: "release-1.2.3"
-spec:
-  rules:
-    - host: olb.matic.link
-      http:
-        paths:
-          - backend:
-              service:
-                name: olb-webserver
-                port:
-                  number: 9292
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - olb.matic.link
-      secretName: matic.link-tls
----
-# Source: application-component/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: olb-webserver-ingress-external-1
-  annotations:
-    kubernetes.io/ingress.class: "external"
-    external-dns.alpha.kubernetes.io/ttl: "60"
-    nginx.ingress.kubernetes.io/proxy-body-size: "256m"
-    nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
-    nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"
-    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
-    external-dns.alpha.kubernetes.io/hostname: "olb.matic.com"
-    nginx.ingress.kubernetes.io/server-snippet: |
-      location /admin { deny all; }
-  labels:
-    app.kubernetes.io/name: olb
-    app.kubernetes.io/instance: olb-webserver
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: webserver
-    app.kubernetes.io/part-of: olb
-    app.kubernetes.io/version: "release-1.2.3"
-spec:
-  rules:
-    - host: olb.matic.com
-      http:
-        paths:
-          - backend:
-              service:
-                name: olb-webserver
-                port:
-                  number: 9292
-            path: /
-            pathType: Prefix
-  tls:
-    - hosts:
-        - olb.matic.com
-      secretName: matic.com-tls
----
-# Source: application-component/templates/datadog-metric.yaml
-apiVersion: datadoghq.com/v1alpha1
-kind: DatadogMetric
-metadata:
-  name: olb-requests-per-second
-spec:
-  query: ewma_10(avg:nginx_ingress.controller.requests{service:olb-webserver}.as_count().rollup(avg, 60))
----
-# Source: application-component/templates/serviceaccount.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: olb
-  labels:
-    app.kubernetes.io/name: olb
-    app.kubernetes.io/instance: olb-webserver
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: webserver
-    app.kubernetes.io/part-of: olb
-    app.kubernetes.io/version: "release-1.2.3"
-  annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-weight": "-5"
-    "helm.sh/resource-policy": keep
