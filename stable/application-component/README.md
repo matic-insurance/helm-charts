@@ -72,6 +72,20 @@ kafka:
   command: "karafka server"
 ```
 
+## Application monitoring
+
+Chart support configuration of additional monitoring information for Datadog and Sentry:
+```yaml
+global:
+  applicationMonitoring:
+    datadog: true
+    sentry: true
+```
+
+Additional documentation can be found in Confluence:
+- [Datadog](https://maticinsurance.atlassian.net/wiki/spaces/DOPS/pages/3652649000/Datadog+Standard+Configuration)
+- [Sentry](https://maticinsurance.atlassian.net/wiki/spaces/DOPS/pages/3652649045/Sentry+Configuration)
+
 ## Full application example
 
 Below is example configuration for regular app at matic 
