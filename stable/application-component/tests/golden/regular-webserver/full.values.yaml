@@ -14,8 +14,8 @@ global:
     configFiles:
       - /app/config/app_settings.local.yml
 
-application:
-  component: webserver
+component: webserver
+command: "bundle exec puma -t 8:8"
 
 image:
   repository: matic/olb
@@ -34,7 +34,6 @@ ingress:
       tls: matic.com-tls
 
 deployment:
-  command: "bundle exec puma -t 8:8"
   replicas: 2
   port: 9292
   resources:

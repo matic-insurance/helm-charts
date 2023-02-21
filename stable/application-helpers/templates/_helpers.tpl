@@ -11,7 +11,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "application-helpers.fullname" -}}
-{{- printf "%s-%s" .Values.global.application.product .Values.application.component | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Values.global.application.product .Values.component | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 
 {{/*
@@ -27,7 +27,7 @@ All Common Labels
 {{- define "application-helpers.labels" -}}
 {{ include "application-helpers.selectorLabels" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/component: {{ .Values.application.component }}
+app.kubernetes.io/component: {{ .Values.component }}
 app.kubernetes.io/part-of: {{ .Values.global.application.product }}
 app.kubernetes.io/version: {{ .Values.global.application.version | quote }}
 helm.sh/chart: {{ include "application-helpers.chart" . }}

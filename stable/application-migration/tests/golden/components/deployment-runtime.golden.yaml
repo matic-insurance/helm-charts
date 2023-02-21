@@ -35,7 +35,7 @@ spec:
       containers:
         - name: application-migration
           image: "bitnami/ruby:0.0.0"
-          command: ["sh","-c","puma -p 9292"]
+          command: ["sh","-c","rails db:migrate"]
           imagePullPolicy: IfNotPresent
           env:
             - name: MY_APP

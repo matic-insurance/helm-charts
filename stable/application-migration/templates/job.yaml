@@ -40,8 +40,8 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ default .Values.global.application.version .Values.image.tag }}"
-          {{- if .Values.deployment.command }}
-          command: ["sh","-c","{{ .Values.deployment.command }}"]
+          {{- if .Values.command }}
+          command: ["sh","-c","{{ .Values.command }}"]
           {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- with .Values.deployment.env }}

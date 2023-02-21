@@ -8,8 +8,11 @@ global:
     # Application version
     version: '0.0.0'
 
-application:
-  component: webserver
+# Current Application component that is deployed. Impacts k8s naming/labels
+component: webserver
+
+# Command to execute inside of container `bundle exec puma`
+command: ""
 
 # Docker image configuration
 image:
@@ -24,8 +27,6 @@ image:
 
 # Deployment configurations
 deployment:
-  # Command to execute inside of container `bundle exec puma`
-  command: ""
   # Number of pods to run. Ignored when autoscaling enabled
   replicas: 1
 

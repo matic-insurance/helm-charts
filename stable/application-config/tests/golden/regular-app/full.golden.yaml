@@ -7,9 +7,9 @@ metadata:
   name: olb-configs-environment
   labels:
     app.kubernetes.io/name: olb
-    app.kubernetes.io/instance: olb-configs
+    app.kubernetes.io/instance: olb-%!s(<nil>)
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: configs
+    app.kubernetes.io/component: 
     app.kubernetes.io/part-of: olb
     app.kubernetes.io/version: "1.2.3"
   annotations:

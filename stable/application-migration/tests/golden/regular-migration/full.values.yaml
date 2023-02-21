@@ -14,14 +14,13 @@ global:
     configFiles:
       - /app/config/app_settings.local.yml
 
-application:
-  component: migration
+component: migration
+command: "rails db:setup db:migrate"
 
 image:
   repository: matic/olb
 
 deployment:
-  command: "rails db:migrate"
   resources:
     requests:
       memory: 200Mi

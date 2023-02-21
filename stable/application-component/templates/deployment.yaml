@@ -36,7 +36,7 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.image.pullSecret }}
       {{- end }}
-      serviceAccountName: {{ include "application-components.serviceAccountName" . }}
+      serviceAccountName: {{ include "application-helpers.serviceAccountName" . }}
       dnsPolicy: {{ .Values.deployment.dnsPolicy }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
       securityContext:
@@ -44,8 +44,8 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ default .Values.global.application.version .Values.image.tag }}"
-          {{- if .Values.deployment.command }}
-          command: ["sh","-c","{{ .Values.deployment.command }}"]
+          {{- if .Values.command }}
+          command: ["sh","-c","{{ .Values.command }}"]
           {{- end }}
           {{- if .Values.service.enabled }}
           ports:

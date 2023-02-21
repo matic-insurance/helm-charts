@@ -1,5 +1,7 @@
+component: websocket
+command: "puma -p 9292"
+
 deployment:
-  command: "puma -p 9292"
   replicas: 2
   annotations:
     test: true

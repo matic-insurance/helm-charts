@@ -13,6 +13,5 @@ global:
     # Path to config files on local disk.
     configFilePathTemplate: "configs/{{ $.Values.global.environment }}"
 
-application:
-  # Application component that is deployed
-  component: webserver
+# Application component that is deployed
+component: webserver

@@ -1,5 +1,6 @@
+command: "rails db:migrate"
+
 deployment:
-  command: "puma -p 9292"
   replicas: 2
   annotations:
     test: true
