@@ -48,10 +48,8 @@ spec:
             - secretRef:
                 name: test-secret-envvars
           volumeMounts:
-            - mountPath: /app/config/test
-              name: test-vol
-              readOnly: true
-              subPath: /test.txt
+            - mountPath: /cache
+              name: cache-vol
           resources:
             limits:
               cpu: 200m
@@ -59,3 +57,6 @@ spec:
             requests:
               cpu: 100m
               memory: 128Mi
+      volumes:
+        - emptyDir: {}
+          name: cache-vol

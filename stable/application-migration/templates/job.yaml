@@ -71,11 +71,16 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.job.resources | nindent 12 }}
-      {{- with .Values.global.application.configFiles }}
+      {{- if or .Values.job.volumes .Values.global.application.configFiles }}
       volumes:
+      {{- with .Values.global.application.configFiles }}
         - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}-vol
           secret:
             secretName: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
+      {{- end }}
+      {{- with .Values.job.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- end }}
       {{- with .Values.job.nodeSelector }}
       nodeSelector:

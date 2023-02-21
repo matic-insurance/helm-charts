@@ -127,11 +127,16 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.deployment.resources | nindent 12 }}
-      {{- with .Values.global.application.configFiles }}
+      {{- if or .Values.deployment.volumes .Values.global.application.configFiles }}
       volumes:
+      {{- with .Values.global.application.configFiles }}
         - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}-vol
           secret:
             secretName: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
+      {{- end }}
+      {{- with .Values.deployment.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- end }}
       {{- with .Values.deployment.nodeSelector }}
       nodeSelector:

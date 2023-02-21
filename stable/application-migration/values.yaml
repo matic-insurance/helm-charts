@@ -31,6 +31,21 @@ job:
   #   value: true
   env: []
 
+  # Additional environment variables to mount from config map or secrets:
+  # - secretRef:
+  #   name: test-secret-envvars
+  envFrom: []
+
+  # Additional volumes to mount to container
+  # - name: cache-vol
+  #   mountPath: /app/cache
+  volumeMounts: []
+
+  # Additional volumes to add to the pod
+  # - name: cache-vol
+  #   emptyDir: {}
+  volumes: []
+
   # Custom annotations to be added to the pod
   annotations: {}
 

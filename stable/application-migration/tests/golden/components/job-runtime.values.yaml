@@ -14,7 +14,8 @@ job:
     - secretRef:
         name: test-secret-envvars
   volumeMounts:
-    - name: test-vol
-      mountPath: /app/config/test
-      subPath: /test.txt
-      readOnly: true
+    - mountPath: /cache
+      name: cache-vol
+  volumes:
+    - name: cache-vol
+      emptyDir: { }
