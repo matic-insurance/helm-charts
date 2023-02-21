@@ -81,10 +81,10 @@ job:
   terminationGracePeriodSeconds: 30
 
   # Scheduling options
-  nodeSelector: { }
-  tolerations: [ ]
-  affinity: { }
-  topologySpreadConstraints: { }
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  topologySpreadConstraints: {}
 
 serviceAccount:
   # Specifies whether a service account should be created
