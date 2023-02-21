@@ -79,5 +79,12 @@ Returns name of migration config files secret/volume
 {{ include "application-helpers.name" . }}-configs-migration
 {{- end }}
 
+{{/*
+Define the name of the service account to use
+*/}}
+{{- define "application-helpers.serviceAccountName" -}}
+{{- default (include "application-helpers.name" .) .Values.serviceAccount.name }}
+{{- end }}
+
 
 
