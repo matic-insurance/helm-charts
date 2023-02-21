@@ -17,6 +17,10 @@ global:
   applicationImage:
     repository: matic/olb
 
+  applicationMonitoring:
+    datadog: true
+    sentry: true
+
 component: webserver
 command: "bundle exec puma -t 8:8"
 
@@ -67,6 +71,3 @@ autoscaling:
       target:
         type: AverageValue
         averageValue: 12000m
-
-datadog:
-  enabled: true

@@ -4,7 +4,7 @@ metadata:
   name: {{ include "application-helpers.fullname" . }}
   labels:
     {{- include "application-helpers.labels" . | nindent 4 }}
-    {{- if .Values.datadog.enabled }}
+    {{- if .Values.global.applicationMonitoring.datadog }}
     {{- include "application-helpers.datadog-labels" . | nindent 4 }}
     {{- end }}
   annotations:
@@ -24,7 +24,7 @@ spec:
         {{- end }}
       labels:
         {{- include "application-helpers.selectorLabels" . | nindent 8 }}
-        {{- if .Values.datadog.enabled }}
+        {{- if .Values.global.applicationMonitoring.datadog }}
         {{- include "application-helpers.datadog-labels" . | nindent 8 }}
         {{- end }}
     spec:
@@ -44,9 +44,17 @@ spec:
           command: ["sh","-c","{{ .Values.command }}"]
           {{- end }}
           imagePullPolicy: {{ .Values.global.applicationImage.pullPolicy }}
-          {{- with .Values.job.env }}
+          {{- if or .Values.global.applicationMonitoring.sentry .Values.job.env }}
           env:
+          {{- if .Values.global.applicationMonitoring.sentry }}
+            - name: SENTRY_RELEASE
+              value: "{{ include "application-helpers.name" . }}-{{ .Values.global.application.version }}"
+            - name: SENTRY_ENVIRONMENT
+              value: {{ .Values.global.application.environment }}
+          {{- end }}
+          {{- with .Values.job.env }}
           {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- end }}
           {{- if or .Values.global.application.environmentVariables .Values.job.envFrom }}
           envFrom:

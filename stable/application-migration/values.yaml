@@ -19,6 +19,13 @@ global:
     # Custom secret to authenticate pulling from private registries
     pullSecret: ""
 
+  # Global configuration for application monitoring tools
+  applicationMonitoring:
+    # Enable datadog monitoring and include additional labels to deployment
+    datadog: false
+    # Provision environment variables for Sentry exception tracking
+    sentry: false
+
 # Application component that is deployed
 component: migrations
 # Command to execute inside of container `rails db:migrate`
@@ -86,6 +93,3 @@ serviceAccount:
   name: ""
   # Additional Annotations to add to the service account when creating
   annotations: {}
-
-datadog:
-  enabled: false

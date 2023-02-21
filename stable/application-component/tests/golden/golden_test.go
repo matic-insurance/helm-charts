@@ -40,8 +40,8 @@ func TestGoldenTemplates(t *testing.T) {
 	        ValuesFiles: []string{"defaults/defaults.values.yaml"},
 	    },
 	    {
-	        GoldenFileName: "components/datadog.golden.yaml",
-	        ValuesFiles: []string{"components/datadog.values.yaml"},
+	        GoldenFileName: "components/monitoring.golden.yaml",
+	        ValuesFiles: []string{"components/monitoring.values.yaml"},
 	        Templates: []string{"templates/deployment.yaml"},
 	    },
 	    {

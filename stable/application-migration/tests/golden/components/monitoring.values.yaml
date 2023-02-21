@@ -1,0 +1,4 @@
+global:
+  applicationMonitoring:
+    datadog: true
+    sentry: true

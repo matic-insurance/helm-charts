@@ -17,17 +17,9 @@ global:
   applicationImage:
     repository: matic/olb
 
+  applicationMonitoring:
+    datadog: true
+    sentry: true
+
 component: migration
 command: "rails db:setup db:migrate"
-
-job:
-  resources:
-    requests:
-      memory: 200Mi
-      cpu: 100m
-    limits:
-      memory: 700Mi
-      cpu: 300m
-
-datadog:
-  enabled: true

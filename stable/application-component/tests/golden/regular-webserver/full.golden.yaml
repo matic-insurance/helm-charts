@@ -74,6 +74,11 @@ spec:
           ports:
             - containerPort: 9292
           imagePullPolicy: IfNotPresent
+          env:
+            - name: SENTRY_RELEASE
+              value: "olb-release-1.2.3"
+            - name: SENTRY_ENVIRONMENT
+              value: production
           envFrom:
             - secretRef:
                 name: olb-configs-environment

@@ -42,6 +42,11 @@ spec:
           image: "matic/olb:release-1.2.3"
           command: ["sh","-c","rails db:setup db:migrate"]
           imagePullPolicy: IfNotPresent
+          env:
+            - name: SENTRY_RELEASE
+              value: "olb-release-1.2.3"
+            - name: SENTRY_ENVIRONMENT
+              value: production
           envFrom:
             - secretRef:
                 name: olb-configs-environment
@@ -51,11 +56,11 @@ spec:
               readOnly: true
           resources:
             limits:
-              cpu: 300m
-              memory: 700Mi
+              cpu: 900m
+              memory: 1500Mi
             requests:
-              cpu: 100m
-              memory: 200Mi
+              cpu: 300m
+              memory: 500Mi
       volumes:
         - name: olb-configs-runtime-vol
           secret:

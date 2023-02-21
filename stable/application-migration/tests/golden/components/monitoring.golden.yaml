@@ -1,40 +1,31 @@
 ---
-# Source: application-component/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
+# Source: application-migration/templates/job.yaml
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: myproduct-webserver
+  name: myproduct-migrations
   labels:
     app.kubernetes.io/name: myproduct
-    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/instance: myproduct-migrations
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: webserver
+    app.kubernetes.io/component: migrations
     app.kubernetes.io/part-of: myproduct
     app.kubernetes.io/version: "0.0.0"
     tags.datadoghq.com/env: staging
     tags.datadoghq.com/service: myproduct
     tags.datadoghq.com/version: "0.0.0"
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
-  replicas: 1
-  minReadySeconds: 1
-  progressDeadlineSeconds: 120
-  revisionHistoryLimit: 5
-  strategy:
-    rollingUpdate:
-      maxSurge: 3
-      maxUnavailable: 1
-    type: RollingUpdate
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: myproduct
-      app.kubernetes.io/instance: myproduct-webserver
+  backoffLimit: 0
   template:
     metadata:
       annotations:
         rollme: "123abc"
       labels:
         app.kubernetes.io/name: myproduct
-        app.kubernetes.io/instance: myproduct-webserver
+        app.kubernetes.io/instance: myproduct-migrations
         tags.datadoghq.com/env: staging
         tags.datadoghq.com/service: myproduct
         tags.datadoghq.com/version: "0.0.0"
@@ -46,13 +37,18 @@ spec:
         fsGroup: 100
         runAsUser: 100
       containers:
-        - name: application-component
+        - name: application-migration
           image: "bitnami/ruby:0.0.0"
           imagePullPolicy: IfNotPresent
+          env:
+            - name: SENTRY_RELEASE
+              value: "myproduct-0.0.0"
+            - name: SENTRY_ENVIRONMENT
+              value: staging
           resources:
             limits:
-              cpu: 600m
+              cpu: 900m
               memory: 1500Mi
             requests:
-              cpu: 200m
+              cpu: 300m
               memory: 500Mi
