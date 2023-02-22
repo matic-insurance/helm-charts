@@ -3,7 +3,7 @@ name: test-charts
 on: pull_request
 
 jobs:
-  lint:
+  chart-testing:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,20 +27,20 @@ jobs:
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
-          changed=$(ct list-changed --config test/ct-lint.yaml --target-branch ${{ github.event.repository.default_branch }})
+          changed=$(ct list-changed --config ops/chart-testing/lint.yaml --target-branch ${{ github.event.repository.default_branch }})
           if [[ -n "$changed" ]]; then
             echo "::set-output name=changed::true"
           fi
 
       - name: Run chart-testing (lint)
-        run: ct lint --config test/ct-lint.yaml --target-branch ${{ github.event.repository.default_branch }}
+        run: ct lint --config ops/chart-testing/lint.yaml --target-branch ${{ github.event.repository.default_branch }}
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.4.0
         if: steps.list-changed.outputs.changed == 'true'
 
       - name: Run chart-testing (install)
-        run: ct install --config test/ct-lint.yaml
+        run: ct install --config ops/chart-testing/install.yaml
 
   unit-test:
     runs-on: ubuntu-latest
