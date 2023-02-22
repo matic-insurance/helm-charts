@@ -1,0 +1,31 @@
+apiVersion: v2
+name: app-deployment
+description: Testing application deployment stack
+
+type: application
+
+version: 0.1.0
+
+appVersion: "0.0.0"
+
+dependencies:
+  - name: application-component
+    version: 0.1.2
+    repository: "file://../../../stable/application-component"
+    alias: "webserver"
+  - name: application-component
+    version: 0.1.2
+    repository: "file://../../../stable/application-component"
+    alias: "sidekiq"
+  - name: application-component
+    version: 0.1.2
+    repository: "file://../../../stable/application-component"
+    alias: "kafka"
+  - name: application-config
+    version: 0.1.2
+    repository: "file://../../../stable/application-config"
+    alias: "configs"
+  - name: application-migration
+    version: 0.1.2
+    repository: "file://../../../stable/application-migration"
+    alias: "migration"
