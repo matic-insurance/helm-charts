@@ -2,11 +2,11 @@ global:
   # Default values for application charts.
   application:
     # Product name
-    product: myproduct
+    product:
     # Application environment that it is running in
-    environment: staging
+    environment:
     # Application version
-    version: '0.0.0'
+    version:
 
     # Environment variables to be added to every application container
     environmentVariables: {}
