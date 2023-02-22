@@ -8,29 +8,39 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Fetch history
-        run: git fetch --prune --unshallow
-
-      - name: Lint charts
-        id: lint
-        uses: helm/chart-testing-action@v1.0.0
         with:
-          command: lint
-          config: test/ct-lint.yaml
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.11.1
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          check-latest: true
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.3.1
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --config test/ct-lint.yaml --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "::set-output name=changed::true"
+          fi
+
+      - name: Run chart-testing (lint)
+        run: ct lint --config test/ct-lint.yaml --target-branch ${{ github.event.repository.default_branch }}
 
       - name: Create kind cluster
-        uses: helm/kind-action@v1.2.0
-        with:
-          node_image: "kindest/node:v1.21.2"
-        # Only build a kind cluster if there are chart changes to test.
-        if: steps.lint.outputs.changed == 'true'
+        uses: helm/kind-action@v1.4.0
+        if: steps.list-changed.outputs.changed == 'true'
 
-      - name: Install charts
-        uses: helm/chart-testing-action@v1.0.0
-        with:
-          command: install
-          config: test/ct-install.yaml
+      - name: Run chart-testing (install)
+        run: ct install --config test/ct-lint.yaml
 
   unit-test:
     runs-on: ubuntu-latest
