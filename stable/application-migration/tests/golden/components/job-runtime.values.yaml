@@ -1,0 +1,30 @@
+global:
+  application:
+    product: myproduct
+    environment: test
+    version: "0.0.0"
+
+  applicationImage:
+    repository: "bitnami/ruby"
+
+command: "rails db:migrate"
+
+job:
+  annotations:
+    test: true
+  env:
+  - name: MY_APP
+    value: IS_TEST
+  - name: MY_POD_NAME
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.name
+  envFrom:
+    - secretRef:
+        name: test-secret-envvars
+  volumeMounts:
+    - mountPath: /cache
+      name: cache-vol
+  volumes:
+    - name: cache-vol
+      emptyDir: { }

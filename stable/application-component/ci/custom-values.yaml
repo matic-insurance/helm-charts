@@ -1,6 +1,14 @@
 global:
   application:
+    product: myproduct
+    environment: test
     version: 3.1.2
+
+  applicationImage:
+    repository: "bitnami/ruby"
+
+component: webserver
+command: ruby -e "loop { puts 'working'; sleep 1}"
 
 serviceAccount:
   name: default

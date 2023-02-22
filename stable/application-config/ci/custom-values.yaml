@@ -1,0 +1,17 @@
+global:
+  application:
+    product: myproduct
+    environment: "test"
+    version: "1.2.3"
+
+    environmentVariables:
+      TEST: "true"
+      ANOTHER_ENV: "false"
+
+    configFiles:
+      - README.md
+
+    configFilePathTemplate: "./"
+
+tests:
+  renderSecrets: true

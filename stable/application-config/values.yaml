@@ -2,11 +2,11 @@ global:
   # Default values for application charts.
   application:
     # Product name
-    product: myproduct
+    product:
     # Application environment that it is running in
-    environment: staging
+    environment:
     # Application version
-    version: '0.0.0'
+    version:
 
     # Environment variables to be added to every application container
     environmentVariables: {}
@@ -25,9 +25,8 @@ global:
     # All files on local disk will be resolved by evaluating this template and adding configFile path.
     configFilePathTemplate: "configs/{{ $.Values.global.environment }}"
 
-application:
-  # Application component that is deployed
-  component: configs
+# Application component that is deployed
+component: configs
 
 # Test Settings do not use in production
 tests:

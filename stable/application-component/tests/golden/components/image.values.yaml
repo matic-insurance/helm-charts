@@ -1,8 +1,12 @@
 global:
   application:
+    product: myproduct
+    environment: test
     version: "1.2.3"
 
-image:
-  repository: matic/olb
-  pullPolicy: Always
-  pullSecret: docker-login
+  applicationImage:
+    repository: matic/olb
+    pullPolicy: Always
+    pullSecret: docker-login
+
+component: webserver

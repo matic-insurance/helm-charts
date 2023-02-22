@@ -1,0 +1,96 @@
+global:
+  # Default values for application charts.
+  application:
+    # Product name
+    product: ""
+    # Application environment that it is running in
+    environment: ""
+    # Application version
+    version: ""
+
+  # Global application Docker image configuration
+  applicationImage:
+    # Repo where image tags are located
+    repository: ""
+    # How image should be pulled from registry
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the Values.version.
+    tag: ""
+    # Custom secret to authenticate pulling from private registries
+    pullSecret: ""
+
+  # Global configuration for application monitoring tools
+  applicationMonitoring:
+    # Enable datadog monitoring and include additional labels to deployment
+    datadog: false
+    # Provision environment variables for Sentry exception tracking
+    sentry: false
+
+# Application component that is deployed
+component: migrations
+
+# Command to execute inside of container `rails db:migrate`
+command:
+
+# Migration job configurations
+job:
+  # Additional environment variables in k8s format:
+  # - name: TEST
+  #   value: true
+  env: []
+
+  # Additional environment variables to mount from config map or secrets:
+  # - secretRef:
+  #   name: test-secret-envvars
+  envFrom: []
+
+  # Additional volumes to mount to container
+  # - name: cache-vol
+  #   mountPath: /app/cache
+  volumeMounts: []
+
+  # Additional volumes to add to the pod
+  # - name: cache-vol
+  #   emptyDir: {}
+  volumes: []
+
+  # Custom annotations to be added to the pod
+  annotations: {}
+
+  # Pod resources. Default resources should be sufficient for any migration
+  resources:
+    # Minimal requirements for pod
+    requests:
+      memory: 500Mi
+      cpu: 300m
+    # Maximum resources for pod
+    limits:
+      memory: 1500Mi
+      cpu: 900m
+
+  # Advanced deployment options
+  # How pods resolve DNS records
+  dnsPolicy: ClusterFirst
+
+  # Security context configuration for pod.
+  securityContext:
+    fsGroup: 100
+    runAsUser: 100
+
+  # How long k8s waits for pod to terminate
+  terminationGracePeriodSeconds: 30
+
+  # Scheduling options
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  topologySpreadConstraints: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # The name of the service account to use.
+  # If not set a name is generated using the name template
+  name: ""
+  # Additional Annotations to add to the service account when creating
+  annotations: {}

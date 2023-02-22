@@ -1,0 +1,17 @@
+global:
+  application:
+    product: myproduct
+    environment: test
+    version: "0.0.0"
+
+  applicationImage:
+    repository: "bitnami/ruby"
+
+job:
+  dnsPolicy: ClusterFirstWithHostNet
+
+  terminationGracePeriodSeconds: 60
+
+  securityContext:
+    fsGroup: 1000
+    runAsUser: 1000

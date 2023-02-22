@@ -1,0 +1,80 @@
+---
+# Source: application-migration/templates/job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: myproduct-migrations
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-migrations
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: migrations
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      annotations:
+        rollme: "123abc"
+      labels:
+        app.kubernetes.io/name: myproduct
+        app.kubernetes.io/instance: myproduct-migrations
+    spec:
+      serviceAccountName: myproduct
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+      restartPolicy: Never
+      securityContext:
+        fsGroup: 100
+        runAsUser: 100
+      containers:
+        - name: application-migration
+          image: "bitnami/ruby:0.0.0"
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 400m
+              memory: 512Mi
+            requests:
+              cpu: 200m
+              memory: 256Mi
+      nodeSelector:
+        disktype: ssd
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: another-node-label-key
+                operator: In
+                values:
+                - another-node-label-value
+            weight: 1
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: topology.kubernetes.io/zone
+                operator: In
+                values:
+                - antarctica-east1
+                - antarctica-west1
+      tolerations:
+        - effect: NoSchedule
+          key: key1
+          operator: Equal
+          value: value1
+        - effect: NoExecute
+          key: key2
+          operator: Equal
+          value: value2
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: myproduct-webserver
+          maxSkew: 1
+          topologyKey: lifecycle
+          whenUnsatisfiable: DoNotSchedule

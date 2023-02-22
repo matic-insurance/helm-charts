@@ -1,0 +1,16 @@
+# Chart testing config for local run
+remote: origin
+target-branch: master
+validate-maintainers: false
+chart-dirs:
+  - stable
+# Skips all charts except one that you testing. Comment chart you want to test right now
+excluded-charts:
+  - application-component
+#  - application-config
+  - application-helpers
+  - application-migration
+  - rails
+chart-repos:
+  - stable=https://matic-insurance.github.io/helm-charts
+helm-extra-args: --timeout 10m

@@ -1,0 +1,63 @@
+---
+# Source: application-migration/templates/job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: myproduct-migrations
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-migrations
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: migrations
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+    test: true
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      annotations:
+        rollme: "123abc"
+        test: true
+      labels:
+        app.kubernetes.io/name: myproduct
+        app.kubernetes.io/instance: myproduct-migrations
+    spec:
+      serviceAccountName: myproduct
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+      restartPolicy: Never
+      securityContext:
+        fsGroup: 100
+        runAsUser: 100
+      containers:
+        - name: application-migration
+          image: "bitnami/ruby:0.0.0"
+          command: ["sh","-c","rails db:migrate"]
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MY_APP
+              value: IS_TEST
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          envFrom:
+            - secretRef:
+                name: test-secret-envvars
+          volumeMounts:
+            - mountPath: /cache
+              name: cache-vol
+          resources:
+            limits:
+              cpu: 900m
+              memory: 1500Mi
+            requests:
+              cpu: 300m
+              memory: 500Mi
+      volumes:
+        - emptyDir: {}
+          name: cache-vol

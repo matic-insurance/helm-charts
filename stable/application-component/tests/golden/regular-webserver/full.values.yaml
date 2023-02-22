@@ -14,11 +14,15 @@ global:
     configFiles:
       - /app/config/app_settings.local.yml
 
-application:
-  component: webserver
+  applicationImage:
+    repository: matic/olb
 
-image:
-  repository: matic/olb
+  applicationMonitoring:
+    datadog: true
+    sentry: true
+
+component: webserver
+command: "bundle exec puma -t 8:8"
 
 ingress:
   enabled: true
@@ -34,7 +38,6 @@ ingress:
       tls: matic.com-tls
 
 deployment:
-  command: "bundle exec puma -t 8:8"
   replicas: 2
   port: 9292
   resources:
@@ -55,7 +58,7 @@ service:
   enabled: true
 
 serviceAccount:
-  enabled: true
+  create: true
 
 autoscaling:
   enabled: true
@@ -68,6 +71,3 @@ autoscaling:
       target:
         type: AverageValue
         averageValue: 12000m
-
-datadog:
-  enabled: true

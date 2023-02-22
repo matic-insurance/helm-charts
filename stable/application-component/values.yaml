@@ -2,30 +2,38 @@ global:
   # Default values for application charts.
   application:
     # Product name
-    product: myproduct
+    product: ""
     # Application environment that it is running in
-    environment: staging
+    environment: ""
     # Application version
-    version: '0.0.0'
+    version: ""
 
-application:
-  component: webserver
+  # Global application docker image configuration
+  applicationImage:
+    # docker images repo
+    repository: ""
+    # How image should be pulled from registry
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the Values.version.
+    tag: ""
+    # Custom secret to authenticate pulling from private registries
+    pullSecret: ""
 
-# Docker image configuration
-image:
-  # Repo where image tags are located
-  repository: bitnami/ruby
-  # How image should be pulled from registry
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the Values.version.
-  tag: ""
-  # Custom secret to authenticate pulling from private registries
-  pullSecret: ""
+  # Global configuration for application monitoring tools
+  applicationMonitoring:
+    # Enable datadog monitoring and include additional labels to deployment
+    datadog: false
+    # Provision environment variables for Sentry exception tracking
+    sentry: false
+
+# Current Application component that is deployed. Impacts k8s naming/labels
+component: ""
+
+# Command to execute inside of container `bundle exec puma`
+command: ""
 
 # Deployment configurations
 deployment:
-  # Command to execute inside of container `bundle exec puma`
-  command: ""
   # Number of pods to run. Ignored when autoscaling enabled
   replicas: 1
 
@@ -39,24 +47,29 @@ deployment:
   #   name: test-secret-envvars
   envFrom: []
 
-  # Additional volumes to mount
-  # - name: test-vol
-  #   mountPath: /app/config/test
+  # Additional volumes to mount to container
+  # - name: cache-vol
+  #   mountPath: /app/cache
   volumeMounts: []
+
+  # Additional volumes to add to the pod
+  # - name: cache-vol
+  #   emptyDir: {}
+  volumes: []
 
   # Custom annotations to be added to the pod
   annotations: {}
 
-  # Pod resources. Must be changed
+  # Pod resources. Recommended to change. Default resources may be low for heavy applications
   resources:
     # Minimal requirements for pod
     requests:
-      memory: 128Mi
-      cpu: 100m
+      memory: 500Mi
+      cpu: 200m
     # Maximum resources for pod
     limits:
-      memory: 256Mi
-      cpu: 200m
+      memory: 1500Mi
+      cpu: 600m
 
   # Pod health probes configurations
   # Check if pod successfully started
@@ -236,12 +249,9 @@ autoscaling:
 
 serviceAccount:
   # Specifies whether a service account should be created
-  enabled: false
+  create: false
   # The name of the service account to use.
   # If not set a name is generated using the name template
   name: ""
   # Additional Annotations to add to the service account when creating
   annotations: {}
-
-datadog:
-  enabled: false

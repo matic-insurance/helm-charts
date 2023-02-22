@@ -4,8 +4,8 @@ metadata:
   name: {{ include "application-helpers.fullname" . }}
   labels:
     {{- include "application-helpers.labels" . | nindent 4 }}
-    {{- if .Values.datadog.enabled }}
-    {{- include "application-helpers.datadog-labels" . | nindent 4 }}
+    {{- if .Values.global.applicationMonitoring.datadog }}
+    {{- include "application-helpers.monitoring.datadog.labels" . | nindent 4 }}
     {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
@@ -28,33 +28,41 @@ spec:
         {{- end }}
       labels:
         {{- include "application-helpers.selectorLabels" . | nindent 8 }}
-        {{- if .Values.datadog.enabled }}
-        {{- include "application-helpers.datadog-labels" . | nindent 8 }}
+        {{- if .Values.global.applicationMonitoring.datadog }}
+        {{- include "application-helpers.monitoring.datadog.labels" . | nindent 8 }}
         {{- end }}
     spec:
-      {{- if .Values.image.pullSecret }}
+      {{- if .Values.global.applicationImage.pullSecret }}
       imagePullSecrets:
-        - name: {{ .Values.image.pullSecret }}
+        - name: {{ .Values.global.applicationImage.pullSecret }}
       {{- end }}
-      serviceAccountName: {{ include "application-components.serviceAccountName" . }}
+      serviceAccountName: {{ include "application-helpers.serviceAccountName" . }}
       dnsPolicy: {{ .Values.deployment.dnsPolicy }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
       securityContext:
         {{- toYaml .Values.deployment.securityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ default .Values.global.application.version .Values.image.tag }}"
-          {{- if .Values.deployment.command }}
-          command: ["sh","-c","{{ .Values.deployment.command }}"]
+          image: "{{ .Values.global.applicationImage.repository }}:{{ default .Values.global.application.version .Values.global.applicationImage.tag }}"
+          {{- if .Values.command }}
+          command: ["sh","-c",{{ .Values.command | quote }}]
           {{- end }}
           {{- if .Values.service.enabled }}
           ports:
             - containerPort: {{ .Values.service.port }}
           {{- end }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.deployment.env }}
+          imagePullPolicy: {{ .Values.global.applicationImage.pullPolicy }}
+          {{- if or .Values.global.applicationMonitoring.datadog .Values.global.applicationMonitoring.sentry .Values.deployment.env }}
           env:
+          {{- if .Values.global.applicationMonitoring.datadog }}
+          {{- include "application-helpers.monitoring.datadog.env" . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.global.applicationMonitoring.sentry }}
+          {{- include "application-helpers.monitoring.sentry.env" . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.deployment.env }}
           {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- end }}
           {{- if or .Values.global.application.environmentVariables .Values.deployment.envFrom }}
           envFrom:
@@ -127,11 +135,16 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.deployment.resources | nindent 12 }}
-      {{- with .Values.global.application.configFiles }}
+      {{- if or .Values.deployment.volumes .Values.global.application.configFiles }}
       volumes:
+      {{- with .Values.global.application.configFiles }}
         - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}-vol
           secret:
             secretName: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
+      {{- end }}
+      {{- with .Values.deployment.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- end }}
       {{- with .Values.deployment.nodeSelector }}
       nodeSelector:

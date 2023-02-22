@@ -1,0 +1,90 @@
+
+---
+# Source: application-migration/templates/job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: olb-migration
+  labels:
+    app.kubernetes.io/name: olb
+    app.kubernetes.io/instance: olb-migration
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: migration
+    app.kubernetes.io/part-of: olb
+    app.kubernetes.io/version: "release-1.2.3"
+    tags.datadoghq.com/env: production
+    tags.datadoghq.com/service: olb
+    tags.datadoghq.com/version: "release-1.2.3"
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      annotations:
+        rollme: "123abc"
+      labels:
+        app.kubernetes.io/name: olb
+        app.kubernetes.io/instance: olb-migration
+        tags.datadoghq.com/env: production
+        tags.datadoghq.com/service: olb
+        tags.datadoghq.com/version: "release-1.2.3"
+    spec:
+      serviceAccountName: olb
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+      restartPolicy: Never
+      securityContext:
+        fsGroup: 100
+        runAsUser: 100
+      containers:
+        - name: application-migration
+          image: "matic/olb:release-1.2.3"
+          command: ["sh","-c","rails db:setup db:migrate"]
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DD_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: DD_TRACE_AGENT_PORT
+              value: "8126"
+            - name: DD_DOGSTATSD_PORT
+              value: "8125"
+            - name: DD_ENV
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/env']
+            - name: DD_SERVICE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/service']
+            - name: DD_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/version']
+            - name: DD_TAGS
+              value: "product:olb,component:migration"
+            - name: SENTRY_RELEASE
+              value: "olb-release-1.2.3"
+            - name: SENTRY_ENVIRONMENT
+              value: production
+          envFrom:
+            - secretRef:
+                name: olb-configs-environment
+          volumeMounts:
+            - name: olb-configs-runtime
+              mountPath: /
+              readOnly: true
+          resources:
+            limits:
+              cpu: 900m
+              memory: 1500Mi
+            requests:
+              cpu: 300m
+              memory: 500Mi
+      volumes:
+        - name: olb-configs-runtime-vol
+          secret:
+            secretName: olb-configs-runtime

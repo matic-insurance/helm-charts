@@ -1,5 +1,16 @@
+global:
+  application:
+    product: myproduct
+    environment: test
+    version: "0.0.0"
+
+  applicationImage:
+    repository: "bitnami/ruby"
+
+component: websocket
+command: "puma -p 9292"
+
 deployment:
-  command: "puma -p 9292"
   replicas: 2
   annotations:
     test: true
@@ -14,7 +25,8 @@ deployment:
     - secretRef:
         name: test-secret-envvars
   volumeMounts:
-    - name: test-vol
-      mountPath: /app/config/test
-      subPath: /test.txt
-      readOnly: true
+    - mountPath: /cache
+      name: cache-vol
+  volumes:
+    - name: cache-vol
+      emptyDir: { }
