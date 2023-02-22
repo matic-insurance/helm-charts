@@ -34,10 +34,10 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation
 type: Opaque
 data:
-{{- range $index, $path := . }}
+{{- range $name, $path := . }}
   {{- $fileTemplateString := default "configs/{{ $.Values.global.application.environment }}" $.Values.global.application.configFilePathTemplate }}
   {{- $filePath := printf "%s%s" (tpl $fileTemplateString $) $path }}
-  {{$path | quote}}: {{ $.Files.Get $filePath | b64enc }}
+  {{$name | quote}}: {{ $.Files.Get $filePath | b64enc }}
 {{- end -}}
 {{- end -}}
 {{- with $.Values.global.application.configFiles }}
@@ -55,10 +55,10 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation
 type: Opaque
 data:
-{{- range $index, $path := . }}
+{{- range $name, $path := . }}
   {{- $fileTemplateString := default "configs/{{ $.Values.global.application.environment }}" $.Values.global.application.configFilePathTemplate }}
   {{- $filePath := printf "%s%s" (tpl $fileTemplateString $) $path }}
-  {{$path | quote}}: {{ $.Files.Get $filePath | b64enc }}
+  {{$name | quote}}: {{ $.Files.Get $filePath | b64enc }}
 {{- end -}}
 {{- end -}}
 {{- end -}}
