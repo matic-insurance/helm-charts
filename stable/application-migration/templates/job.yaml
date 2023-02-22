@@ -70,7 +70,7 @@ spec:
           {{- if or .Values.global.application.configFiles .Values.job.volumeMounts }}
           volumeMounts:
           {{- with .Values.global.application.configFiles }}
-            - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
+            - name: {{ include "application-helpers.configs.files-migration.volume-name" $ }}
               mountPath: /
               readOnly: true
           {{- end }}
@@ -85,7 +85,7 @@ spec:
       {{- with .Values.global.application.configFiles }}
         - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}-vol
           secret:
-            secretName: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
+            secretName: {{ include "application-helpers.configs.files-migration.volume-name" $ }}
       {{- end }}
       {{- with .Values.job.volumes }}
         {{- toYaml . | nindent 8 }}

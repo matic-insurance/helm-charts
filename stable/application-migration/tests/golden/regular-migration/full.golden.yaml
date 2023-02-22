@@ -74,7 +74,7 @@ spec:
             - secretRef:
                 name: olb-configs-environment
           volumeMounts:
-            - name: olb-configs-runtime
+            - name: olb-configs-migration
               mountPath: /
               readOnly: true
           resources:
@@ -87,4 +87,4 @@ spec:
       volumes:
         - name: olb-configs-runtime-vol
           secret:
-            secretName: olb-configs-runtime
+            secretName: olb-configs-migration
