@@ -138,7 +138,7 @@ deployment:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 3
-      maxUnavailable: 1
+      maxUnavailable: 0
 
   # Scheduling options
   nodeSelector: {}
