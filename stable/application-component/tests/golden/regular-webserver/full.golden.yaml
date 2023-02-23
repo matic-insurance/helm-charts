@@ -138,11 +138,11 @@ spec:
             failureThreshold: 4
           resources:
             limits:
-              cpu: 300m
-              memory: 700Mi
+              cpu: 800m
+              memory: 2100Mi
             requests:
-              cpu: 100m
-              memory: 200Mi
+              cpu: 400m
+              memory: 700Mi
       volumes:
         - name: olb-configs-runtime
           secret:

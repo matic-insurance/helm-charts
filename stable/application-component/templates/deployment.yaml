@@ -137,7 +137,11 @@ spec:
             failureThreshold: {{ .Values.deployment.livenessProbe.failureThreshold }}
           {{- end }}
           resources:
+            {{- if kindIs "string" .Values.deployment.resources }}
+            {{- toYaml (get .Values.defaults.resources .Values.deployment.resources) | nindent 12 }}
+            {{- else }}
             {{- toYaml .Values.deployment.resources | nindent 12 }}
+            {{- end }}
       {{- if or .Values.deployment.volumes .Values.global.application.configFiles }}
       volumes:
       {{- with .Values.global.application.configFiles }}

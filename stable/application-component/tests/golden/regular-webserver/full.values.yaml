@@ -40,13 +40,7 @@ ingress:
 deployment:
   replicas: 2
   port: 9292
-  resources:
-    requests:
-      memory: 200Mi
-      cpu: 100m
-    limits:
-      memory: 700Mi
-      cpu: 300m
+  resources: high
   startupProbe:
     enabled: true
   readinessProbe:
