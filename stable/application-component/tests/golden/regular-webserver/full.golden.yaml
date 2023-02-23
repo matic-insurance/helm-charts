@@ -44,7 +44,7 @@ spec:
   strategy:
     rollingUpdate:
       maxSurge: 3
-      maxUnavailable: 1
+      maxUnavailable: 0
     type: RollingUpdate
   selector:
     matchLabels:
@@ -106,7 +106,8 @@ spec:
                 name: olb-configs-environment
           volumeMounts:
             - name: olb-configs-runtime
-              mountPath: /
+              mountPath: "/app/config/app_settings.local.yml"
+              subPath: "app_settings"
               readOnly: true
           startupProbe:
             httpGet:
@@ -137,13 +138,13 @@ spec:
             failureThreshold: 4
           resources:
             limits:
-              cpu: 300m
-              memory: 700Mi
+              cpu: 800m
+              memory: 2100Mi
             requests:
-              cpu: 100m
-              memory: 200Mi
+              cpu: 400m
+              memory: 700Mi
       volumes:
-        - name: olb-configs-runtime-vol
+        - name: olb-configs-runtime
           secret:
             secretName: olb-configs-runtime
 ---

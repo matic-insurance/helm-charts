@@ -1,0 +1,18 @@
+dependencies:
+- name: application-component
+  repository: file://../../../stable/application-component
+  version: 0.1.2
+- name: application-component
+  repository: file://../../../stable/application-component
+  version: 0.1.2
+- name: application-component
+  repository: file://../../../stable/application-component
+  version: 0.1.2
+- name: application-config
+  repository: file://../../../stable/application-config
+  version: 0.1.2
+- name: application-migration
+  repository: file://../../../stable/application-migration
+  version: 0.1.2
+digest: sha256:515a19c6a56045d2db8eff8430c3ebcf8ca89f0f158de779068ce804d6d4075c
+generated: "2023-02-22T11:18:14.883241+02:00"

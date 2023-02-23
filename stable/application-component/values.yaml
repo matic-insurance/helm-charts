@@ -60,16 +60,10 @@ deployment:
   # Custom annotations to be added to the pod
   annotations: {}
 
-  # Pod resources. Recommended to change. Default resources may be low for heavy applications
-  resources:
-    # Minimal requirements for pod
-    requests:
-      memory: 500Mi
-      cpu: 200m
-    # Maximum resources for pod
-    limits:
-      memory: 1500Mi
-      cpu: 600m
+  # resources describe what pod resources should have.
+  # Supports "low" "normal" "high" predefined values
+  # Supports k8s definition if custom values are needed
+  resources: normal
 
   # Pod health probes configurations
   # Check if pod successfully started
@@ -144,7 +138,7 @@ deployment:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 3
-      maxUnavailable: 1
+      maxUnavailable: 0
 
   # Scheduling options
   nodeSelector: {}
@@ -196,18 +190,6 @@ ingress:
           proxy_set_header X-Forwarded-Host $http_host;
         }
 
-  # Default ingress settings for every ingress instance
-  default:
-    allow_locations:
-      - /
-    additional_hosts: []
-    annotations:
-      nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
-      nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent
-      nginx.ingress.kubernetes.io/proxy-next-upstream-tries: 8
-      nginx.ingress.kubernetes.io/proxy-body-size: 256m
-      external-dns.alpha.kubernetes.io/ttl: "60"
-
 # Autoscaling configuration
 autoscaling:
   enabled: false
@@ -255,3 +237,50 @@ serviceAccount:
   name: ""
   # Additional Annotations to add to the service account when creating
   annotations: {}
+
+# default contain default values for various resources
+defaults:
+  # ingress contain default values for ingress resource
+  ingress:
+    allow_locations:
+      - /
+    additional_hosts: []
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+      nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent
+      nginx.ingress.kubernetes.io/proxy-next-upstream-tries: 8
+      nginx.ingress.kubernetes.io/proxy-body-size: 256m
+      external-dns.alpha.kubernetes.io/ttl: "60"
+
+  # default resource configurations
+  resources:
+    # Low utilization resources
+    low:
+      # Minimal requirements for pod
+      requests:
+        memory: 200Mi
+        cpu: 100m
+      # Maximum resources for pod
+      limits:
+        memory: 700Mi
+        cpu: 300m
+    # Normal app resources
+    normal:
+      # Minimal requirements for pod
+      requests:
+        memory: 500Mi
+        cpu: 200m
+      # Maximum resources for pod
+      limits:
+        memory: 1500Mi
+        cpu: 600m
+    # heavy app resources
+    high:
+      # Minimal requirements for pod
+      requests:
+        memory: 700Mi
+        cpu: 400m
+      # Maximum resources for pod
+      limits:
+        memory: 2100Mi
+        cpu: 800m

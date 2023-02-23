@@ -26,16 +26,18 @@ kind: Secret
 metadata:
   name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
   labels:
-    {{- include "application-helpers.labels" $ | nindent 4 }}
+    {{- /*  Override component as it is not defined at place where we call this helper  */}}
+    {{- include "application-helpers.labels" (merge (dict "Values" (dict "component" "configs")) $) | nindent 4 }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-weight": "5"
     "helm.sh/hook-delete-policy": before-hook-creation
 type: Opaque
 data:
-{{- range $index, $path := . }}
-  {{- $filePath := printf "%s%s" (tpl $.Values.global.application.configFilePathTemplate $) $path }}
-  {{$path | quote}}: {{ $.Files.Get $filePath | b64enc }}
+{{- range $name, $path := . }}
+  {{- $fileTemplateString := default "configs/{{ $.Values.global.application.environment }}" $.Values.global.application.configFilePathTemplate }}
+  {{- $filePath := printf "%s%s" (tpl $fileTemplateString $) $path }}
+  {{$name | quote}}: {{ $.Files.Get $filePath | b64enc }}
 {{- end -}}
 {{- end -}}
 {{- with $.Values.global.application.configFiles }}
@@ -45,16 +47,18 @@ kind: Secret
 metadata:
   name: {{ include "application-helpers.configs.files-migration.volume-name" $ }}
   labels:
-    {{- include "application-helpers.labels" $ | nindent 4 }}
+    {{- /*  Override component as it is not defined at place where we call this helper  */}}
+    {{- include "application-helpers.labels" (merge (dict "Values" (dict "component" "configs")) $) | nindent 4 }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-weight": "-5"
     "helm.sh/hook-delete-policy": before-hook-creation
 type: Opaque
 data:
-{{- range $index, $path := . }}
-  {{- $filePath := printf "%s%s" (tpl $.Values.global.application.configFilePathTemplate $) $path }}
-  {{$path | quote}}: {{ $.Files.Get $filePath | b64enc }}
+{{- range $name, $path := . }}
+  {{- $fileTemplateString := default "configs/{{ $.Values.global.application.environment }}" $.Values.global.application.configFilePathTemplate }}
+  {{- $filePath := printf "%s%s" (tpl $fileTemplateString $) $path }}
+  {{$name | quote}}: {{ $.Files.Get $filePath | b64enc }}
 {{- end -}}
 {{- end -}}
 {{- end -}}

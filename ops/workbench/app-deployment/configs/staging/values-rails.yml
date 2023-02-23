@@ -1,0 +1,126 @@
+global:
+  application:
+    product: helm-workbench
+    environment: test
+    version: 3.1.2
+
+    environmentVariables:
+      WORKBENCH: true
+      TEST_RESPONSE: "Working Locally! Another deployment!"
+      ANOTHER_ENV: "another test"
+
+    configFiles:
+      - /app/config.ru
+      - /app/check_sidekiq.sh
+
+  applicationImage:
+    repository: ruby
+
+  applicationMonitoring:
+    datadog: true
+    sentry: true
+
+migrations:
+  command: ruby -e 'puts :migration_is_done'
+
+webserver:
+  component: "webserver"
+  command: "gem install rack rackup --no-document && cd /app && rackup --host 0.0.0.0 --port 9292"
+
+  deployment:
+    replicas: 2
+    port: 9292
+    resources:
+      requests:
+        memory: 500Mi
+        cpu: 200m
+      limits:
+        memory: 1500Mi
+        cpu: 600m
+    startupProbe:
+      enabled: true
+    readinessProbe:
+      enabled: true
+    livenessProbe:
+      enabled: true
+
+  ingress:
+    enabled: true
+    list:
+#      - host: olb.matic.link
+#        type: internal
+#        tls: matic.link-tls
+#
+      - host: helm-workbench.matic.com
+        type: external
+        deny_locations:
+          - /admin
+        tls: matic.com-tls
+
+  service:
+    enabled: true
+
+  serviceAccount:
+    create: true
+
+#  autoscaling:
+#    enabled: true
+#    minReplicas: 2
+#    maxReplicas: 4
+#    metrics:
+#      - name: olb-requests-per-second
+#        type: Datadog
+#        query: ewma_10(avg:nginx_ingress.controller.requests{service:olb-webserver}.as_count().rollup(avg, 60))
+#        target:
+#          type: AverageValue
+#          averageValue: 12
+
+sidekiq:
+  component: "sidekiq"
+  command: "ruby -e 'loop { puts :sidekiq_working; sleep 1}'"
+  deployment:
+    resources:
+      requests:
+        memory: 200Mi
+        cpu: 100m
+      limits:
+        memory: 700Mi
+        cpu: 300m
+    startupProbe:
+      enabled: false
+      command:
+        - /bin/sh
+        - -c
+        - "stat /tmp/healthy || exit 1"
+    readinessProbe:
+      enabled: false
+      command:
+        - /bin/sh
+        - -c
+        - "stat /tmp/healthy || exit 1"
+
+#    autoscaling:
+#      enabled: true
+#      minReplicas: 1
+#      maxReplicas: 3
+#      metrics:
+#        - name: olb-sidekiq-utilization
+#          type: Datadog
+#          query: ewma_10(avg:sidekiq.process.utilization{product:olb}.rollup(avg, 60))
+#          target:
+#            type: Value
+#            value: 75
+
+
+kafka:
+  component: "kafka"
+  command: "ruby -e 'loop { puts :kafka_working; sleep 1}'"
+  deployment:
+    replicas: 1
+    resources:
+      requests:
+        memory: 200Mi
+        cpu: 100m
+      limits:
+        memory: 700Mi
+        cpu: 300m

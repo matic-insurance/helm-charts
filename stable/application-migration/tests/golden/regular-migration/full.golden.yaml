@@ -74,8 +74,9 @@ spec:
             - secretRef:
                 name: olb-configs-environment
           volumeMounts:
-            - name: olb-configs-runtime
-              mountPath: /
+            - name: olb-configs-migration
+              mountPath: "/app/config/app_settings.local.yml"
+              subPath: "0"
               readOnly: true
           resources:
             limits:
@@ -85,6 +86,6 @@ spec:
               cpu: 300m
               memory: 500Mi
       volumes:
-        - name: olb-configs-runtime-vol
+        - name: olb-configs-migration
           secret:
-            secretName: olb-configs-runtime
+            secretName: olb-configs-migration

@@ -77,9 +77,12 @@ spec:
           {{- if or .Values.global.application.configFiles .Values.deployment.volumeMounts }}
           volumeMounts:
           {{- with .Values.global.application.configFiles }}
+          {{- range $name, $path := . }}
             - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
-              mountPath: /
+              mountPath: {{ $path | quote }}
+              subPath: {{ $name | quote }}
               readOnly: true
+          {{- end }}
           {{- end }}
           {{- with .Values.deployment.volumeMounts }}
           {{- toYaml . | nindent 12 }}
@@ -134,11 +137,15 @@ spec:
             failureThreshold: {{ .Values.deployment.livenessProbe.failureThreshold }}
           {{- end }}
           resources:
+            {{- if kindIs "string" .Values.deployment.resources }}
+            {{- toYaml (get .Values.defaults.resources .Values.deployment.resources) | nindent 12 }}
+            {{- else }}
             {{- toYaml .Values.deployment.resources | nindent 12 }}
+            {{- end }}
       {{- if or .Values.deployment.volumes .Values.global.application.configFiles }}
       volumes:
       {{- with .Values.global.application.configFiles }}
-        - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}-vol
+        - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
           secret:
             secretName: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
       {{- end }}

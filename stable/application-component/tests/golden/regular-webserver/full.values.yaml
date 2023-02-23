@@ -12,7 +12,7 @@ global:
       VAULT_ADDR: https://vault-st1.matic.link
       VAULT_AUTH_BACKEND: staging-eks-3
     configFiles:
-      - /app/config/app_settings.local.yml
+      app_settings: /app/config/app_settings.local.yml
 
   applicationImage:
     repository: matic/olb
@@ -40,13 +40,7 @@ ingress:
 deployment:
   replicas: 2
   port: 9292
-  resources:
-    requests:
-      memory: 200Mi
-      cpu: 100m
-    limits:
-      memory: 700Mi
-      cpu: 300m
+  resources: high
   startupProbe:
     enabled: true
   readinessProbe:

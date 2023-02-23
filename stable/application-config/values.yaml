@@ -25,9 +25,6 @@ global:
     # All files on local disk will be resolved by evaluating this template and adding configFile path.
     configFilePathTemplate: "configs/{{ $.Values.global.environment }}"
 
-# Application component that is deployed
-component: configs
-
 # Test Settings do not use in production
 tests:
   renderSecrets:

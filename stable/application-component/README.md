@@ -93,7 +93,6 @@ Below is example configuration for regular app at matic
 global:
   application:
     product: olb
-    component: webserver
     environment: production
     version: release-1.2.3
 

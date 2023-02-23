@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -e
+
+if [ -z $1 ]
+  then
+    echo 'Please provide environment name as argument... (staging, production)'
+    echo 'example: `bash deploy *staging* develop`'
+    exit 1
+fi
+
+if [ -z $2 ]
+  then
+    echo 'Please provide docker tag to build.. (latest, develop, release-x.x.x)'
+    echo 'example: `bash deploy staging *release-0.1.0*'
+    exit 1
+fi
+
+ENVIRONMENT=$1
+RELEASE=$2
+PRODUCT=helm-workbench
+SERVICE=rails
+HELM_REPO=https://matic-insurance.github.io/helm-charts
+
+function get_charts(){
+  helm repo add matic-charts "$HELM_REPO"
+  helm dependency up --skip-refresh
+}
+
+function install_release(){
+  helm upgrade -i $1-$4-$2 \
+  -f ./configs/$2/values-$4.yml \
+  --namespace $2 \
+  --set global.application.version=$3 \
+  --wait \
+  --timeout 10m \
+  "${@:7}" \
+  ./
+}
+
+get_charts
+install_release "$PRODUCT" "$ENVIRONMENT" "$RELEASE" "$SERVICE" $*

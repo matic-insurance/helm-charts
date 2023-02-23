@@ -9,14 +9,14 @@ metadata:
     kubernetes.io/ingress.class: {{ required "Ingress type must be specified" $ingress.type | quote  }}
     {{- /* Get default annotations and merge them with one provided in config. Empty annotations discarded*/}}
     {{- $ingress_annotations := $ingress.annotations | default dict }}
-    {{- $annotations := merge $ingress_annotations $.Values.ingress.default.annotations }}
+    {{- $annotations := merge $ingress_annotations $.Values.defaults.ingress.annotations }}
     {{- range $key, $value := $annotations }}
     {{- if $value }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
     {{- end }}
     {{- /* Insert dns annotations related to host/additional host unless previously defined */}}
-    {{- $additional_hosts := $ingress.additional_hosts | default $.Values.ingress.default.additional_hosts }}
+    {{- $additional_hosts := $ingress.additional_hosts | default $.Values.defaults.ingress.additional_hosts }}
     {{- if and ($additional_hosts) (not (hasKey $ingress_annotations "external-dns.alpha.kubernetes.io/hostname")) }}
     nginx.ingress.kubernetes.io/server-alias: {{ $additional_hosts | join ", " | quote }}
     {{- end }}
@@ -42,7 +42,7 @@ spec:
     - host: {{ required "Ingress host must be specified" $ingress.host }}
       http:
         paths:
-          {{- range $path := ($ingress.allow_locations | default $.Values.ingress.default.allow_locations) }}
+          {{- range $path := ($ingress.allow_locations | default $.Values.defaults.ingress.allow_locations) }}
           - backend:
               service:
                 name: {{ include "application-helpers.fullname" $ }}
