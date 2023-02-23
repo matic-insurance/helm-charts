@@ -9,7 +9,7 @@ HELM_PKG="docs"
 for i in $(ls -1 ${CHARTS_DIR})
 do
     echo "building ${i} chart"
-    helm package -d ${HELM_PKG} ${CHARTS_DIR}/${i}
+    helm package --dependency-update --destination ${HELM_PKG} ${CHARTS_DIR}/${i}
 done
 
 # Update index.yaml with new charts
