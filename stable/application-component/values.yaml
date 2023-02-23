@@ -284,5 +284,3 @@ defaults:
       limits:
         memory: 2100Mi
         cpu: 800m
-
-
