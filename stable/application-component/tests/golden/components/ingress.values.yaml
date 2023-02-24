@@ -9,9 +9,11 @@ global:
 
 component: webserver
 
+deployment:
+  port: 3010
+
 service:
   enabled: true
-  port: 3010
 
 ingress:
   enabled: true

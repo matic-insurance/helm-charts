@@ -9,6 +9,8 @@ global:
 
 component: webserver
 
+deployment:
+  port: 9292
+
 service:
   enabled: true
-  port: 9292

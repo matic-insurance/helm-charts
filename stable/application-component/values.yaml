@@ -37,6 +37,9 @@ deployment:
   # Number of pods to run. Ignored when autoscaling enabled
   replicas: 1
 
+  # port configures exposed port by deployment and used in service and ingress configurations.
+  port: 9292
+
   # placement tells where pods should be scheduled: spot, on_demand, mixed.
   # configuration should not be mixed with affinity/topologySpreadConstraints/tolerations
   # By default no special placement is done
@@ -81,7 +84,7 @@ deployment:
     path: /healthz/webserver
     # Specify command if you want probe to use exec
     command:
-    # Specify port if you want to override default service port
+    # Specify port if you want to override default deployment port
 #    port: 3000
     # How long to wait before sending first probe
     initialDelaySeconds: 1
@@ -157,8 +160,6 @@ service:
   enabled: false
   # Type of the service
   type: ClusterIP
-  # Pod port to listen and expose
-  port: 9292
 
 # Ingress configuration
 # Ingress will forward all requests to the service configured above. Ingress is not created when service disabled
