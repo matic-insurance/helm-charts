@@ -105,6 +105,9 @@ spec:
             - secretRef:
                 name: olb-configs-environment
           volumeMounts:
+            - name: dynamic-sa-token
+              mountPath: /var/run/secrets/tokens
+              readOnly: true
             - name: olb-configs-runtime
               mountPath: "/app/config/app_settings.local.yml"
               subPath: "app_settings"
@@ -144,6 +147,12 @@ spec:
               cpu: 400m
               memory: 700Mi
       volumes:
+        - name: dynamic-sa-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: dynamic-sa-token
+                  expirationSeconds: 600
         - name: olb-configs-runtime
           secret:
             secretName: olb-configs-runtime

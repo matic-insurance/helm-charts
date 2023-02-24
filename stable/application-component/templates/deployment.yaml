@@ -74,8 +74,12 @@ spec:
           {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- end }}
-          {{- if or .Values.global.application.configFiles .Values.deployment.volumeMounts }}
           volumeMounts:
+            {{- /* Mount service account token to hardcoded path for backward compatibility with settings_reader-vault_resolver <= 0.4.9*/}}
+            {{- /* should be removed once we make settings_reader-vault_resolver read token from default location or support custom token location*/}}
+            - name: dynamic-sa-token
+              mountPath: /var/run/secrets/tokens
+              readOnly: true
           {{- with .Values.global.application.configFiles }}
           {{- range $name, $path := . }}
             - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
@@ -86,7 +90,6 @@ spec:
           {{- end }}
           {{- with .Values.deployment.volumeMounts }}
           {{- toYaml . | nindent 12 }}
-          {{- end }}
           {{- end }}
           {{- if .Values.deployment.startupProbe.enabled }}
           startupProbe:
@@ -142,8 +145,15 @@ spec:
             {{- else }}
             {{- toYaml .Values.deployment.resources | nindent 12 }}
             {{- end }}
-      {{- if or .Values.deployment.volumes .Values.global.application.configFiles }}
       volumes:
+          {{- /* Mount service account token to hardcoded path for backward compatibility with settings_reader-vault_resolver <= 0.4.9*/}}
+          {{- /* should be removed once we make settings_reader-vault_resolver read token from default location or support custom token location*/}}
+        - name: dynamic-sa-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: dynamic-sa-token
+                  expirationSeconds: 600
       {{- with .Values.global.application.configFiles }}
         - name: {{ include "application-helpers.configs.files-runtime.volume-name" $ }}
           secret:
@@ -151,7 +161,6 @@ spec:
       {{- end }}
       {{- with .Values.deployment.volumes }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
       {{- end }}
       {{- with .Values.deployment.nodeSelector }}
       nodeSelector:

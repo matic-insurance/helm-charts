@@ -43,6 +43,10 @@ spec:
         - name: application-component
           image: "bitnami/ruby:0.0.0"
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: dynamic-sa-token
+              mountPath: /var/run/secrets/tokens
+              readOnly: true
           resources:
             limits:
               cpu: 600m
@@ -50,6 +54,13 @@ spec:
             requests:
               cpu: 200m
               memory: 500Mi
+      volumes:
+        - name: dynamic-sa-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: dynamic-sa-token
+                  expirationSeconds: 600
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
