@@ -333,4 +333,3 @@ defaults:
         - maxSkew: 2
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: ScheduleAnyway
-
