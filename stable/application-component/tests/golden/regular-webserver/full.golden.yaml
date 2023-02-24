@@ -147,6 +147,13 @@ spec:
         - name: olb-configs-runtime
           secret:
             secretName: olb-configs-runtime
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: eks.amazonaws.com/capacityType
+        whenUnsatisfiable: DoNotSchedule
+      - maxSkew: 2
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
 ---
 # Source: application-component/templates/hpa.yaml
 apiVersion: autoscaling/v2

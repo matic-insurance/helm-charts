@@ -39,8 +39,10 @@ ingress:
 
 deployment:
   replicas: 2
+  placement: mixed
   port: 9292
   resources: high
+
   startupProbe:
     enabled: true
   readinessProbe:
