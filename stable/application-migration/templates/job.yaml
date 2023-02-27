@@ -39,7 +39,7 @@ spec:
       securityContext:
         {{- toYaml .Values.job.securityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "application-helpers.fullname" . }}
           image: {{ include "application-helpers.docker-image" . | quote }}
           {{- if .Values.command }}
           command: ["sh","-c",{{ .Values.command | quote }}]

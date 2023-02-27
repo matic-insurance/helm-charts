@@ -32,7 +32,7 @@ spec:
         fsGroup: 1000
         runAsUser: 1000
       containers:
-        - name: application-migration
+        - name: myproduct-migrations
           image: "bitnami/ruby:0.0.0"
           imagePullPolicy: IfNotPresent
           volumeMounts:

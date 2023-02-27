@@ -42,7 +42,7 @@ spec:
         fsGroup: 100
         runAsUser: 100
       containers:
-        - name: application-component
+        - name: myproduct-webserver
           image: "matic/olb:1.2.3"
           imagePullPolicy: Always
           volumeMounts:

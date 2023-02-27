@@ -68,7 +68,7 @@ spec:
         fsGroup: 100
         runAsUser: 100
       containers:
-        - name: application-component
+        - name: olb-webserver
           image: "matic/olb:release-1.2.3"
           command: ["sh","-c","bundle exec puma -t 8:8"]
           ports:

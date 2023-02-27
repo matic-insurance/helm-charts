@@ -120,7 +120,7 @@ spec:
         fsGroup: 100
         runAsUser: 100
       containers:
-        - name: application-component
+        - name: myproduct-webserver
           image: "bitnami/ruby:0.0.0"
           imagePullPolicy: IfNotPresent
           volumeMounts:

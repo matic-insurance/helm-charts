@@ -34,7 +34,7 @@ spec:
         fsGroup: 100
         runAsUser: 100
       containers:
-        - name: application-migration
+        - name: myproduct-migrations
           image: "matic/olb:1.2.3"
           imagePullPolicy: Always
           volumeMounts:

@@ -42,7 +42,7 @@ spec:
       securityContext:
         {{- toYaml .Values.deployment.securityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "application-helpers.fullname" . }}
           image: "{{ .Values.global.applicationImage.repository }}:{{ default .Values.global.application.version .Values.global.applicationImage.tag }}"
           {{- if .Values.command }}
           command: ["sh","-c",{{ .Values.command | quote }}]
