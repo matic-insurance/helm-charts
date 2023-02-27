@@ -49,6 +49,9 @@ spec:
             - secretRef:
                 name: test-secret-envvars
           volumeMounts:
+            - name: dynamic-sa-token
+              mountPath: /var/run/secrets/tokens
+              readOnly: true
             - mountPath: /cache
               name: cache-vol
           resources:
@@ -59,5 +62,11 @@ spec:
               cpu: 300m
               memory: 500Mi
       volumes:
+        - name: dynamic-sa-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: dynamic-sa-token
+                  expirationSeconds: 600
         - emptyDir: {}
           name: cache-vol

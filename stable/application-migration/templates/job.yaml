@@ -67,8 +67,13 @@ spec:
           {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- end }}
-          {{- if or .Values.global.application.configFiles .Values.job.volumeMounts }}
+{{- /*          {{- if or .Values.global.application.configFiles .Values.job.volumeMounts }}*/}}
           volumeMounts:
+            {{- /* Mount service account token to hardcoded path for backward compatibility with settings_reader-vault_resolver <= 0.4.9*/}}
+            {{- /* should be removed once we make settings_reader-vault_resolver read token from default location or support custom token location*/}}
+            - name: dynamic-sa-token
+              mountPath: /var/run/secrets/tokens
+              readOnly: true
           {{- with .Values.global.application.configFiles }}
           {{- range $name, $path := . }}
             - name: {{ include "application-helpers.configs.files-migration.volume-name" $ }}
@@ -80,11 +85,19 @@ spec:
           {{- with .Values.job.volumeMounts }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- end }}
+{{- /*          {{- end }}*/}}
           resources:
             {{- toYaml .Values.job.resources | nindent 12 }}
-      {{- if or .Values.job.volumes .Values.global.application.configFiles }}
+{{- /*      {{- if or .Values.job.volumes .Values.global.application.configFiles }}*/}}
       volumes:
+          {{- /* Mount service account token to hardcoded path for backward compatibility with settings_reader-vault_resolver <= 0.4.9*/}}
+          {{- /* should be removed once we make settings_reader-vault_resolver read token from default location or support custom token location*/}}
+        - name: dynamic-sa-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: dynamic-sa-token
+                  expirationSeconds: 600
       {{- with .Values.global.application.configFiles }}
         - name: {{ include "application-helpers.configs.files-migration.volume-name" $ }}
           secret:
@@ -93,7 +106,7 @@ spec:
       {{- with .Values.job.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- end }}
+{{- /*      {{- end }}*/}}
       {{- with .Values.job.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

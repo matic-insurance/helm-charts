@@ -18,5 +18,5 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation
 type: Opaque
 data:
-  ANOTHER_ENV: ImZhbHNlIg==
-  TEST: InRydWUi
+  ANOTHER_ENV: "ZmFsc2U="
+  TEST: "dHJ1ZQ=="

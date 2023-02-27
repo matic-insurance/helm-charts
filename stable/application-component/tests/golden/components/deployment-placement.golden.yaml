@@ -3,12 +3,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myproduct-webserver
+  name: myproduct-worker
   labels:
     app.kubernetes.io/name: myproduct
-    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/instance: myproduct-worker
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: webserver
+    app.kubernetes.io/component: worker
     app.kubernetes.io/part-of: myproduct
     app.kubernetes.io/version: "0.0.0"
 spec:
@@ -24,14 +24,14 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: myproduct
-      app.kubernetes.io/instance: myproduct-webserver
+      app.kubernetes.io/instance: myproduct-worker
   template:
     metadata:
       annotations:
         rollme: "123abc"
       labels:
         app.kubernetes.io/name: myproduct
-        app.kubernetes.io/instance: myproduct-webserver
+        app.kubernetes.io/instance: myproduct-worker
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst
@@ -61,3 +61,17 @@ spec:
               - serviceAccountToken:
                   path: dynamic-sa-token
                   expirationSeconds: 600
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: eks.amazonaws.com/capacityType
+                operator: In
+                values:
+                - Ec2Spot
+            weight: 1
+      topologySpreadConstraints:
+      - maxSkew: 2
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway

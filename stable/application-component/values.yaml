@@ -37,6 +37,14 @@ deployment:
   # Number of pods to run. Ignored when autoscaling enabled
   replicas: 1
 
+  # port configures exposed port by deployment and used in service and ingress configurations.
+  port: 9292
+
+  # placement tells where pods should be scheduled: spot, on_demand, mixed.
+  # configuration should not be mixed with affinity/topologySpreadConstraints/tolerations
+  # By default no special placement is done
+  placement:
+
   # Additional environment variables in k8s format:
   # - name: TEST
   #   value: true
@@ -76,7 +84,7 @@ deployment:
     path: /healthz/webserver
     # Specify command if you want probe to use exec
     command:
-    # Specify port if you want to override default service port
+    # Specify port if you want to override default deployment port
 #    port: 3000
     # How long to wait before sending first probe
     initialDelaySeconds: 1
@@ -144,7 +152,7 @@ deployment:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-  topologySpreadConstraints: {}
+  topologySpreadConstraints: []
 
 # Service configuration for the pods
 service:
@@ -152,8 +160,6 @@ service:
   enabled: false
   # Type of the service
   type: ClusterIP
-  # Pod port to listen and expose
-  port: 9292
 
 # Ingress configuration
 # Ingress will forward all requests to the service configured above. Ingress is not created when service disabled
@@ -284,3 +290,46 @@ defaults:
       limits:
         memory: 2100Mi
         cpu: 800m
+
+  # placement default settings
+  placement:
+    # spot placement prefers all pods to be scheduled to spot instances
+    spot:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: eks.amazonaws.com/capacityType
+                    operator: In
+                    values:
+                      - Ec2Spot
+      topologySpreadConstraints:
+        - maxSkew: 2
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+    # on demand placement - requires all pods on on demand instances instances
+    on_demand:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: eks.amazonaws.com/capacityType
+                    operator: In
+                    values:
+                      - ON_DEMAND
+      topologySpreadConstraints:
+        - maxSkew: 2
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+    # mixed placement - tells that pods should be distributed evenly between spot/on_demand instances
+    mixed:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: eks.amazonaws.com/capacityType
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 2
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway

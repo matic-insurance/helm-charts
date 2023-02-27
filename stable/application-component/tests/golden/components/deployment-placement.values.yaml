@@ -7,10 +7,7 @@ global:
   applicationImage:
     repository: "bitnami/ruby"
 
-component: webserver
+component: worker
 
 deployment:
-  port: 9292
-
-service:
-  enabled: true
+  placement: spot
