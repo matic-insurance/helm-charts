@@ -131,8 +131,8 @@ deployment:
 
   # Security context configuration for pod.
   securityContext:
-    fsGroup: 100
-    runAsUser: 100
+    fsGroup: 1000
+    runAsUser: 1000
 
   # Time before deployment starts checking for pod lifecycle
   minReadySeconds: 1

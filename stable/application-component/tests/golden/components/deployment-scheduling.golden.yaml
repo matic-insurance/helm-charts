@@ -32,15 +32,16 @@ spec:
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-webserver
+        app.kubernetes.io/component: webserver
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
       securityContext:
-        fsGroup: 100
-        runAsUser: 100
+        fsGroup: 1000
+        runAsUser: 1000
       containers:
-        - name: application-component
+        - name: myproduct-webserver
           image: "bitnami/ruby:0.0.0"
           imagePullPolicy: IfNotPresent
           volumeMounts:

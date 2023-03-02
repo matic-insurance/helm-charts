@@ -27,6 +27,7 @@ spec:
       labels:
         app.kubernetes.io/name: olb
         app.kubernetes.io/instance: olb-migration
+        app.kubernetes.io/component: migration
         tags.datadoghq.com/env: production
         tags.datadoghq.com/service: olb
         tags.datadoghq.com/version: "release-1.2.3"
@@ -36,10 +37,10 @@ spec:
       terminationGracePeriodSeconds: 30
       restartPolicy: Never
       securityContext:
-        fsGroup: 100
-        runAsUser: 100
+        fsGroup: 1000
+        runAsUser: 1000
       containers:
-        - name: application-migration
+        - name: olb-migration
           image: "matic/olb:release-1.2.3"
           command: ["sh","-c","rails db:setup db:migrate"]
           imagePullPolicy: IfNotPresent

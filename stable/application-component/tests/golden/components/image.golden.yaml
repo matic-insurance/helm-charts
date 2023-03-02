@@ -32,6 +32,7 @@ spec:
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-webserver
+        app.kubernetes.io/component: webserver
     spec:
       imagePullSecrets:
         - name: docker-login
@@ -39,10 +40,10 @@ spec:
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
       securityContext:
-        fsGroup: 100
-        runAsUser: 100
+        fsGroup: 1000
+        runAsUser: 1000
       containers:
-        - name: application-component
+        - name: myproduct-webserver
           image: "matic/olb:1.2.3"
           imagePullPolicy: Always
           volumeMounts:

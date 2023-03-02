@@ -23,6 +23,7 @@ spec:
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-migrations
+        app.kubernetes.io/component: migrations
     spec:
       imagePullSecrets:
         - name: docker-login
@@ -31,10 +32,10 @@ spec:
       terminationGracePeriodSeconds: 30
       restartPolicy: Never
       securityContext:
-        fsGroup: 100
-        runAsUser: 100
+        fsGroup: 1000
+        runAsUser: 1000
       containers:
-        - name: application-migration
+        - name: myproduct-migrations
           image: "matic/olb:1.2.3"
           imagePullPolicy: Always
           volumeMounts:

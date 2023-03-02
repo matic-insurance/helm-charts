@@ -28,6 +28,7 @@ spec:
         {{- end }}
       labels:
         {{- include "application-helpers.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: {{ .Values.component }}
         {{- if .Values.global.applicationMonitoring.datadog }}
         {{- include "application-helpers.monitoring.datadog.labels" . | nindent 8 }}
         {{- end }}
@@ -42,7 +43,7 @@ spec:
       securityContext:
         {{- toYaml .Values.deployment.securityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "application-helpers.fullname" . }}
           image: "{{ .Values.global.applicationImage.repository }}:{{ default .Values.global.application.version .Values.global.applicationImage.tag }}"
           {{- if .Values.command }}
           command: ["sh","-c",{{ .Values.command | quote }}]

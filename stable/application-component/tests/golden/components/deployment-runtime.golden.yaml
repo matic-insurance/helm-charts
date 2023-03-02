@@ -33,15 +33,16 @@ spec:
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-websocket
+        app.kubernetes.io/component: websocket
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
       securityContext:
-        fsGroup: 100
-        runAsUser: 100
+        fsGroup: 1000
+        runAsUser: 1000
       containers:
-        - name: application-component
+        - name: myproduct-websocket
           image: "bitnami/ruby:0.0.0"
           command: ["sh","-c","puma -p 9292"]
           imagePullPolicy: IfNotPresent

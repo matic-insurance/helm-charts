@@ -25,16 +25,17 @@ spec:
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-migrations
+        app.kubernetes.io/component: migrations
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
       restartPolicy: Never
       securityContext:
-        fsGroup: 100
-        runAsUser: 100
+        fsGroup: 1000
+        runAsUser: 1000
       containers:
-        - name: application-migration
+        - name: myproduct-migrations
           image: "bitnami/ruby:0.0.0"
           command: ["sh","-c","rails db:migrate"]
           imagePullPolicy: IfNotPresent
