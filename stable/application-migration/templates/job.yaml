@@ -24,6 +24,7 @@ spec:
         {{- end }}
       labels:
         {{- include "application-helpers.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: {{ .Values.component }}
         {{- if .Values.global.applicationMonitoring.datadog }}
         {{- include "application-helpers.monitoring.datadog.labels" . | nindent 8 }}
         {{- end }}

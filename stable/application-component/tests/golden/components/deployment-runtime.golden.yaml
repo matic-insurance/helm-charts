@@ -33,6 +33,7 @@ spec:
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-websocket
+        app.kubernetes.io/component: websocket
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst

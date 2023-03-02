@@ -26,6 +26,7 @@ spec:
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-migrations
+        app.kubernetes.io/component: migrations
         tags.datadoghq.com/env: staging
         tags.datadoghq.com/service: myproduct
         tags.datadoghq.com/version: "0.0.0"

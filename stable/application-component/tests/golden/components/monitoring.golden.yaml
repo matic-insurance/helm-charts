@@ -35,6 +35,7 @@ spec:
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-webserver
+        app.kubernetes.io/component: webserver
         tags.datadoghq.com/env: staging
         tags.datadoghq.com/service: myproduct
         tags.datadoghq.com/version: "0.0.0"

@@ -29,6 +29,7 @@ spec:
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-webserver
+        app.kubernetes.io/component: webserver
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirstWithHostNet
