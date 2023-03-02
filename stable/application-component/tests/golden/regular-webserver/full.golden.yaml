@@ -66,8 +66,8 @@ spec:
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 30
       securityContext:
-        fsGroup: 100
-        runAsUser: 100
+        fsGroup: 1000
+        runAsUser: 1000
       containers:
         - name: olb-webserver
           image: "matic/olb:release-1.2.3"

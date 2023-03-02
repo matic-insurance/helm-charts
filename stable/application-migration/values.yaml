@@ -74,8 +74,8 @@ job:
 
   # Security context configuration for pod.
   securityContext:
-    fsGroup: 100
-    runAsUser: 100
+    fsGroup: 1000
+    runAsUser: 1000
 
   # How long k8s waits for pod to terminate
   terminationGracePeriodSeconds: 30

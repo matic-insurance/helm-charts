@@ -37,8 +37,8 @@ spec:
       terminationGracePeriodSeconds: 30
       restartPolicy: Never
       securityContext:
-        fsGroup: 100
-        runAsUser: 100
+        fsGroup: 1000
+        runAsUser: 1000
       containers:
         - name: olb-migration
           image: "matic/olb:release-1.2.3"

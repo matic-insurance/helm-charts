@@ -32,8 +32,8 @@ spec:
       terminationGracePeriodSeconds: 30
       restartPolicy: Never
       securityContext:
-        fsGroup: 100
-        runAsUser: 100
+        fsGroup: 1000
+        runAsUser: 1000
       containers:
         - name: myproduct-migrations
           image: "bitnami/ruby:0.0.0"
