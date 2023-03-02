@@ -35,6 +35,15 @@ metadata:
 {{ toYaml $ingress.server_snippet | trimAll "|" | indent 4 }}
     {{- end }}
     {{- end }}
+    {{- if not (hasKey $ingress_annotations "nginx.ingress.kubernetes.io/configuration-snippet") }}
+    {{- if $.Values.global.applicationMonitoring.datadog }}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+        {{- /* Datadog: Tracing request inside nginx ingress https://docs.datadoghq.com/tracing/trace_collection/proxy_setup/?tab=nginx#nginx-ingress-controller-for-kubernetes */}}
+        opentracing_tag "service.name" {{ printf "%s-%s" (include "application-helpers.name" $) "nginx" | quote}};
+        {{- /* Datadog: Additional data for time request was queued https://docs.datadoghq.com/tracing/trace_collection/dd_libraries/ruby/#http-request-queuing */}}
+        proxy_set_header X-Request-Start "t=${msec}";
+    {{- end}}
+    {{- end }}
   labels:
     {{- include "application-helpers.labels" $ | nindent 4 }}
 spec:
