@@ -22,6 +22,9 @@ spec:
         {{- with .Values.job.annotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- if .Values.global.applicationMonitoring.datadog }}
+        ad.datadoghq.com/{{ include "application-helpers.fullname" . }}.logs: '[{"source": "{{ .Values.job.logs.source }}"}]'
+        {{- end }}
       labels:
         {{- include "application-helpers.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ .Values.component }}

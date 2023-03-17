@@ -32,6 +32,7 @@ spec:
     metadata:
       annotations:
         rollme: "123abc"
+        ad.datadoghq.com/myproduct-webserver.logs: '[{"source": "ruby"}]'
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-webserver
