@@ -66,8 +66,16 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.labels['tags.datadoghq.com/version']
+            - name: DD_ENTITY_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
             - name: DD_TAGS
-              value: "product:olb,component:migration"
+              value: "product:olb,element:migration"
+            - name: DD_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: SENTRY_RELEASE
               value: "olb-release-1.2.3"
             - name: SENTRY_ENVIRONMENT

@@ -68,8 +68,16 @@ Datadog environment variables to be used by datadog libraries
   valueFrom:
     fieldRef:
       fieldPath: metadata.labels['tags.datadoghq.com/version']
+- name: DD_ENTITY_ID
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.uid
 - name: DD_TAGS
-  value: "product:{{ .Values.global.application.product}},component:{{ .Values.component }}"
+  value: "product:{{ .Values.global.application.product}},element:{{ .Values.component }}"
+- name: DD_POD_NAME
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.name
 {{- end }}
 
 {{/*

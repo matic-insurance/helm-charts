@@ -64,8 +64,16 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.labels['tags.datadoghq.com/version']
+            - name: DD_ENTITY_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
             - name: DD_TAGS
-              value: "product:myproduct,component:migrations"
+              value: "product:myproduct,element:migrations"
+            - name: DD_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: SENTRY_RELEASE
               value: "myproduct-0.0.0"
             - name: SENTRY_ENVIRONMENT
