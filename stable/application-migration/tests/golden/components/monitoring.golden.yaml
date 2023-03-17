@@ -23,6 +23,7 @@ spec:
     metadata:
       annotations:
         rollme: "123abc"
+        ad.datadoghq.com/myproduct-migrations.logs: '[{"source": "ruby"}]'
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-migrations

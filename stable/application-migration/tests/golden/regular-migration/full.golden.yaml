@@ -24,6 +24,7 @@ spec:
     metadata:
       annotations:
         rollme: "123abc"
+        ad.datadoghq.com/olb-migration.logs: '[{"source": "ruby"}]'
       labels:
         app.kubernetes.io/name: olb
         app.kubernetes.io/instance: olb-migration

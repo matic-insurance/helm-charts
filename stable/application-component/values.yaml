@@ -154,6 +154,11 @@ deployment:
   affinity: {}
   topologySpreadConstraints: []
 
+  # logs configure logging for pod
+  logs:
+    # logs.source tells datadog how to parse logs from this deployment
+    source: ruby
+
 # Service configuration for the pods
 service:
   # Should we create the service

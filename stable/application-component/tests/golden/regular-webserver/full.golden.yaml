@@ -54,6 +54,7 @@ spec:
     metadata:
       annotations:
         rollme: "123abc"
+        ad.datadoghq.com/olb-webserver.logs: '[{"source": "ruby"}]'
       labels:
         app.kubernetes.io/name: olb
         app.kubernetes.io/instance: olb-webserver
