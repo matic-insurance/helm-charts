@@ -209,18 +209,38 @@ autoscaling:
   # Min number of pods to scale
   minReplicas: 2
   # Metrics that used to evaluate target pods
-  metrics: {}
+  metrics: []
     # Example datadog metrics
 #    - name: origin-p95-latency
+#      type: Datadog
 #      query: p95:trace.nginx.handle{env:production,resource_name:/,service:origin-nginx}.rollup(avg, 60)
 #      target:
 #        type: Value # desiredReplicas = ceil[currentReplicas * ( currentMetricValue / desiredMetricValue )] - number of pods should double if latency is 1 second
 #        value: 500m # p95 nginx latency goes above 500ms
 #    - name: origin-requests-per-second
+#      type: Datadog
 #      query: ewma_10(avg:nginx_ingress.controller.requests{service:origin-rails}.as_count().rollup(avg, 60))
 #      target:
 #        type: AverageValue # desiredReplicas = ceil[( currentMetricValue / desiredMetricValue )] - if nginx receives 60 requests per second - it should have 5 pods to process them
 #        averageValue: 12 # Assuming every thread processing 2 requests per second, and every pod has 6 threads
+#    - type: Resource
+#      resource:
+#        name: cpu
+#        target:
+#          type: Utilization
+#          averageUtilization: 60
+#    - type: External
+#      external:
+#        metric:
+#          name: sidekiq.queue.size
+#          selector:
+#            matchLabels:
+#              product: servicing
+#              environment: production
+#        target:
+#          type: Value
+#          value: 2000
+
   # Autoscaling behaviour
   behavior:
     scaleUp:
