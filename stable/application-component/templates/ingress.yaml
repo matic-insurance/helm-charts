@@ -9,9 +9,14 @@ metadata:
     kubernetes.io/ingress.class: {{ required "Ingress type must be specified" $ingress.type | quote  }}
     {{- /* Get default annotations and merge them with one provided in config. Empty annotations discarded*/}}
     {{- $ingress_annotations := $ingress.annotations | default dict }}
-    {{- $annotations := merge $ingress_annotations $.Values.defaults.ingress.annotations }}
+    {{- $annotations := merge dict $ingress_annotations $.Values.defaults.ingress.annotations }}
     {{- range $key, $value := $annotations }}
-    {{- if $value }}
+    {{- /* Due to the bug https://github.com/helm/helm/issues/5274 need additional checks to allow clearing defaults */}}
+    {{- if hasKey $ingress_annotations $key }}
+      {{- if get $ingress_annotations $key }}
+    {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    {{- else if $value }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
     {{- end }}
