@@ -50,8 +50,13 @@ func TestGoldenTemplates(t *testing.T) {
 	        Templates: []string{"templates/serviceaccount.yaml", "templates/deployment.yaml"},
 	    },
 	    {
-	        GoldenFileName: "components/image.golden.yaml",
-	        ValuesFiles: []string{"components/image.values.yaml"},
+	        GoldenFileName: "components/image-global.golden.yaml",
+	        ValuesFiles: []string{"components/image-global.values.yaml"},
+	        Templates: []string{"templates/deployment.yaml"},
+	    },
+	    {
+	        GoldenFileName: "components/image-custom.golden.yaml",
+	        ValuesFiles: []string{"components/image-custom.values.yaml"},
 	        Templates: []string{"templates/deployment.yaml"},
 	    },
 	    {

@@ -23,5 +23,5 @@ appVersion: "0.0.0"
 
 dependencies:
   - name: application-helpers
-    version: 0.1.8
+    version: 0.1.9
     repository: "file://../application-helpers"

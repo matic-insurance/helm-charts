@@ -1,0 +1,14 @@
+global:
+  application:
+    product: myproduct
+    environment: test
+    version: "1.2.3"
+
+  applicationImage:
+    repository: matic/olb
+    pullPolicy: Always
+    pullSecret: docker-login
+
+applicationImage:
+  repository: busybox
+  tag: 3.4

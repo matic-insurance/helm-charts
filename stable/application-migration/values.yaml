@@ -32,6 +32,13 @@ component: migrations
 # Command to execute inside of container `rails db:migrate`
 command:
 
+# Component application image configuration. Overrides global configuration
+applicationImage:
+  # docker images repo
+  repository: ""
+  # Overrides the image tag whose default is the Values.version.
+  tag: ""
+
 # Migration job configurations
 job:
   # Additional environment variables in k8s format:

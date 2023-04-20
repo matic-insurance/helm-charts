@@ -32,6 +32,13 @@ component: ""
 # Command to execute inside of container `bundle exec puma`
 command: ""
 
+# Component application image configuration. Overrides global configuration
+applicationImage:
+  # docker images repo
+  repository: ""
+  # Overrides the image tag whose default is the Values.version.
+  tag: ""
+
 # Deployment configurations
 deployment:
   # Number of pods to run. Ignored when autoscaling enabled
