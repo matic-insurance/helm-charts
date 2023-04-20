@@ -139,8 +139,10 @@ Define the name of the service account to use
 Construct full docker image
 */}}
 {{- define "application-helpers.docker-image" }}
-{{- $repository := required ".Values.global.applicationImage.repository is required for application deployment" .Values.global.applicationImage.repository -}}
-{{- $tag := default .Values.global.application.version .Values.global.applicationImage.tag -}}
+{{- $imageRepository := default .Values.global.applicationImage.repository .Values.applicationImage.repository }}
+{{- $imageTag := .Values.applicationImage.tag | default .Values.global.applicationImage.tag | default .Values.global.application.version | print }}
+{{- $repository := required ".applicationImage.repository is required for application deployment" $imageRepository -}}
+{{- $tag := required ".applicationImage.tag is required for application deployment" $imageTag -}}
 {{ printf "%s:%s" $repository $tag }}
 {{- end }}
 
