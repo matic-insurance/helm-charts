@@ -11,7 +11,12 @@ component: webserver
 
 deployment:
   dnsPolicy: ClusterFirstWithHostNet
-
+  dnsConfig:
+    searches:
+      - my.dns.search.suffix
+    options:
+      - name: ndots
+        value: "2"
   minReadySeconds: 5
   progressDeadlineSeconds: 60
   terminationGracePeriodSeconds: 60

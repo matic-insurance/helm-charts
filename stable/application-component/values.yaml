@@ -136,6 +136,9 @@ deployment:
   # How pods resolve DNS records
   dnsPolicy: ClusterFirst
 
+  # Custom DNS configuration
+  dnsConfig:
+
   # Security context configuration for pod.
   securityContext:
     fsGroup: 1000

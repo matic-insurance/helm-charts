@@ -33,6 +33,12 @@ spec:
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirstWithHostNet
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "2"
+        searches:
+        - my.dns.search.suffix
       terminationGracePeriodSeconds: 60
       securityContext:
         fsGroup: 1000

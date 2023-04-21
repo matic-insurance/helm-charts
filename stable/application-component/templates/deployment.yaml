@@ -42,6 +42,10 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "application-helpers.serviceAccountName" . }}
       dnsPolicy: {{ .Values.deployment.dnsPolicy }}
+      {{- with .Values.deployment.dnsConfig }}
+      dnsConfig:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
       securityContext:
         {{- toYaml .Values.deployment.securityContext | nindent 8 }}
