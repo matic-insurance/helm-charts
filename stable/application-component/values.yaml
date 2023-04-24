@@ -136,7 +136,7 @@ deployment:
   # How pods resolve DNS records
   dnsPolicy: ClusterFirst
 
-  # Custom DNS configuration
+  # Custom DNS configuration. Overrides default ndots 1 option
   dnsConfig:
 
   # Security context configuration for pod.
@@ -368,3 +368,10 @@ defaults:
         - maxSkew: 2
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: ScheduleAnyway
+
+  # Default DNS configuration for application deployment
+  dnsConfig:
+    options:
+      - name: ndots
+        value: "1"
+

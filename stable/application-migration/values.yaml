@@ -78,6 +78,8 @@ job:
   # Advanced deployment options
   # How pods resolve DNS records
   dnsPolicy: ClusterFirst
+  # Custom DNS configuration. Overrides default ndots 1 option
+  dnsConfig:
 
   # Security context configuration for pod.
   securityContext:
@@ -106,3 +108,10 @@ serviceAccount:
   name: ""
   # Additional Annotations to add to the service account when creating
   annotations: {}
+
+defaults:
+  # Default DNS configuration for application deployment. Set ndots option to 1
+  dnsConfig:
+    options:
+      - name: ndots
+        value: "1"

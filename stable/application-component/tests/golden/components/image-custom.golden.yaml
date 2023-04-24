@@ -38,6 +38,10 @@ spec:
         - name: docker-login
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "1"
       terminationGracePeriodSeconds: 30
       securityContext:
         fsGroup: 1000
