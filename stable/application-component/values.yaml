@@ -47,10 +47,33 @@ deployment:
   # port configures exposed port by deployment and used in service and ingress configurations.
   port: 9292
 
+  # availability configures different aspects of application replication, disruption budget and updates
+  # availability:critical
+  #  - checks if app has at least 3 pods,
+  #  - update/disruption allow at most one pod as unhealthy
+  #  - shutdown have additional pre stop hook dealy to account for other services accounting for change
+  #  - affinity demands placing pods on different hosts
+  # availability:high
+  #  - checks app to have at least 2 pods
+  #  - update/disruption allow at most one pod as unhealthy
+  #  - shutdown have additional pre stop hook dealy to account for other services accounting for change
+  #  - affinity asks placing pods on different hosts
+  # availability:normal
+  #  - checks app to have at least 2 pods
+  #  - update/disruption allow at most one pod as unhealthy
+  # availability:irrelevant
+  #  - it is ok for component to be down for short period of time.
+  availability: normal
+
   # placement tells where pods should be scheduled: spot, on_demand, mixed.
   # configuration should not be mixed with affinity/topologySpreadConstraints/tolerations
   # By default no special placement is done
   placement:
+
+  # resources describe what pod resources should have.
+  # Supports "low" "normal" "high" predefined values
+  # Supports k8s definition if custom values are needed
+  resources: normal
 
   # Additional environment variables in k8s format:
   # - name: TEST
@@ -74,11 +97,6 @@ deployment:
 
   # Custom annotations to be added to the pod
   annotations: {}
-
-  # resources describe what pod resources should have.
-  # Supports "low" "normal" "high" predefined values
-  # Supports k8s definition if custom values are needed
-  resources: normal
 
   # Pod health probes configurations
   # Check if pod successfully started

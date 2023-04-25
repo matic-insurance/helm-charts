@@ -1,4 +1,16 @@
 ---
+# Source: application-component/templates/pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: myproduct-webserver
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: myproduct
+      app.kubernetes.io/instance: myproduct-webserver
+---
 # Source: application-component/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment

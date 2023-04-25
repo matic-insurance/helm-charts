@@ -1,0 +1,16 @@
+{{- $availability := .Values.deployment.availability }}
+{{- if not (eq $availability "irrelevant") }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "application-helpers.fullname" . }}
+spec:
+  maxUnavailable: 1
+  {{- if eq $availability "critical" }}
+  minAvailable: 2
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "application-helpers.selectorLabels" . | nindent 6 }}
+{{- end }}

@@ -1,4 +1,16 @@
 ---
+# Source: application-component/templates/pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: olb-webserver
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: olb
+      app.kubernetes.io/instance: olb-webserver
+---
 # Source: application-component/templates/service.yaml
 apiVersion: v1
 kind: Service
