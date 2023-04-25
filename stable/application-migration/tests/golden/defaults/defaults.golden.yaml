@@ -28,6 +28,10 @@ spec:
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "1"
       terminationGracePeriodSeconds: 30
       restartPolicy: Never
       securityContext:
