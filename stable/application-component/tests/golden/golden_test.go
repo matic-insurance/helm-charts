@@ -85,18 +85,36 @@ func TestGoldenTemplates(t *testing.T) {
 	        Templates: []string{"templates/deployment.yaml", "templates/service.yaml"},
 	    },
 	    {
-	        GoldenFileName: "components/ingress.golden.yaml",
-	        ValuesFiles: []string{"components/ingress.values.yaml"},
-	        Templates: []string{"templates/ingress.yaml", "templates/service.yaml"},
+	        GoldenFileName: "deployment-schemes/critical-mixed.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/critical-mixed.values.yaml"},
 	    },
 	    {
-	        GoldenFileName: "components/hpa.golden.yaml",
-	        ValuesFiles: []string{"components/hpa.values.yaml"},
-	        Templates: []string{"templates/hpa.yaml", "templates/datadog-metric.yaml", "templates/deployment.yaml"},
+	        GoldenFileName: "deployment-schemes/critical-on_demand.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/critical-on_demand.values.yaml"},
 	    },
 	    {
-	        GoldenFileName: "regular-webserver/full.golden.yaml",
-	        ValuesFiles: []string{"regular-webserver/full.values.yaml"},
+	        GoldenFileName: "deployment-schemes/high-mixed.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/high-mixed.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/high-on_demand.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/high-on_demand.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/high-spot.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/high-spot.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/normal-mixed.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/normal-mixed.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/normal-spot.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/normal-spot.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/irrelevant-spot.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/irrelevant-spot.values.yaml"},
 	    },
 	}
 

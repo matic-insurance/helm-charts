@@ -1,0 +1,82 @@
+---
+# Source: application-component/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myproduct-webserver
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
+spec:
+  replicas: 2
+  minReadySeconds: 1
+  progressDeadlineSeconds: 120
+  revisionHistoryLimit: 5
+  strategy:
+    rollingUpdate:
+      maxSurge: 3
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: myproduct
+      app.kubernetes.io/instance: myproduct-webserver
+  template:
+    metadata:
+      annotations:
+        rollme: "123abc"
+      labels:
+        app.kubernetes.io/name: myproduct
+        app.kubernetes.io/instance: myproduct-webserver
+        app.kubernetes.io/component: webserver
+    spec:
+      serviceAccountName: myproduct
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "1"
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+      containers:
+        - name: myproduct-webserver
+          image: "bitnami/ruby:0.0.0"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: dynamic-sa-token
+              mountPath: /var/run/secrets/tokens
+              readOnly: true
+          resources:
+            limits:
+              cpu: 300m
+              memory: 700Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+      volumes:
+        - name: dynamic-sa-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: dynamic-sa-token
+                  expirationSeconds: 600
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: eks.amazonaws.com/capacityType
+                operator: In
+                values:
+                - Ec2Spot
+            weight: 1
+      topologySpreadConstraints:
+      - maxSkew: 2
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
