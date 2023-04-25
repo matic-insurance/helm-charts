@@ -2,6 +2,7 @@ apiVersion: v2
 name: application-migration
 description: Job to run db migration for application before installing/upgrading new version
 home: https://matic-insurance.github.io/helm-charts
+icon: https://maticinsurance.sirv.com/engineering/helm/migration.png
 
 type: application
 

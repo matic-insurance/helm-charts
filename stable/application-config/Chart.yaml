@@ -2,6 +2,7 @@ apiVersion: v2
 name: application-config
 description: "Deployment of application configs: environment variables and custom files"
 home: https://matic-insurance.github.io/helm-charts
+icon: https://maticinsurance.sirv.com/engineering/helm/config.png
 
 type: application
 
