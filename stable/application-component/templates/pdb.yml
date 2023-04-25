@@ -14,3 +14,14 @@ spec:
     matchLabels:
       {{- include "application-helpers.selectorLabels" . | nindent 6 }}
 {{- end }}
+{{- /* Availability checks*/}}
+{{- $deploymentMinPods := int (min .Values.deployment.replicas .Values.autoscaling.minReplicas) }}
+{{- if eq $availability "critical" }}
+    {{- if lt $deploymentMinPods 3 }}
+        {{- fail "With availability critical - deployment and autoscaling should have at minimum 3 pods" }}
+    {{- end }}
+{{- else if or (eq $availability "high") (eq $availability "normal") }}
+    {{- if lt $deploymentMinPods 2 }}
+        {{- fail "With availability high and normal - deployment and autoscaling should have at minimum 2 pods" }}
+    {{- end }}
+{{- end }}

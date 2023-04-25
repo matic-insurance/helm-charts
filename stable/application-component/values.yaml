@@ -51,7 +51,7 @@ deployment:
   # availability:critical
   #  - checks if app has at least 3 pods,
   #  - update/disruption allow at most one pod as unhealthy
-  #  - shutdown have additional pre stop hook dealy to account for other services accounting for change
+  #  - shutdown have additional pre stop hook delay to account for other services accounting for change
   #  - affinity demands placing pods on different hosts
   # availability:high
   #  - checks app to have at least 2 pods
@@ -235,7 +235,7 @@ autoscaling:
   # Maximum number of pods to scale
   maxReplicas: 6
   # Min number of pods to scale
-  minReplicas: 2
+  minReplicas: 3
   # Metrics that used to evaluate target pods
   metrics: []
     # Example datadog metrics
