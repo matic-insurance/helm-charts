@@ -48,7 +48,12 @@ spec:
       {{- else }}
         {{- toYaml .Values.defaults.dnsConfig | nindent 8 }}
       {{- end }}
+        {{- /* When availability important - extend termination period for 15 seconds while prestop hook running */}}
+      {{- if or (eq .Values.deployment.availability "critical") (eq .Values.deployment.availability "high") }}
+      terminationGracePeriodSeconds: {{ add (int .Values.deployment.terminationGracePeriodSeconds) 15 }}
+      {{- else }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.deployment.securityContext | nindent 8 }}
       containers:
@@ -101,6 +106,16 @@ spec:
           {{- with .Values.deployment.volumeMounts }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if .Values.deployment.lifecycle }}
+          lifecycle:
+            {{ toYaml .Values.deployment.lifecycle | nindent 12 }}
+          {{ else if or (eq .Values.deployment.availability "critical") (eq .Values.deployment.availability "high") }}
+          {{- /* When availability important - wait 15 seconds before sending TERM signal. This allow upstream services to account for pod changes */}}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 15"]
+          {{- end}}
           {{- if .Values.deployment.startupProbe.enabled }}
           startupProbe:
             {{- if .Values.deployment.startupProbe.command }}

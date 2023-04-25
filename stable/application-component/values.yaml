@@ -51,12 +51,12 @@ deployment:
   # availability:critical
   #  - checks if app has at least 3 pods,
   #  - update/disruption allow at most one pod as unhealthy
-  #  - shutdown have additional pre stop hook delay to account for other services accounting for change
+  #  - shutdown have additional pre stop hook delay to allow other services stop using pod that is deleted
   #  - affinity demands placing pods on different hosts
   # availability:high
   #  - checks app to have at least 2 pods
   #  - update/disruption allow at most one pod as unhealthy
-  #  - shutdown have additional pre stop hook dealy to account for other services accounting for change
+  #  - shutdown have additional pre stop hook delay to allow other services stop using pod that is deleted
   #  - affinity asks placing pods on different hosts
   # availability:normal
   #  - checks app to have at least 2 pods
@@ -98,6 +98,8 @@ deployment:
   # Custom annotations to be added to the pod
   annotations: {}
 
+  # lifecycle configuration for container
+  lifecycle: {}
   # Pod health probes configurations
   # Check if pod successfully started
   # Passing probe - will mark pod as alive and start sending traffic to it.

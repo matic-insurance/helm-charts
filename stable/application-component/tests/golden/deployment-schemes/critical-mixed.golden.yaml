@@ -53,7 +53,7 @@ spec:
         options:
         - name: ndots
           value: "1"
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 45
       securityContext:
         fsGroup: 1000
         runAsUser: 1000
@@ -65,6 +65,10 @@ spec:
             - name: dynamic-sa-token
               mountPath: /var/run/secrets/tokens
               readOnly: true
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 15"]
           resources:
             limits:
               cpu: 800m
