@@ -80,6 +80,16 @@ func TestGoldenTemplates(t *testing.T) {
 	        Templates: []string{"templates/deployment.yaml", "templates/service.yaml"},
 	    },
 	    {
+	        GoldenFileName: "components/ingress.golden.yaml",
+	        ValuesFiles: []string{"components/ingress.values.yaml"},
+	        Templates: []string{"templates/ingress.yaml", "templates/service.yaml"},
+	    },
+	    {
+	        GoldenFileName: "components/hpa.golden.yaml",
+	        ValuesFiles: []string{"components/hpa.values.yaml"},
+	        Templates: []string{"templates/hpa.yaml", "templates/datadog-metric.yaml", "templates/deployment.yaml"},
+	    },
+	    {
 	        GoldenFileName: "deployment-schemes/critical-mixed.golden.yaml",
 	        ValuesFiles: []string{"deployment-schemes/critical-mixed.values.yaml"},
 	    },
