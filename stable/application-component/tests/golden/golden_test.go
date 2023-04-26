@@ -127,6 +127,10 @@ func TestGoldenTemplates(t *testing.T) {
 	        GoldenFileName: "deployment-schemes/irrelevant-spot.golden.yaml",
 	        ValuesFiles: []string{"deployment-schemes/irrelevant-spot.values.yaml"},
 	    },
+	    {
+	        GoldenFileName: "regular-webserver/full.golden.yaml",
+	        ValuesFiles: []string{"regular-webserver/full.values.yaml"},
+	    },
 	}
 
 	for _, testCase := range testCases {

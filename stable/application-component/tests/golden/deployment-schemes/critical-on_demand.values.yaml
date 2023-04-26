@@ -8,9 +8,9 @@ global:
     repository: "bitnami/ruby"
 
 component: webserver
+availability: critical
+resources: high
+placement: on_demand
 
 deployment:
-  availability: critical
-  resources: high
-  placement: on_demand
   replicas: 3

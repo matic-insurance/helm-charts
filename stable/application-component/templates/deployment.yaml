@@ -49,7 +49,7 @@ spec:
         {{- toYaml .Values.defaults.dnsConfig | nindent 8 }}
       {{- end }}
         {{- /* When availability important - extend termination period for 15 seconds while prestop hook running */}}
-      {{- if or (eq .Values.deployment.availability "critical") (eq .Values.deployment.availability "high") }}
+      {{- if or (eq .Values.availability "critical") (eq .Values.availability "high") }}
       terminationGracePeriodSeconds: {{ add (int .Values.deployment.terminationGracePeriodSeconds) 15 }}
       {{- else }}
       terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
@@ -109,7 +109,7 @@ spec:
           {{- if .Values.deployment.lifecycle }}
           lifecycle:
             {{ toYaml .Values.deployment.lifecycle | nindent 12 }}
-          {{ else if or (eq .Values.deployment.availability "critical") (eq .Values.deployment.availability "high") }}
+          {{ else if or (eq .Values.availability "critical") (eq .Values.availability "high") }}
           {{- /* When availability important - wait 15 seconds before sending TERM signal. This allow upstream services to account for pod changes */}}
           lifecycle:
             preStop:
@@ -165,10 +165,10 @@ spec:
             failureThreshold: {{ .Values.deployment.livenessProbe.failureThreshold }}
           {{- end }}
           resources:
-            {{- if kindIs "string" .Values.deployment.resources }}
-            {{- toYaml (get .Values.defaults.resources .Values.deployment.resources) | nindent 12 }}
-            {{- else }}
+            {{- if .Values.deployment.resources }}
             {{- toYaml .Values.deployment.resources | nindent 12 }}
+            {{- else }}
+            {{- toYaml (get .Values.defaults.resources .Values.resources) | nindent 12 }}
             {{- end }}
       volumes:
           {{- /* Mount service account token to hardcoded path for backward compatibility with settings_reader-vault_resolver <= 0.4.9*/}}
@@ -195,7 +195,7 @@ spec:
       affinity:
         {{- toYaml .Values.deployment.affinity | nindent 8 }}
       {{- else }}
-      {{- with get .Values.defaults.affinity .Values.deployment.placement }}
+      {{- with get .Values.defaults.affinity .Values.placement }}
       affinity:
         {{- toYaml . | nindent 8}}
       {{- end }}
@@ -208,7 +208,7 @@ spec:
       topologySpreadConstraints:
         {{- toYaml .Values.deployment.topologySpreadConstraints | nindent 8 }}
       {{- else }}
-      {{- with get (get .Values.defaults.topologySpreadConstraints .Values.deployment.availability) .Values.deployment.placement }}
+      {{- with get (get .Values.defaults.topologySpreadConstraints .Values.availability) .Values.placement }}
       topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
       {{- end }}

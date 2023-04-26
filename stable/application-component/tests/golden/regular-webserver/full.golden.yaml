@@ -81,7 +81,7 @@ spec:
         options:
         - name: ndots
           value: "1"
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 45
       securityContext:
         fsGroup: 1000
         runAsUser: 1000
@@ -138,6 +138,10 @@ spec:
               mountPath: "/app/config/app_settings.local.yml"
               subPath: "app_settings"
               readOnly: true
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 15"]
           startupProbe:
             httpGet:
               path: /healthz/webserver
@@ -183,12 +187,15 @@ spec:
           secret:
             secretName: olb-configs-runtime
       topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: eks.amazonaws.com/capacityType
-        whenUnsatisfiable: DoNotSchedule
-      - maxSkew: 2
-        topologyKey: topology.kubernetes.io/zone
-        whenUnsatisfiable: ScheduleAnyway
+        - maxSkew: 2
+          topologyKey: eks.amazonaws.com/capacityType
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
 ---
 # Source: application-component/templates/hpa.yaml
 apiVersion: autoscaling/v2

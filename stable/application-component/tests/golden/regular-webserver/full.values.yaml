@@ -23,6 +23,9 @@ global:
 
 component: webserver
 command: "bundle exec puma -t 8:8"
+availability: high
+placement: mixed
+resources: high
 
 ingress:
   enabled: true
@@ -39,9 +42,7 @@ ingress:
 
 deployment:
   replicas: 2
-  placement: mixed
   port: 9292
-  resources: high
 
   startupProbe:
     enabled: true
