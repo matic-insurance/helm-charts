@@ -175,6 +175,7 @@ deployment:
   terminationGracePeriodSeconds: 30
   # How many old ReplicaSets for this Deployment you want to retain
   revisionHistoryLimit: 5
+  # strategy - configures how pod are updated.
   strategy:
     type: RollingUpdate
     rollingUpdate:
