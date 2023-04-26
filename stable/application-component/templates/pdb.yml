@@ -14,8 +14,9 @@ spec:
     matchLabels:
       {{- include "application-helpers.selectorLabels" . | nindent 6 }}
 {{- end }}
-{{- /* Availability checks*/}}
+{{- /* Availability checks */}}
 {{- $deploymentMinPods := int (min .Values.deployment.replicas .Values.autoscaling.minReplicas) }}
+{{- $placement := .Values.deployment.placement }}
 {{- if eq $availability "critical" }}
     {{- if lt $deploymentMinPods 3 }}
         {{- fail "With availability critical - deployment and autoscaling should have at minimum 3 pods" }}

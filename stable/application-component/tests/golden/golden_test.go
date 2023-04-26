@@ -75,11 +75,6 @@ func TestGoldenTemplates(t *testing.T) {
 	        Templates: []string{"templates/deployment.yaml"},
 	    },
 	    {
-	        GoldenFileName: "components/deployment-placement.golden.yaml",
-	        ValuesFiles: []string{"components/deployment-placement.values.yaml"},
-	        Templates: []string{"templates/deployment.yaml"},
-	    },
-	    {
 	        GoldenFileName: "components/service.golden.yaml",
 	        ValuesFiles: []string{"components/service.values.yaml"},
 	        Templates: []string{"templates/deployment.yaml", "templates/service.yaml"},
@@ -91,6 +86,10 @@ func TestGoldenTemplates(t *testing.T) {
 	    {
 	        GoldenFileName: "deployment-schemes/critical-on_demand.golden.yaml",
 	        ValuesFiles: []string{"deployment-schemes/critical-on_demand.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/critical-spot.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/critical-spot.values.yaml"},
 	    },
 	    {
 	        GoldenFileName: "deployment-schemes/high-mixed.golden.yaml",
@@ -109,8 +108,20 @@ func TestGoldenTemplates(t *testing.T) {
 	        ValuesFiles: []string{"deployment-schemes/normal-mixed.values.yaml"},
 	    },
 	    {
+	        GoldenFileName: "deployment-schemes/normal-on_demand.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/normal-mixed.values.yaml"},
+	    },
+	    {
 	        GoldenFileName: "deployment-schemes/normal-spot.golden.yaml",
 	        ValuesFiles: []string{"deployment-schemes/normal-spot.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/irrelevant-mixed.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/irrelevant-mixed.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/irrelevant-on_demand.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/irrelevant-on_demand.values.yaml"},
 	    },
 	    {
 	        GoldenFileName: "deployment-schemes/irrelevant-spot.golden.yaml",

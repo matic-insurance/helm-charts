@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/part-of: myproduct
     app.kubernetes.io/version: "0.0.0"
 spec:
-  replicas: 1
+  replicas: 2
   minReadySeconds: 5
   progressDeadlineSeconds: 60
   revisionHistoryLimit: 3

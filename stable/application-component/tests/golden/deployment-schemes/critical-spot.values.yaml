@@ -10,7 +10,7 @@ global:
 component: webserver
 
 deployment:
-  availability: normal
+  availability: critical
+  resources: high
   placement: spot
-  resources: normal
-  replicas: 2
+  replicas: 3

@@ -42,7 +42,7 @@ applicationImage:
 # Deployment configurations
 deployment:
   # Number of pods to run. Ignored when autoscaling enabled
-  replicas: 1
+  replicas: 2
 
   # port configures exposed port by deployment and used in service and ingress configurations.
   port: 9292
@@ -63,12 +63,12 @@ deployment:
   #  - update/disruption allow at most one pod as unhealthy
   # availability:irrelevant
   #  - it is ok for component to be down for short period of time.
-  availability: normal
+  availability: irrelevant
 
-  # placement tells where pods should be scheduled: spot, on_demand, mixed.
+  # placement tells where pods should be scheduled: spot, on_demand, mixed, irrelevant
   # configuration should not be mixed with affinity/topologySpreadConstraints/tolerations
   # By default no special placement is done
-  placement:
+  placement: irrelevant
 
   # resources describe what pod resources should have.
   # Supports "low" "normal" "high" predefined values
@@ -346,48 +346,140 @@ defaults:
         memory: 2100Mi
         cpu: 800m
 
-  # placement default settings
-  placement:
+  affinity:
     # spot placement prefers all pods to be scheduled to spot instances
     spot:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 1
-              preference:
-                matchExpressions:
-                  - key: eks.amazonaws.com/capacityType
-                    operator: In
-                    values:
-                      - Ec2Spot
-      topologySpreadConstraints:
-        - maxSkew: 2
-          topologyKey: topology.kubernetes.io/zone
-          whenUnsatisfiable: ScheduleAnyway
-    # on demand placement - requires all pods on on demand instances instances
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+                - key: eks.amazonaws.com/capacityType
+                  operator: In
+                  values:
+                    - Ec2Spot
+    # on demand placement - prefers all pods on on demand instances instances
     on_demand:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: eks.amazonaws.com/capacityType
-                    operator: In
-                    values:
-                      - ON_DEMAND
-      topologySpreadConstraints:
-        - maxSkew: 2
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+                - key: eks.amazonaws.com/capacityType
+                  operator: In
+                  values:
+                    - ON_DEMAND
+    # Mixed placement do not have any affinity but using topologySpreadConstraints
+    mixed:
+    irrelevant:
+
+  topologySpreadConstraints:
+    critical:
+      # requires even distribution across hosts
+      # asks pods to be distributed across zones
+      spot:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: ScheduleAnyway
-    # mixed placement - tells that pods should be distributed evenly between spot/on_demand instances
-    mixed:
-      topologySpreadConstraints:
+      # requires even distribution across hosts
+      # asks pods to be distributed across zones
+      on_demand:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      # requires even distribution across node type and hosts
+      # asks pods to be distributed across zones
+      mixed:
         - maxSkew: 1
           topologyKey: eks.amazonaws.com/capacityType
           whenUnsatisfiable: DoNotSchedule
-        - maxSkew: 2
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: ScheduleAnyway
+      irrelevant:
+
+    high:
+      # requires uneven distribution across hosts
+      # asks pods to be distributed across zones
+      spot:
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      # requires uneven distribution across hosts
+      # asks pods to be distributed across zones
+      on_demand:
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      # requires uneven distribution across node type and hosts
+      # asks pods to be distributed across zones
+      mixed:
+        - maxSkew: 2
+          topologyKey: eks.amazonaws.com/capacityType
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      irrelevant:
+
+    normal:
+      # asks uneven distribution across hosts and zones
+      spot:
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      # asks uneven distribution across hosts and zones
+      on_demand:
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      # requires uneven distribution across node types
+      # asks pods to be more or less evenly across hosts and zones
+      mixed:
+        - maxSkew: 2
+          topologyKey: eks.amazonaws.com/capacityType
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      irrelevant:
+
+    irrelevant:
+      spot:
+      on_demand:
+      # asks uneven distribution across node types
+      mixed:
+        - maxSkew: 2
+          topologyKey: eks.amazonaws.com/capacityType
+          whenUnsatisfiable: ScheduleAnyway
+      irrelevant:
 
   # Default DNS configuration for application deployment
   dnsConfig:

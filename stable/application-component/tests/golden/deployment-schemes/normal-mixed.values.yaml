@@ -11,6 +11,6 @@ component: webserver
 
 deployment:
   availability: normal
-  resources: normal
   placement: mixed
+  resources: normal
   replicas: 2

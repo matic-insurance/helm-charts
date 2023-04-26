@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: webserver
     app.kubernetes.io/part-of: myproduct
-    app.kubernetes.io/version: "1.2.3"
+    app.kubernetes.io/version: "0.0.0"
 spec:
   replicas: 2
   minReadySeconds: 1
@@ -34,8 +34,6 @@ spec:
         app.kubernetes.io/instance: myproduct-webserver
         app.kubernetes.io/component: webserver
     spec:
-      imagePullSecrets:
-        - name: docker-login
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst
       dnsConfig:
@@ -48,19 +46,19 @@ spec:
         runAsUser: 1000
       containers:
         - name: myproduct-webserver
-          image: "nginx:2.3"
-          imagePullPolicy: Always
+          image: "bitnami/ruby:0.0.0"
+          imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: dynamic-sa-token
               mountPath: /var/run/secrets/tokens
               readOnly: true
           resources:
             limits:
-              cpu: 600m
-              memory: 1500Mi
+              cpu: 300m
+              memory: 700Mi
             requests:
-              cpu: 200m
-              memory: 500Mi
+              cpu: 100m
+              memory: 200Mi
       volumes:
         - name: dynamic-sa-token
           projected:
@@ -68,3 +66,13 @@ spec:
               - serviceAccountToken:
                   path: dynamic-sa-token
                   expirationSeconds: 600
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: eks.amazonaws.com/capacityType
+                operator: In
+                values:
+                - ON_DEMAND
+            weight: 1
