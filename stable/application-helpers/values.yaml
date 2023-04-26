@@ -9,7 +9,7 @@ global:
     version: ""
 
     # Config files to be mounted to application containers
-    configFiles: []
+    configFiles: {}
     # Path to config files on local disk. Note this value is for documentation purposes. Real default is inside of _config-files.yaml
     configFilePathTemplate: "configs/{{ $.Values.global.environment }}"
 
