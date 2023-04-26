@@ -70,10 +70,10 @@ spec:
                 command: ["/bin/sh", "-c", "sleep 15"]
           resources:
             limits:
-              cpu: 600m
+              cpu: 1200m
               memory: 1500Mi
             requests:
-              cpu: 200m
+              cpu: 400m
               memory: 500Mi
       volumes:
         - name: dynamic-sa-token

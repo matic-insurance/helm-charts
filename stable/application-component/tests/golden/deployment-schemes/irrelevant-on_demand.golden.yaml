@@ -54,10 +54,10 @@ spec:
               readOnly: true
           resources:
             limits:
-              cpu: 300m
+              cpu: 600m
               memory: 700Mi
             requests:
-              cpu: 100m
+              cpu: 200m
               memory: 200Mi
       volumes:
         - name: dynamic-sa-token

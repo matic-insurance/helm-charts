@@ -171,10 +171,10 @@ spec:
             failureThreshold: 4
           resources:
             limits:
-              cpu: 800m
+              cpu: 1800m
               memory: 2100Mi
             requests:
-              cpu: 400m
+              cpu: 600m
               memory: 700Mi
       volumes:
         - name: dynamic-sa-token
