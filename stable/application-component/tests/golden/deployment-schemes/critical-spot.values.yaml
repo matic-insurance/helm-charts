@@ -1,0 +1,19 @@
+global:
+  application:
+    product: myproduct
+    environment: test
+    version: "0.0.0"
+
+  applicationImage:
+    repository: "bitnami/ruby"
+
+component: webserver
+availability: critical
+resources: high
+placement: spot
+
+deployment:
+  replicas: 3
+
+probes:
+  enabled: true

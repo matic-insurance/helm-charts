@@ -13,11 +13,14 @@ metadata:
     app.kubernetes.io/version: "0.0.0"
 spec:
   replicas: 2
-  minReadySeconds: 5
-  progressDeadlineSeconds: 60
-  revisionHistoryLimit: 3
+  minReadySeconds: 1
+  progressDeadlineSeconds: 120
+  revisionHistoryLimit: 5
   strategy:
-    type: Recreate
+    rollingUpdate:
+      maxSurge: 3
+      maxUnavailable: 0
+    type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/name: myproduct
@@ -32,14 +35,12 @@ spec:
         app.kubernetes.io/component: webserver
     spec:
       serviceAccountName: myproduct
-      dnsPolicy: ClusterFirstWithHostNet
+      dnsPolicy: ClusterFirst
       dnsConfig:
         options:
         - name: ndots
-          value: "2"
-        searches:
-        - my.dns.search.suffix
-      terminationGracePeriodSeconds: 60
+          value: "1"
+      terminationGracePeriodSeconds: 30
       securityContext:
         fsGroup: 1000
         runAsUser: 1000
@@ -53,11 +54,11 @@ spec:
               readOnly: true
           resources:
             limits:
-              cpu: 1200m
-              memory: 1500Mi
+              cpu: 600m
+              memory: 700Mi
             requests:
-              cpu: 400m
-              memory: 500Mi
+              cpu: 200m
+              memory: 200Mi
       volumes:
         - name: dynamic-sa-token
           projected:
@@ -65,3 +66,13 @@ spec:
               - serviceAccountToken:
                   path: dynamic-sa-token
                   expirationSeconds: 600
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: eks.amazonaws.com/capacityType
+                operator: In
+                values:
+                - ON_DEMAND
+            weight: 1

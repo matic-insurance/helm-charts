@@ -1,4 +1,16 @@
 ---
+# Source: application-component/templates/pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: myproduct-webserver
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: myproduct
+      app.kubernetes.io/instance: myproduct-webserver
+---
 # Source: application-component/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -40,7 +52,7 @@ spec:
         options:
         - name: ndots
           value: "1"
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 45
       securityContext:
         fsGroup: 1000
         runAsUser: 1000
@@ -52,6 +64,37 @@ spec:
             - name: dynamic-sa-token
               mountPath: /var/run/secrets/tokens
               readOnly: true
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 15"]
+          startupProbe:
+            httpGet:
+              path: /healthz/webserver
+              port: 9292
+            initialDelaySeconds: 1
+            timeoutSeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 40
+          readinessProbe:
+            httpGet:
+              path: /healthz/webserver
+              port: 9292
+            initialDelaySeconds: 0
+            timeoutSeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            failureThreshold: 4
+          livenessProbe:
+            httpGet:
+              path: /healthz/webserver
+              port: 9292
+            initialDelaySeconds: 60
+            timeoutSeconds: 20
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 4
           resources:
             limits:
               cpu: 1200m
@@ -66,3 +109,13 @@ spec:
               - serviceAccountToken:
                   path: dynamic-sa-token
                   expirationSeconds: 600
+      topologySpreadConstraints:
+        - maxSkew: 2
+          topologyKey: eks.amazonaws.com/capacityType
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway

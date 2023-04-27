@@ -1,4 +1,16 @@
 ---
+# Source: application-component/templates/pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: olb-webserver
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: olb
+      app.kubernetes.io/instance: olb-webserver
+---
 # Source: application-component/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -69,7 +81,7 @@ spec:
         options:
         - name: ndots
           value: "1"
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 45
       securityContext:
         fsGroup: 1000
         runAsUser: 1000
@@ -126,6 +138,10 @@ spec:
               mountPath: "/app/config/app_settings.local.yml"
               subPath: "app_settings"
               readOnly: true
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 15"]
           startupProbe:
             httpGet:
               path: /healthz/webserver
@@ -155,10 +171,10 @@ spec:
             failureThreshold: 4
           resources:
             limits:
-              cpu: 800m
+              cpu: 1800m
               memory: 2100Mi
             requests:
-              cpu: 400m
+              cpu: 600m
               memory: 700Mi
       volumes:
         - name: dynamic-sa-token
@@ -171,12 +187,15 @@ spec:
           secret:
             secretName: olb-configs-runtime
       topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: eks.amazonaws.com/capacityType
-        whenUnsatisfiable: DoNotSchedule
-      - maxSkew: 2
-        topologyKey: topology.kubernetes.io/zone
-        whenUnsatisfiable: ScheduleAnyway
+        - maxSkew: 2
+          topologyKey: eks.amazonaws.com/capacityType
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
 ---
 # Source: application-component/templates/hpa.yaml
 apiVersion: autoscaling/v2
@@ -227,6 +246,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "internal"
     external-dns.alpha.kubernetes.io/ttl: "60"
+    nginx.ingress.kubernetes.io/load-balance: "ewma"
     nginx.ingress.kubernetes.io/proxy-body-size: "256m"
     nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
     nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"
@@ -267,6 +287,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "external"
     external-dns.alpha.kubernetes.io/ttl: "60"
+    nginx.ingress.kubernetes.io/load-balance: "ewma"
     nginx.ingress.kubernetes.io/proxy-body-size: "256m"
     nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
     nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"

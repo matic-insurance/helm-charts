@@ -75,11 +75,6 @@ func TestGoldenTemplates(t *testing.T) {
 	        Templates: []string{"templates/deployment.yaml"},
 	    },
 	    {
-	        GoldenFileName: "components/deployment-placement.golden.yaml",
-	        ValuesFiles: []string{"components/deployment-placement.values.yaml"},
-	        Templates: []string{"templates/deployment.yaml"},
-	    },
-	    {
 	        GoldenFileName: "components/service.golden.yaml",
 	        ValuesFiles: []string{"components/service.values.yaml"},
 	        Templates: []string{"templates/deployment.yaml", "templates/service.yaml"},
@@ -93,6 +88,54 @@ func TestGoldenTemplates(t *testing.T) {
 	        GoldenFileName: "components/hpa.golden.yaml",
 	        ValuesFiles: []string{"components/hpa.values.yaml"},
 	        Templates: []string{"templates/hpa.yaml", "templates/datadog-metric.yaml", "templates/deployment.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/critical-mixed.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/critical-mixed.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/critical-on_demand.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/critical-on_demand.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/critical-spot.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/critical-spot.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/high-mixed.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/high-mixed.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/high-on_demand.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/high-on_demand.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/high-spot.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/high-spot.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/normal-mixed.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/normal-mixed.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/normal-on_demand.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/normal-mixed.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/normal-spot.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/normal-spot.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/irrelevant-mixed.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/irrelevant-mixed.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/irrelevant-on_demand.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/irrelevant-on_demand.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "deployment-schemes/irrelevant-spot.golden.yaml",
+	        ValuesFiles: []string{"deployment-schemes/irrelevant-spot.values.yaml"},
 	    },
 	    {
 	        GoldenFileName: "regular-webserver/full.golden.yaml",

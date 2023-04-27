@@ -1,18 +1,30 @@
 ---
+# Source: application-component/templates/pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: myproduct-webserver
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: myproduct
+      app.kubernetes.io/instance: myproduct-webserver
+---
 # Source: application-component/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myproduct-worker
+  name: myproduct-webserver
   labels:
     app.kubernetes.io/name: myproduct
-    app.kubernetes.io/instance: myproduct-worker
+    app.kubernetes.io/instance: myproduct-webserver
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: worker
+    app.kubernetes.io/component: webserver
     app.kubernetes.io/part-of: myproduct
     app.kubernetes.io/version: "0.0.0"
 spec:
-  replicas: 1
+  replicas: 2
   minReadySeconds: 1
   progressDeadlineSeconds: 120
   revisionHistoryLimit: 5
@@ -24,15 +36,15 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: myproduct
-      app.kubernetes.io/instance: myproduct-worker
+      app.kubernetes.io/instance: myproduct-webserver
   template:
     metadata:
       annotations:
         rollme: "123abc"
       labels:
         app.kubernetes.io/name: myproduct
-        app.kubernetes.io/instance: myproduct-worker
-        app.kubernetes.io/component: worker
+        app.kubernetes.io/instance: myproduct-webserver
+        app.kubernetes.io/component: webserver
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst
@@ -45,19 +57,46 @@ spec:
         fsGroup: 1000
         runAsUser: 1000
       containers:
-        - name: myproduct-worker
+        - name: myproduct-webserver
           image: "bitnami/ruby:0.0.0"
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: dynamic-sa-token
               mountPath: /var/run/secrets/tokens
               readOnly: true
+          startupProbe:
+            httpGet:
+              path: /healthz/webserver
+              port: 9292
+            initialDelaySeconds: 1
+            timeoutSeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 40
+          readinessProbe:
+            httpGet:
+              path: /healthz/webserver
+              port: 9292
+            initialDelaySeconds: 0
+            timeoutSeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            failureThreshold: 4
+          livenessProbe:
+            httpGet:
+              path: /healthz/webserver
+              port: 9292
+            initialDelaySeconds: 60
+            timeoutSeconds: 20
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 4
           resources:
             limits:
-              cpu: 600m
+              cpu: 1200m
               memory: 1500Mi
             requests:
-              cpu: 200m
+              cpu: 400m
               memory: 500Mi
       volumes:
         - name: dynamic-sa-token
@@ -77,6 +116,9 @@ spec:
                 - Ec2Spot
             weight: 1
       topologySpreadConstraints:
-      - maxSkew: 2
-        topologyKey: topology.kubernetes.io/zone
-        whenUnsatisfiable: ScheduleAnyway
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway

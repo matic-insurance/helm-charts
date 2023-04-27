@@ -1,0 +1,33 @@
+{{- if not (eq .Values.availability "irrelevant") }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "application-helpers.fullname" . }}
+spec:
+  maxUnavailable: 1
+  {{- if eq .Values.availability "critical" }}
+  minAvailable: 2
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "application-helpers.selectorLabels" . | nindent 6 }}
+{{- end }}
+{{- /* Availability checks */}}
+{{- $deploymentMinPods := int (min .Values.deployment.replicas .Values.autoscaling.minReplicas) }}
+{{- if eq .Values.availability "critical" }}
+    {{- if lt $deploymentMinPods 3 }}
+      {{- fail "With availability critical - deployment and autoscaling should have at minimum 3 pods" }}
+    {{- end }}
+{{- else if or (eq .Values.availability "high") (eq .Values.availability "normal") }}
+    {{- if lt $deploymentMinPods 2 }}
+      {{- fail "With availability high and normal - deployment and autoscaling should have at minimum 2 pods" }}
+    {{- end }}
+{{- end }}
+
+{{- /* Health probes checks */}}
+{{- if not (eq .Values.availability "irrelevant") }}
+  {{- if not (and .Values.probes.enabled .Values.probes.startupProbe.enabled) }}
+    {{- fail "With availability that not irrelevant - deployment should have .probes and .probes.startupProbe enabled" }}
+  {{- end }}
+{{- end }}

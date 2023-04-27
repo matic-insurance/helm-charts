@@ -32,6 +32,34 @@ component: ""
 # Command to execute inside of container `bundle exec puma`
 command: ""
 
+# availability configures different aspects of application replication, disruption budget and updates
+# availability:critical
+#  - checks if app has at least 3 pods,
+#  - update/disruption allow at most one pod as unhealthy
+#  - shutdown have additional pre stop hook delay to allow other services stop using pod that is deleted
+#  - affinity demands placing pods on different hosts
+# availability:high
+#  - checks app to have at least 2 pods
+#  - update/disruption allow at most one pod as unhealthy
+#  - shutdown have additional pre stop hook delay to allow other services stop using pod that is deleted
+#  - affinity asks placing pods on different hosts
+# availability:normal
+#  - checks app to have at least 2 pods
+#  - update/disruption allow at most one pod as unhealthy
+# availability:irrelevant
+#  - it is ok for component to be down for short period of time.
+availability: irrelevant
+
+# placement tells where pods should be scheduled: spot, on_demand, mixed, irrelevant
+# configuration should not be mixed with affinity/topologySpreadConstraints/tolerations
+# By default no special placement is done
+placement: irrelevant
+
+# resources describe what pod resources should have.
+# Supports "low" "normal" "high" predefined values
+# Supports k8s definition if custom values are needed
+resources: normal
+
 # Component application image configuration. Overrides global configuration
 applicationImage:
   # docker images repo
@@ -42,15 +70,13 @@ applicationImage:
 # Deployment configurations
 deployment:
   # Number of pods to run. Ignored when autoscaling enabled
-  replicas: 1
+  replicas: 2
 
   # port configures exposed port by deployment and used in service and ingress configurations.
   port: 9292
 
-  # placement tells where pods should be scheduled: spot, on_demand, mixed.
-  # configuration should not be mixed with affinity/topologySpreadConstraints/tolerations
-  # By default no special placement is done
-  placement:
+  # resources allow to customize dedicated resources. overrides .Values.resources
+  resources: {}
 
   # Additional environment variables in k8s format:
   # - name: TEST
@@ -75,62 +101,8 @@ deployment:
   # Custom annotations to be added to the pod
   annotations: {}
 
-  # resources describe what pod resources should have.
-  # Supports "low" "normal" "high" predefined values
-  # Supports k8s definition if custom values are needed
-  resources: normal
-
-  # Pod health probes configurations
-  # Check if pod successfully started
-  # Passing probe - will mark pod as alive and start sending traffic to it.
-  # Failing probe - pod killed and new one will be started
-  # Default configuration designed to wait up to 3 minutes for pod to start responding
-  startupProbe:
-    enabled: false
-    # How health will be evaluated.
-    path: /healthz/webserver
-    # Specify command if you want probe to use exec
-    command:
-    # Specify port if you want to override default deployment port
-#    port: 3000
-    # How long to wait before sending first probe
-    initialDelaySeconds: 1
-    # What is the timeout of request
-    timeoutSeconds: 5
-    # What is the delay between requests
-    periodSeconds: 5
-    # How many checks should be successful to mark pod alive
-    successThreshold: 1
-    # How many checks before pod considered dead
-    failureThreshold: 40
-  # Check if pod is ready to accept traffic.
-  # This probe does not restart the pod but simply removes it from accepting additional traffic
-  # Intention of readiness probe is to temporary remove pod from balancer if it was overloaded by requests
-  # Default configuration check if pod is not responding during one minute and removes it from balancer
-  readinessProbe:
-    enabled: false
-    path: /healthz/webserver
-    # Specify command if you want probe to use exec
-    command:
-    initialDelaySeconds: 0
-    timeoutSeconds: 10
-    periodSeconds: 15
-    successThreshold: 1
-    failureThreshold: 4
-  # Check if pod is alive.
-  # If pod is not alive - pod is replaced with new pod
-  # Default configuration checks if pod is not responding for 2 minutes and kills it
-  # Liveness probe has bigger timeouts and periods so k8s first remove pod from balancer and if it is not recovered - kills it.
-  livenessProbe:
-    enabled: false
-    path: /healthz/webserver
-    # Specify command if you want probe to use exec
-    command:
-    initialDelaySeconds: 60
-    timeoutSeconds: 20
-    periodSeconds: 30
-    successThreshold: 1
-    failureThreshold: 4
+  # lifecycle configuration for container
+  lifecycle: {}
 
   # Advanced deployment options
   # How pods resolve DNS records
@@ -152,6 +124,7 @@ deployment:
   terminationGracePeriodSeconds: 30
   # How many old ReplicaSets for this Deployment you want to retain
   revisionHistoryLimit: 5
+  # strategy - configures how pod are updated.
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -211,13 +184,71 @@ ingress:
           proxy_set_header X-Forwarded-Host $http_host;
         }
 
+# probes hold configuration for all probes used by pod
+probes:
+  enabled: false
+  # probe types (all, startup, readiness). short hand to dictates what probe are created in addition to enabled tag
+  type: all
+
+  # Pod health probes configurations
+  # Check if pod successfully started
+  # Passing probe - will mark pod as alive and start sending traffic to it.
+  # Failing probe - pod killed and new one will be started
+  # Default configuration designed to wait up to 3 minutes for pod to start responding
+  startupProbe:
+    enabled: true
+    # How health will be evaluated.
+    path: /healthz/webserver
+    # Specify command if you want probe to use exec
+    command:
+    # Specify port if you want to override default deployment port
+    #    port: 3000
+    # How long to wait before sending first probe
+    initialDelaySeconds: 1
+    # What is the timeout of request
+    timeoutSeconds: 5
+    # What is the delay between requests
+    periodSeconds: 5
+    # How many checks should be successful to mark pod alive
+    successThreshold: 1
+    # How many checks before pod considered dead
+    failureThreshold: 40
+  # Check if pod is ready to accept traffic.
+  # This probe does not restart the pod but simply removes it from accepting additional traffic
+  # Intention of readiness probe is to temporary remove pod from balancer if it was overloaded by requests
+  # Default configuration check if pod is not responding during one minute and removes it from balancer
+  readinessProbe:
+    enabled: true
+    path: /healthz/webserver
+    # Specify command if you want probe to use exec
+    command:
+    initialDelaySeconds: 0
+    timeoutSeconds: 10
+    periodSeconds: 15
+    successThreshold: 1
+    failureThreshold: 4
+  # Check if pod is alive.
+  # If pod is not alive - pod is replaced with new pod
+  # Default configuration checks if pod is not responding for 2 minutes and kills it
+  # Liveness probe has bigger timeouts and periods so k8s first remove pod from balancer and if it is not recovered - kills it.
+  livenessProbe:
+    enabled: true
+    path: /healthz/webserver
+    # Specify command if you want probe to use exec
+    command:
+    initialDelaySeconds: 60
+    timeoutSeconds: 20
+    periodSeconds: 30
+    successThreshold: 1
+    failureThreshold: 4
+
 # Autoscaling configuration
 autoscaling:
   enabled: false
   # Maximum number of pods to scale
   maxReplicas: 6
   # Min number of pods to scale
-  minReplicas: 2
+  minReplicas: 3
   # Metrics that used to evaluate target pods
   metrics: []
     # Example datadog metrics
@@ -287,6 +318,7 @@ defaults:
       - /
     additional_hosts: []
     annotations:
+      nginx.ingress.kubernetes.io/load-balance: "ewma"
       nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
       nginx.ingress.kubernetes.io/proxy-next-upstream: error timeout non_idempotent
       nginx.ingress.kubernetes.io/proxy-next-upstream-tries: 8
@@ -300,74 +332,166 @@ defaults:
       # Minimal requirements for pod
       requests:
         memory: 200Mi
-        cpu: 100m
+        cpu: 200m
       # Maximum resources for pod
       limits:
         memory: 700Mi
-        cpu: 300m
+        cpu: 600m
     # Normal app resources
     normal:
       # Minimal requirements for pod
       requests:
         memory: 500Mi
-        cpu: 200m
+        cpu: 400m
       # Maximum resources for pod
       limits:
         memory: 1500Mi
-        cpu: 600m
+        cpu: 1200m
     # heavy app resources
     high:
       # Minimal requirements for pod
       requests:
         memory: 700Mi
-        cpu: 400m
+        cpu: 600m
       # Maximum resources for pod
       limits:
         memory: 2100Mi
-        cpu: 800m
+        cpu: 1800m
 
-  # placement default settings
-  placement:
+  affinity:
     # spot placement prefers all pods to be scheduled to spot instances
     spot:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 1
-              preference:
-                matchExpressions:
-                  - key: eks.amazonaws.com/capacityType
-                    operator: In
-                    values:
-                      - Ec2Spot
-      topologySpreadConstraints:
-        - maxSkew: 2
-          topologyKey: topology.kubernetes.io/zone
-          whenUnsatisfiable: ScheduleAnyway
-    # on demand placement - requires all pods on on demand instances instances
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+                - key: eks.amazonaws.com/capacityType
+                  operator: In
+                  values:
+                    - Ec2Spot
+    # on demand placement - prefers all pods on on demand instances instances
     on_demand:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: eks.amazonaws.com/capacityType
-                    operator: In
-                    values:
-                      - ON_DEMAND
-      topologySpreadConstraints:
-        - maxSkew: 2
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+                - key: eks.amazonaws.com/capacityType
+                  operator: In
+                  values:
+                    - ON_DEMAND
+    # Mixed placement do not have any affinity but using topologySpreadConstraints
+    mixed:
+    irrelevant:
+
+  topologySpreadConstraints:
+    critical:
+      # requires even distribution across hosts
+      # asks pods to be distributed across zones
+      spot:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: ScheduleAnyway
-    # mixed placement - tells that pods should be distributed evenly between spot/on_demand instances
-    mixed:
-      topologySpreadConstraints:
+      # requires even distribution across hosts
+      # asks pods to be distributed across zones
+      on_demand:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      # requires even distribution across node type and hosts
+      # asks pods to be distributed across zones
+      mixed:
         - maxSkew: 1
           topologyKey: eks.amazonaws.com/capacityType
           whenUnsatisfiable: DoNotSchedule
-        - maxSkew: 2
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: ScheduleAnyway
+      irrelevant:
+
+    high:
+      # requires uneven distribution across hosts
+      # asks pods to be distributed across zones
+      spot:
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      # requires uneven distribution across hosts
+      # asks pods to be distributed across zones
+      on_demand:
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      # requires uneven distribution across node type and hosts
+      # asks pods to be distributed across zones
+      mixed:
+        - maxSkew: 2
+          topologyKey: eks.amazonaws.com/capacityType
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      irrelevant:
+
+    normal:
+      # asks uneven distribution across hosts and zones
+      spot:
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      # asks uneven distribution across hosts and zones
+      on_demand:
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      # requires uneven distribution across node types
+      # asks pods to be more or less evenly across hosts and zones
+      mixed:
+        - maxSkew: 2
+          topologyKey: eks.amazonaws.com/capacityType
+          whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+      irrelevant:
+
+    irrelevant:
+      spot:
+      on_demand:
+      # asks uneven distribution across node types
+      mixed:
+        - maxSkew: 2
+          topologyKey: eks.amazonaws.com/capacityType
+          whenUnsatisfiable: ScheduleAnyway
+      irrelevant:
 
   # Default DNS configuration for application deployment
   dnsConfig:

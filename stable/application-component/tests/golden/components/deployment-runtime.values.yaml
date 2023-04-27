@@ -30,3 +30,11 @@ deployment:
   volumes:
     - name: cache-vol
       emptyDir: { }
+
+probes:
+  enabled: true
+  type: startup
+
+  startupProbe:
+    command:
+      - /app/ops/scripts/check_sidekiq.sh

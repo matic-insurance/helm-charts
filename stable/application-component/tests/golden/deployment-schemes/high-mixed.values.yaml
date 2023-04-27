@@ -7,7 +7,13 @@ global:
   applicationImage:
     repository: "bitnami/ruby"
 
-component: worker
+component: webserver
+availability: high
+resources: normal
+placement: mixed
 
 deployment:
-  placement: spot
+  replicas: 2
+
+probes:
+  enabled: true

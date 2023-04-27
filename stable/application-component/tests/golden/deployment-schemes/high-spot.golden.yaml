@@ -1,4 +1,16 @@
 ---
+# Source: application-component/templates/pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: myproduct-webserver
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: myproduct
+      app.kubernetes.io/instance: myproduct-webserver
+---
 # Source: application-component/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -40,7 +52,7 @@ spec:
         options:
         - name: ndots
           value: "1"
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 45
       securityContext:
         fsGroup: 1000
         runAsUser: 1000
@@ -52,13 +64,44 @@ spec:
             - name: dynamic-sa-token
               mountPath: /var/run/secrets/tokens
               readOnly: true
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 15"]
+          startupProbe:
+            httpGet:
+              path: /healthz/webserver
+              port: 9292
+            initialDelaySeconds: 1
+            timeoutSeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 40
+          readinessProbe:
+            httpGet:
+              path: /healthz/webserver
+              port: 9292
+            initialDelaySeconds: 0
+            timeoutSeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            failureThreshold: 4
+          livenessProbe:
+            httpGet:
+              path: /healthz/webserver
+              port: 9292
+            initialDelaySeconds: 60
+            timeoutSeconds: 20
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 4
           resources:
             limits:
-              cpu: 400m
-              memory: 512Mi
+              cpu: 1200m
+              memory: 1500Mi
             requests:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 400m
+              memory: 500Mi
       volumes:
         - name: dynamic-sa-token
           projected:
@@ -66,39 +109,20 @@ spec:
               - serviceAccountToken:
                   path: dynamic-sa-token
                   expirationSeconds: 600
-      nodeSelector:
-        disktype: ssd
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - preference:
               matchExpressions:
-              - key: another-node-label-key
+              - key: eks.amazonaws.com/capacityType
                 operator: In
                 values:
-                - another-node-label-value
+                - Ec2Spot
             weight: 1
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: topology.kubernetes.io/zone
-                operator: In
-                values:
-                - antarctica-east1
-                - antarctica-west1
-      tolerations:
-        - effect: NoSchedule
-          key: key1
-          operator: Equal
-          value: value1
-        - effect: NoExecute
-          key: key2
-          operator: Equal
-          value: value2
       topologySpreadConstraints:
-        - labelSelector:
-            matchLabels:
-              app.kubernetes.io/instance: myproduct-webserver
-          maxSkew: 1
-          topologyKey: lifecycle
+        - maxSkew: 2
+          topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
