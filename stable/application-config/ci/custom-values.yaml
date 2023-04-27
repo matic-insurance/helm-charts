@@ -9,7 +9,7 @@ global:
       ANOTHER_ENV: "false"
 
     configFiles:
-      - README.md
+      test: README.md
 
     configFilePathTemplate: "./"
 

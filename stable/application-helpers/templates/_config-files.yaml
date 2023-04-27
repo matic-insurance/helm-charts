@@ -11,8 +11,8 @@ In final applicaiton chart in order to mount files one should:
   global:
     application:
       configFiles:
-        - /app/config/app_settings.local.yaml
-        - /app/config/variables.txt
+        app_settings: /app/config/app_settings.local.yaml
+        variables: /app/config/variables.txt
   ```
 
 
