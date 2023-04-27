@@ -117,7 +117,8 @@ spec:
                 command: ["/bin/sh", "-c", "sleep 15"]
           {{- end}}
           {{- if .Values.probes.enabled }}
-          {{- if .Values.probes.startupProbe.enabled }}
+          {{- $probesType := .Values.probes.type }}
+          {{- if and .Values.probes.startupProbe.enabled (or (eq $probesType "all") (eq $probesType "startup")) }}
           startupProbe:
             {{- if .Values.probes.startupProbe.command }}
             exec:
@@ -133,7 +134,7 @@ spec:
             successThreshold: {{ .Values.probes.startupProbe.successThreshold }}
             failureThreshold: {{ .Values.probes.startupProbe.failureThreshold }}
           {{- end }}
-          {{- if .Values.probes.readinessProbe.enabled }}
+          {{- if and .Values.probes.readinessProbe.enabled (or (eq $probesType "all") (eq $probesType "readiness")) }}
           readinessProbe:
             {{- if .Values.probes.readinessProbe.command }}
             exec:
@@ -149,7 +150,7 @@ spec:
             successThreshold: {{ .Values.probes.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.probes.readinessProbe.failureThreshold }}
           {{- end }}
-          {{- if .Values.probes.livenessProbe.enabled }}
+          {{- if and .Values.probes.livenessProbe.enabled (or (eq $probesType "all") (eq $probesType "liveness")) }}
           livenessProbe:
             {{- if .Values.probes.livenessProbe.command }}
             exec:

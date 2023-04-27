@@ -33,14 +33,8 @@ deployment:
 
 probes:
   enabled: true
+  type: startup
 
   startupProbe:
-    enabled: true
     command:
       - /app/ops/scripts/check_sidekiq.sh
-
-  readinessProbe:
-    enabled: false
-
-  livenessProbe:
-    enabled: false

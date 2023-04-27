@@ -187,6 +187,8 @@ ingress:
 # probes hold configuration for all probes used by pod
 probes:
   enabled: false
+  # probe types (all, startup, readiness). short hand to dictates what probe are created in addition to enabled tag
+  type: all
 
   # Pod health probes configurations
   # Check if pod successfully started
