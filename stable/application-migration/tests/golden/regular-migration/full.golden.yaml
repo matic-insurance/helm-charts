@@ -93,7 +93,7 @@ spec:
               readOnly: true
             - name: olb-configs-migration
               mountPath: "/app/config/app_settings.local.yml"
-              subPath: "0"
+              subPath: "app_settings"
               readOnly: true
           resources:
             limits:

@@ -37,8 +37,8 @@ global:
       RAILS_SERVE_ASSETS: "true"
 
     configFiles:
-      - /app/config/app_settings.local.yaml
-      - /app/config/database.yaml
+      app_settings: /app/config/app_settings.local.yaml
+      variables: /app/config/database.yaml
 ```
 
 As result of above configuration k8s will:

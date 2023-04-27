@@ -19,7 +19,7 @@ global:
     #   and mounted at: /app/config/test.yaml
     # In order for this to work final application chart should create config-files.yaml and invoke config files template:
     #  `{{ include "application-helpers.config-files.tpl" . }}`
-    configFiles: []
+    configFiles: {}
 
     # Path to config files on local disk.
     # All files on local disk will be resolved by evaluating this template and adding configFile path.
