@@ -44,12 +44,8 @@ deployment:
   replicas: 2
   port: 9292
 
-  startupProbe:
-    enabled: true
-  readinessProbe:
-    enabled: true
-  livenessProbe:
-    enabled: true
+probes:
+  enabled: true
 
 service:
   enabled: true

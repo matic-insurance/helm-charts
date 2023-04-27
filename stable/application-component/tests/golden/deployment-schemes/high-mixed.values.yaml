@@ -14,3 +14,6 @@ placement: mixed
 
 deployment:
   replicas: 2
+
+probes:
+  enabled: true

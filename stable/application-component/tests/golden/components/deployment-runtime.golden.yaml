@@ -66,6 +66,14 @@ spec:
               readOnly: true
             - mountPath: /cache
               name: cache-vol
+          startupProbe:
+            exec:
+              command: [/app/ops/scripts/check_sidekiq.sh]
+            initialDelaySeconds: 1
+            timeoutSeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 40
           resources:
             limits:
               cpu: 1200m

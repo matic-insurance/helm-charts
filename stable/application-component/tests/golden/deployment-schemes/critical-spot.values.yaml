@@ -14,3 +14,6 @@ placement: spot
 
 deployment:
   replicas: 3
+
+probes:
+  enabled: true

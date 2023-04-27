@@ -116,53 +116,55 @@ spec:
               exec:
                 command: ["/bin/sh", "-c", "sleep 15"]
           {{- end}}
-          {{- if .Values.deployment.startupProbe.enabled }}
+          {{- if .Values.probes.enabled }}
+          {{- if .Values.probes.startupProbe.enabled }}
           startupProbe:
-            {{- if .Values.deployment.startupProbe.command }}
+            {{- if .Values.probes.startupProbe.command }}
             exec:
-              command: {{ .Values.deployment.startupProbe.command }}
+              command: {{ .Values.probes.startupProbe.command }}
             {{- else }}
             httpGet:
-              path: {{ .Values.deployment.startupProbe.path }}
+              path: {{ .Values.probes.startupProbe.path }}
               port: {{ .Values.deployment.port }}
             {{- end}}
-            initialDelaySeconds: {{ .Values.deployment.startupProbe.initialDelaySeconds }}
-            timeoutSeconds: {{ .Values.deployment.startupProbe.timeoutSeconds }}
-            periodSeconds: {{ .Values.deployment.startupProbe.periodSeconds }}
-            successThreshold: {{ .Values.deployment.startupProbe.successThreshold }}
-            failureThreshold: {{ .Values.deployment.startupProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.probes.startupProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.probes.startupProbe.timeoutSeconds }}
+            periodSeconds: {{ .Values.probes.startupProbe.periodSeconds }}
+            successThreshold: {{ .Values.probes.startupProbe.successThreshold }}
+            failureThreshold: {{ .Values.probes.startupProbe.failureThreshold }}
           {{- end }}
-          {{- if .Values.deployment.readinessProbe.enabled }}
+          {{- if .Values.probes.readinessProbe.enabled }}
           readinessProbe:
-            {{- if .Values.deployment.readinessProbe.command }}
+            {{- if .Values.probes.readinessProbe.command }}
             exec:
-              command: {{ .Values.deployment.readinessProbe.command }}
+              command: {{ .Values.probes.readinessProbe.command }}
             {{- else }}
             httpGet:
-              path: {{ .Values.deployment.readinessProbe.path }}
+              path: {{ .Values.probes.readinessProbe.path }}
               port: {{ .Values.deployment.port }}
             {{- end}}
-            initialDelaySeconds: {{ .Values.deployment.readinessProbe.initialDelaySeconds }}
-            timeoutSeconds: {{ .Values.deployment.readinessProbe.timeoutSeconds }}
-            periodSeconds: {{ .Values.deployment.readinessProbe.periodSeconds }}
-            successThreshold: {{ .Values.deployment.readinessProbe.successThreshold }}
-            failureThreshold: {{ .Values.deployment.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.probes.readinessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.probes.readinessProbe.timeoutSeconds }}
+            periodSeconds: {{ .Values.probes.readinessProbe.periodSeconds }}
+            successThreshold: {{ .Values.probes.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.probes.readinessProbe.failureThreshold }}
           {{- end }}
-          {{- if .Values.deployment.livenessProbe.enabled }}
+          {{- if .Values.probes.livenessProbe.enabled }}
           livenessProbe:
-            {{- if .Values.deployment.livenessProbe.command }}
+            {{- if .Values.probes.livenessProbe.command }}
             exec:
-              command: {{ .Values.deployment.livenessProbe.command }}
+              command: {{ .Values.probes.livenessProbe.command }}
             {{- else }}
             httpGet:
-              path: {{ .Values.deployment.livenessProbe.path }}
+              path: {{ .Values.probes.livenessProbe.path }}
               port: {{ .Values.deployment.port }}
             {{- end}}
-            initialDelaySeconds: {{ .Values.deployment.livenessProbe.initialDelaySeconds }}
-            timeoutSeconds: {{ .Values.deployment.livenessProbe.timeoutSeconds }}
-            periodSeconds: {{ .Values.deployment.livenessProbe.periodSeconds }}
-            successThreshold: {{ .Values.deployment.livenessProbe.successThreshold }}
-            failureThreshold: {{ .Values.deployment.livenessProbe.failureThreshold }}
+            initialDelaySeconds: {{ .Values.probes.livenessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.probes.livenessProbe.timeoutSeconds }}
+            periodSeconds: {{ .Values.probes.livenessProbe.periodSeconds }}
+            successThreshold: {{ .Values.probes.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.probes.livenessProbe.failureThreshold }}
+          {{- end }}
           {{- end }}
           resources:
             {{- if .Values.deployment.resources }}

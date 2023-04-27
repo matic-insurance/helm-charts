@@ -103,57 +103,6 @@ deployment:
 
   # lifecycle configuration for container
   lifecycle: {}
-  # Pod health probes configurations
-  # Check if pod successfully started
-  # Passing probe - will mark pod as alive and start sending traffic to it.
-  # Failing probe - pod killed and new one will be started
-  # Default configuration designed to wait up to 3 minutes for pod to start responding
-  startupProbe:
-    enabled: false
-    # How health will be evaluated.
-    path: /healthz/webserver
-    # Specify command if you want probe to use exec
-    command:
-    # Specify port if you want to override default deployment port
-#    port: 3000
-    # How long to wait before sending first probe
-    initialDelaySeconds: 1
-    # What is the timeout of request
-    timeoutSeconds: 5
-    # What is the delay between requests
-    periodSeconds: 5
-    # How many checks should be successful to mark pod alive
-    successThreshold: 1
-    # How many checks before pod considered dead
-    failureThreshold: 40
-  # Check if pod is ready to accept traffic.
-  # This probe does not restart the pod but simply removes it from accepting additional traffic
-  # Intention of readiness probe is to temporary remove pod from balancer if it was overloaded by requests
-  # Default configuration check if pod is not responding during one minute and removes it from balancer
-  readinessProbe:
-    enabled: false
-    path: /healthz/webserver
-    # Specify command if you want probe to use exec
-    command:
-    initialDelaySeconds: 0
-    timeoutSeconds: 10
-    periodSeconds: 15
-    successThreshold: 1
-    failureThreshold: 4
-  # Check if pod is alive.
-  # If pod is not alive - pod is replaced with new pod
-  # Default configuration checks if pod is not responding for 2 minutes and kills it
-  # Liveness probe has bigger timeouts and periods so k8s first remove pod from balancer and if it is not recovered - kills it.
-  livenessProbe:
-    enabled: false
-    path: /healthz/webserver
-    # Specify command if you want probe to use exec
-    command:
-    initialDelaySeconds: 60
-    timeoutSeconds: 20
-    periodSeconds: 30
-    successThreshold: 1
-    failureThreshold: 4
 
   # Advanced deployment options
   # How pods resolve DNS records
@@ -234,6 +183,62 @@ ingress:
         location /foldername-b {
           proxy_set_header X-Forwarded-Host $http_host;
         }
+
+# probes hold configuration for all probes used by pod
+probes:
+  enabled: false
+
+  # Pod health probes configurations
+  # Check if pod successfully started
+  # Passing probe - will mark pod as alive and start sending traffic to it.
+  # Failing probe - pod killed and new one will be started
+  # Default configuration designed to wait up to 3 minutes for pod to start responding
+  startupProbe:
+    enabled: true
+    # How health will be evaluated.
+    path: /healthz/webserver
+    # Specify command if you want probe to use exec
+    command:
+    # Specify port if you want to override default deployment port
+    #    port: 3000
+    # How long to wait before sending first probe
+    initialDelaySeconds: 1
+    # What is the timeout of request
+    timeoutSeconds: 5
+    # What is the delay between requests
+    periodSeconds: 5
+    # How many checks should be successful to mark pod alive
+    successThreshold: 1
+    # How many checks before pod considered dead
+    failureThreshold: 40
+  # Check if pod is ready to accept traffic.
+  # This probe does not restart the pod but simply removes it from accepting additional traffic
+  # Intention of readiness probe is to temporary remove pod from balancer if it was overloaded by requests
+  # Default configuration check if pod is not responding during one minute and removes it from balancer
+  readinessProbe:
+    enabled: true
+    path: /healthz/webserver
+    # Specify command if you want probe to use exec
+    command:
+    initialDelaySeconds: 0
+    timeoutSeconds: 10
+    periodSeconds: 15
+    successThreshold: 1
+    failureThreshold: 4
+  # Check if pod is alive.
+  # If pod is not alive - pod is replaced with new pod
+  # Default configuration checks if pod is not responding for 2 minutes and kills it
+  # Liveness probe has bigger timeouts and periods so k8s first remove pod from balancer and if it is not recovered - kills it.
+  livenessProbe:
+    enabled: true
+    path: /healthz/webserver
+    # Specify command if you want probe to use exec
+    command:
+    initialDelaySeconds: 60
+    timeoutSeconds: 20
+    periodSeconds: 30
+    successThreshold: 1
+    failureThreshold: 4
 
 # Autoscaling configuration
 autoscaling:

@@ -69,6 +69,33 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "sleep 15"]
+          startupProbe:
+            httpGet:
+              path: /healthz/webserver
+              port: 9292
+            initialDelaySeconds: 1
+            timeoutSeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 40
+          readinessProbe:
+            httpGet:
+              path: /healthz/webserver
+              port: 9292
+            initialDelaySeconds: 0
+            timeoutSeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            failureThreshold: 4
+          livenessProbe:
+            httpGet:
+              path: /healthz/webserver
+              port: 9292
+            initialDelaySeconds: 60
+            timeoutSeconds: 20
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 4
           resources:
             limits:
               cpu: 1800m

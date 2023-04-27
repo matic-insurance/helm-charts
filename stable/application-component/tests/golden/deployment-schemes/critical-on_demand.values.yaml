@@ -14,3 +14,6 @@ placement: on_demand
 
 deployment:
   replicas: 3
+
+probes:
+  enabled: true
