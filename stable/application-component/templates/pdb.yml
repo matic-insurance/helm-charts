@@ -4,6 +4,9 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "application-helpers.fullname" . }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
 spec:
   maxUnavailable: 1
   {{- if eq .Values.availability "critical" }}

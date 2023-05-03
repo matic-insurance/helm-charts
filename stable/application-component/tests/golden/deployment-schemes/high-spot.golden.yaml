@@ -1,16 +1,4 @@
 ---
-# Source: application-component/templates/pdb.yml
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: myproduct-webserver
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: myproduct
-      app.kubernetes.io/instance: myproduct-webserver
----
 # Source: application-component/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -126,3 +114,18 @@ spec:
         - maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: ScheduleAnyway
+---
+# Source: application-component/templates/pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: myproduct-webserver
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: myproduct
+      app.kubernetes.io/instance: myproduct-webserver
