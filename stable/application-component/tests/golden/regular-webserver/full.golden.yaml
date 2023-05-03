@@ -1,16 +1,4 @@
 ---
-# Source: application-component/templates/pdb.yml
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: olb-webserver
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: olb
-      app.kubernetes.io/instance: olb-webserver
----
 # Source: application-component/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -197,47 +185,6 @@ spec:
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: ScheduleAnyway
 ---
-# Source: application-component/templates/hpa.yaml
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: olb-webserver
-  labels:
-    app.kubernetes.io/name: olb
-    app.kubernetes.io/instance: olb-webserver
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: webserver
-    app.kubernetes.io/part-of: olb
-    app.kubernetes.io/version: "release-1.2.3"
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: olb-webserver
-  minReplicas: 2
-  maxReplicas: 4
-  metrics:
-    - type: External
-      external:
-        metric:
-          name: datadogmetric@production:olb-requests-per-second
-        target:
-          averageValue: 12000m
-          type: AverageValue
-  behavior:
-    scaleDown:
-      policies:
-      - periodSeconds: 180
-        type: Pods
-        value: 1
-      stabilizationWindowSeconds: 60
-    scaleUp:
-      policies:
-      - periodSeconds: 60
-        type: Pods
-        value: 2
-      stabilizationWindowSeconds: 15
----
 # Source: application-component/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -330,6 +277,21 @@ metadata:
 spec:
   query: ewma_10(avg:nginx_ingress.controller.requests{service:olb-webserver}.as_count().rollup(avg, 60))
 ---
+# Source: application-component/templates/pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: olb-webserver
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: olb
+      app.kubernetes.io/instance: olb-webserver
+---
 # Source: application-component/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
@@ -346,3 +308,47 @@ metadata:
     "helm.sh/hook": pre-install
     "helm.sh/hook-weight": "-10"
     "helm.sh/resource-policy": keep
+---
+# Source: application-component/templates/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: olb-webserver
+  labels:
+    app.kubernetes.io/name: olb
+    app.kubernetes.io/instance: olb-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: olb
+    app.kubernetes.io/version: "release-1.2.3"
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "2"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: olb-webserver
+  minReplicas: 2
+  maxReplicas: 4
+  metrics:
+    - type: External
+      external:
+        metric:
+          name: datadogmetric@production:olb-requests-per-second
+        target:
+          averageValue: 12000m
+          type: AverageValue
+  behavior:
+    scaleDown:
+      policies:
+      - periodSeconds: 180
+        type: Pods
+        value: 1
+      stabilizationWindowSeconds: 60
+    scaleUp:
+      policies:
+      - periodSeconds: 60
+        type: Pods
+        value: 2
+      stabilizationWindowSeconds: 15
