@@ -121,7 +121,7 @@ kind: PodDisruptionBudget
 metadata:
   name: myproduct-webserver
   annotations:
-    "helm.sh/hook": post-install
+    "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "1"
 spec:
   maxUnavailable: 1
