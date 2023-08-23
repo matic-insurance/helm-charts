@@ -1,0 +1,17 @@
+---
+# Source: application-mesh/templates/destination-rule.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: leads-broker-webserver
+spec:
+  host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 12
+        connectTimeout: 2s
+    loadBalancer:
+      simple: LEAST_REQUEST
+  subsets:
+    - name: default
