@@ -5,4 +5,11 @@
 
 Use defaults when not specified
 
+# Add common labels to all components
+
+```yaml
+labels:
+  {{- include "application-helpers.labels" . | nindent 4 }}
+```
+
 # Review and think if we need outlier configuration in `DestinationRule` 

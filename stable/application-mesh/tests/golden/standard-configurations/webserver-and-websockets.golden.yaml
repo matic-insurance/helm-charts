@@ -9,9 +9,25 @@ spec:
   trafficPolicy:
     connectionPool:
       tcp:
-        maxConnections: 12
-        connectTimeout: 2s
+        maxConnections: 200
+        connectTimeout: 5s
     loadBalancer:
       simple: LEAST_REQUEST
   subsets:
     - name: default
+---
+# Source: application-mesh/templates/virtual-service.yml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-webserver
+spec:
+  hosts:
+    - leads-broker-webserver.app-component-test00000.svc.cluster.local
+  gateways:
+    - mesh
+  http:
+    - route:
+        - destination:
+            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            subset: default
