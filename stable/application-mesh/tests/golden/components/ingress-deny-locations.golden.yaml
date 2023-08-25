@@ -10,7 +10,8 @@ spec:
   gateways:
     - mesh
   http:
-    - route:
+    - name: allow-all-locations
+      route:
         - destination:
             host: leads-broker-websockets.app-component-test00000.svc.cluster.local
             subset: default
@@ -28,19 +29,18 @@ spec:
   gateways:
     - istio-ingress/private-matic-link
   http:
-    - route:
-        name: deny-ingress-spec
-        match:
-          - uri:
-              prefix: /api
-          - uri:
-              prefix: /upload
-        directResponse:
-          status: 403
-          body:
-            string: Access Denied
-    - route:
-        name: allow-all-locations
-        destination:
-          host: leads-broker-websockets.app-component-test00000.svc.cluster.local
-          subset: default
+    - name: deny-ingress-spec
+      match:
+        - uri:
+            prefix: /api
+        - uri:
+            prefix: /upload
+      directResponse:
+        status: 403
+        body:
+          string: Access Denied
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: leads-broker-websockets.app-component-test00000.svc.cluster.local
+            subset: default

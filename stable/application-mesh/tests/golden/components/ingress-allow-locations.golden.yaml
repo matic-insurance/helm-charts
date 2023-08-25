@@ -10,7 +10,8 @@ spec:
   gateways:
     - mesh
   http:
-    - route:
+    - name: allow-all-locations
+      route:
         - destination:
             host: leads-broker-backend.app-component-test00000.svc.cluster.local
             subset: default
@@ -30,21 +31,20 @@ spec:
   gateways:
     - istio-ingress/external-matic-com
   http:
-    - route:
-        name: allow-ingress-spec
-        match:
-          - uri:
-              prefix: /api/hooks
-          - uri:
-              prefix: /api/zendesk
-          - uri:
-              prefix: /api/status
-        destination:
-          host: leads-broker-backend.app-component-test00000.svc.cluster.local
-          subset: default
-    - route:
-        name: deny-everything-except-allowed
-        directResponse:
-          status: 403
-          body:
-            string: Access Denied
+    - name: allow-ingress-spec
+      match:
+        - uri:
+            prefix: /api/hooks
+        - uri:
+            prefix: /api/zendesk
+        - uri:
+            prefix: /api/status
+      route:
+        - destination:
+            host: leads-broker-backend.app-component-test00000.svc.cluster.local
+            subset: default
+    - name: deny-everything-except-allowed
+      directResponse:
+        status: 403
+        body:
+          string: Access Denied

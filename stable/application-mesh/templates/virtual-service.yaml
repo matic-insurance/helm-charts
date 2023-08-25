@@ -13,11 +13,11 @@ spec:
   gateways:
     - mesh
   http:
-    - route:
+    - name: allow-all-locations
+      route:
         - destination:
             host: {{ $service_host }}
             subset: default
-{{- end }}
 {{- end }}
 {{/* Virtual Services for pre-existing gateway (wildcard domain). Required to populate ExternalDNS and configure routing */}}
 {{- range $_, $ingress := .Values.ingress }}
@@ -43,42 +43,41 @@ spec:
     {{- $allow_locations := $ingress.allow_locations | default $.Values.defaults.ingress.allow_locations }}
     {{- if gt (len $deny_locations) 0 }}
     {{- /* Has Deny locations specified */}}
-    - route:
-        name: deny-ingress-spec
-        match:
-          {{- range $path := $deny_locations }}
-          - uri:
-              prefix: {{ $path }}
-          {{- end }}
-        directResponse:
-          status: 403
-          body:
-            string: Access Denied
+    - name: deny-ingress-spec
+      match:
+        {{- range $path := $deny_locations }}
+        - uri:
+            prefix: {{ $path }}
+        {{- end }}
+      directResponse:
+        status: 403
+        body:
+          string: Access Denied
     {{- end }}
     {{- if gt (len $allow_locations) 0 }}
     {{- /* Has Allow locations specified */}}
-    - route:
-        name: allow-ingress-spec
-        match:
-          {{- range $path := $allow_locations }}
-          - uri:
-              prefix: {{ $path }}
-          {{- end }}
-        destination:
-          host: {{ $service_host }}
-          subset: default
-    - route:
-        name: deny-everything-except-allowed
-        directResponse:
-          status: 403
-          body:
-            string: Access Denied
+    - name: allow-ingress-spec
+      match:
+        {{- range $path := $allow_locations }}
+        - uri:
+            prefix: {{ $path }}
+        {{- end }}
+      route:
+        - destination:
+            host: {{ $service_host }}
+            subset: default
+    - name: deny-everything-except-allowed
+      directResponse:
+        status: 403
+        body:
+          string: Access Denied
     {{ else }}
     {{- /* Route everything to service */}}
-    - route:
-        name: allow-all-locations
-        destination:
-          host: {{ $service_host }}
-          subset: default
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: {{ $service_host }}
+            subset: default
     {{- end }}
+{{- end }}
 {{- end }}
