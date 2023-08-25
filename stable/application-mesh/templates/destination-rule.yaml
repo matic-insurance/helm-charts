@@ -1,0 +1,20 @@
+{{- if .Values.enabled }}
+{{- range $_, $destination := .Values.destinations }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: {{ include "application-helpers.name" $ }}-{{ $destination.component }}
+spec:
+  host: {{ include "application-mesh.service-host" (merge (dict "component" $destination.component) $) }}
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 200
+        connectTimeout: 5s
+    loadBalancer:
+      simple: LEAST_REQUEST
+  subsets:
+    - name: default
+{{- end }}
+{{- end }}

@@ -1,0 +1,18 @@
+global:
+  application:
+    product: leads-broker
+    environment: test
+    version: "0.0.0"
+
+destinations:
+  - component: webserver
+
+ingress:
+  - host: leads-broker-st2.matic.com
+    gateway: wildcard-matic-com
+    destination: webserver
+    deny_locations:
+      - /admin
+  - host: leads-broker-st2.matic.link
+    gateway: wildcard-matic-link
+    destination: webserver

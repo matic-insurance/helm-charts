@@ -1,0 +1,16 @@
+global:
+  application:
+    product: leads-broker
+    environment: test
+    version: "0.0.0"
+
+destinations:
+  - component: websockets
+
+ingress:
+  - host: ws-amp-st1.matic.link
+    gateway: private-matic-link
+    destination: websockets
+    deny_locations:
+      - /api
+      - /upload

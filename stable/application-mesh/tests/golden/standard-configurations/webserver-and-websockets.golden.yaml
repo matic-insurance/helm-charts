@@ -1,0 +1,155 @@
+---
+# Source: application-mesh/templates/destination-rule.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: leads-broker-webserver
+spec:
+  host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 200
+        connectTimeout: 5s
+    loadBalancer:
+      simple: LEAST_REQUEST
+  subsets:
+    - name: default
+---
+# Source: application-mesh/templates/destination-rule.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: leads-broker-websockets
+spec:
+  host: leads-broker-websockets.app-component-test00000.svc.cluster.local
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 200
+        connectTimeout: 5s
+    loadBalancer:
+      simple: LEAST_REQUEST
+  subsets:
+    - name: default
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-webserver
+spec:
+  hosts:
+    - leads-broker-webserver.app-component-test00000.svc.cluster.local
+  gateways:
+    - mesh
+  http:
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            subset: default
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-websockets
+spec:
+  hosts:
+    - leads-broker-websockets.app-component-test00000.svc.cluster.local
+  gateways:
+    - mesh
+  http:
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: leads-broker-websockets.app-component-test00000.svc.cluster.local
+            subset: default
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-52ce0794
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "admin-st1.matic.com, broker-st1.matic.com, api-amp-st1.matic.com"
+spec:
+  hosts:
+    - admin-st1.matic.com
+    - broker-st1.matic.com
+    - api-amp-st1.matic.com
+  gateways:
+    - istio-ingress/private-matic-com
+  http:
+    - name: deny-ingress-spec
+      match:
+        - uri:
+            prefix: /uploads/document
+      directResponse:
+        status: 403
+        body:
+          string: Access Denied
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            subset: default
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-6670087e
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "ams360-st1.matic.com, scim-st1.matic.com, mailgun-st1.matic.com, amp-twilio-st1.matic.com, amp-hooks-st1.matic.com"
+spec:
+  hosts:
+    - ams360-st1.matic.com
+    - scim-st1.matic.com
+    - mailgun-st1.matic.com
+    - amp-twilio-st1.matic.com
+    - amp-hooks-st1.matic.com
+  gateways:
+    - istio-ingress/public-matic-com
+  http:
+    - name: allow-ingress-spec
+      match:
+        - uri:
+            prefix: /api/ams360/notification_events
+        - uri:
+            prefix: /scim/v2
+        - uri:
+            prefix: /api/mailgun/docusign_envelope
+        - uri:
+            prefix: /api/twilio
+        - uri:
+            prefix: /api/zendesk
+      route:
+        - destination:
+            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            subset: default
+    - name: deny-everything-except-allowed
+      directResponse:
+        status: 403
+        body:
+          string: Access Denied
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-ca030c53
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "ws-broker-st1.maticinsurance.com"
+spec:
+  hosts:
+    - ws-broker-st1.maticinsurance.com
+  gateways:
+    - istio-ingress/private-matic-com
+  http:
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: leads-broker-websockets.app-component-test00000.svc.cluster.local
+            subset: default

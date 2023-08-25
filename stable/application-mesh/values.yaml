@@ -1,0 +1,86 @@
+global:
+  # Default values for application charts.
+  application:
+    # Product name
+    product: ""
+    # Application environment that it is running in
+    environment: ""
+    # Application version
+    version: ""
+
+  # Global configuration for application monitoring tools
+  applicationMonitoring:
+    # Enable datadog monitoring and include additional labels to deployment
+    datadog: false
+    # Provision environment variables for Sentry exception tracking
+    sentry: false
+
+# Kill switch for mesh deployment
+enabled: true
+
+# List of destinations for the mesh traffic together with rules
+destinations:
+  - component: webserver
+    # Configurations for tcp connection pool
+    # https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings
+    connectionPool:
+      # maxConnections - Maximum number of connections that can be open from source pod to this destination
+      # https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings-TCPSettings
+      maxConnections: 200
+      # connectionTimeout - How long should we wait to establish connection
+      # https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings-TCPSettings
+      connectionTimeout: 5s
+    # loadBalancer - what load balance algorithm to use (LEAST_REQUEST, ROUND_ROBIN, RANDOM)
+    # https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-SimpleLB
+    loadBalancer: LEAST_REQUEST
+
+
+ingress:
+  # Domain for ingress
+  - host: myhost1.local
+    # List of additional domains to support by this ingress
+    additional_hosts: []
+    # Gateway to attach for this ingress. Supported list:
+    #   - external (NOT IMPLEMENTED) - create custom public gateway
+    #   - internal (NOT IMPLEMENTED) - create custom private gateway
+    #   - public-matic-com - use existing public matic.com gateway with wildcard certificate
+    #   - private-matic-com - use existing private matic.com gateway with wildcard certificate
+    #   - private-matic-link - use existing private matic.link gateway with wildcard certificate
+    gateway: external
+    # Destination that should receive ingress traffic
+    destination: webserver
+    # List of allowed locations. Default "/"
+    allow_locations:
+      - /api
+      - /upload
+    # List of locations to block. Default empty
+    deny_locations:
+      - /admin
+      - /internal_api
+      - /etc
+    # Additional annotations for ingress
+    annotations: {}
+
+defaults:
+  # Default ingress configurations
+  ingress:
+    # No additional hosts by default
+    additional_hosts: []
+    # Empty allow locations results in everything routed to the service
+    allow_locations: []
+    # Empty deny locations
+    deny_locations: []
+  # Default destination configurations
+  destination:
+    # Configurations for tcp connection pool
+    # https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings
+    connectionPool:
+      # maxConnections - Maximum number of connections that can be open from source pod to this destination
+      # https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings-TCPSettings
+      maxConnections: 200
+      # connectionTimeout - How long should we wait to establish connection
+      # https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings-TCPSettings
+      connectionTimeout: 5s
+    # loadBalancer - what load balance algorithm to use (LEAST_REQUEST, ROUND_ROBIN, RANDOM)
+    # https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-SimpleLB
+    loadBalancer: LEAST_REQUEST

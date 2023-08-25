@@ -1,0 +1,80 @@
+---
+# Source: application-mesh/templates/destination-rule.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: leads-broker-webserver
+spec:
+  host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 200
+        connectTimeout: 5s
+    loadBalancer:
+      simple: LEAST_REQUEST
+  subsets:
+    - name: default
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-webserver
+spec:
+  hosts:
+    - leads-broker-webserver.app-component-test00000.svc.cluster.local
+  gateways:
+    - mesh
+  http:
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            subset: default
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-83e409ab
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "leads-broker-st2.matic.com"
+spec:
+  hosts:
+    - leads-broker-st2.matic.com
+  gateways:
+    - istio-ingress/wildcard-matic-com
+  http:
+    - name: deny-ingress-spec
+      match:
+        - uri:
+            prefix: /admin
+      directResponse:
+        status: 403
+        body:
+          string: Access Denied
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            subset: default
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-8e0e0a1a
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "leads-broker-st2.matic.link"
+spec:
+  hosts:
+    - leads-broker-st2.matic.link
+  gateways:
+    - istio-ingress/wildcard-matic-link
+  http:
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            subset: default
