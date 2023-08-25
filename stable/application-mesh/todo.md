@@ -1,3 +1,7 @@
+# Implement custom gateways after cert-manager can generate certificates
+
+Add support for `gateway: external` and `gateway: internal` in the ingress list
+
 # Support custom traffic configurations for `DestinationRule`
 
 - `.Values.destinations[].connectionPool` 
@@ -12,4 +16,4 @@ labels:
   {{- include "application-helpers.labels" . | nindent 4 }}
 ```
 
-# Review and think if we need outlier configuration in `DestinationRule` 
+# Review and think if we need outlier configuration in `DestinationRule`

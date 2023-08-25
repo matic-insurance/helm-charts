@@ -40,8 +40,13 @@ ingress:
   - host: myhost1.local
     # List of additional domains to support by this ingress
     additional_hosts: []
-    # Type of ingress: external(public)/internal(private)
-    type: external
+    # Gateway to attach for this ingress. Supported list:
+    #   - external (NOT IMPLEMENTED) - create custom public gateway
+    #   - internal (NOT IMPLEMENTED) - create custom private gateway
+    #   - public-matic-com - use existing public matic.com gateway with wildcard certificate
+    #   - private-matic-com - use existing private matic.com gateway with wildcard certificate
+    #   - private-matic-link - use existing private matic.link gateway with wildcard certificate
+    gateway: external
     # Destination that should receive ingress traffic
     destination: webserver
     # List of allowed locations. Default "/"
@@ -57,6 +62,15 @@ ingress:
     annotations: {}
 
 defaults:
+  # Default ingress configurations
+  ingress:
+    # No additional hosts by default
+    additional_hosts: []
+    # Empty allow locations results in everything routed to the service
+    allow_locations: []
+    # Empty deny locations
+    deny_locations: []
+  # Default destination configurations
   destination:
     # Configurations for tcp connection pool
     # https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings

@@ -3,9 +3,9 @@
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
-  name: leads-broker-webserver
+  name: leads-broker-backend
 spec:
-  host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+  host: leads-broker-backend.app-component-test00000.svc.cluster.local
   trafficPolicy:
     connectionPool:
       tcp:

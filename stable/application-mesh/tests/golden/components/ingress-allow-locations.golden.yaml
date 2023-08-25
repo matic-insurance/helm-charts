@@ -1,0 +1,50 @@
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-backend
+spec:
+  hosts:
+    - leads-broker-backend.app-component-test00000.svc.cluster.local
+  gateways:
+    - mesh
+  http:
+    - route:
+        - destination:
+            host: leads-broker-backend.app-component-test00000.svc.cluster.local
+            subset: default
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-6670087e
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "broker-hooks-st1.matic.com, zendesk-st1.matic.com, amp-hooks-st1.matic.com"
+spec:
+  hosts:
+    - broker-hooks-st1.matic.com
+    - zendesk-st1.matic.com
+    - amp-hooks-st1.matic.com
+  gateways:
+    - istio-ingress/external-matic-com
+  http:
+    - route:
+        name: allow-ingress-spec
+        match:
+          - uri:
+              prefix: /api/hooks
+          - uri:
+              prefix: /api/zendesk
+          - uri:
+              prefix: /api/status
+        destination:
+          host: leads-broker-backend.app-component-test00000.svc.cluster.local
+          subset: default
+    - route:
+        name: deny-everything-except-allowed
+        directResponse:
+          status: 403
+          body:
+            string: Access Denied

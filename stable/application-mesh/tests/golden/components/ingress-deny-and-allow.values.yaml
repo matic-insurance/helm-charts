@@ -8,11 +8,11 @@ destinations:
   - component: webserver
 
 ingress:
-  - host: leads-broker-st2.matic.com
-    gateway: wildcard-matic-com
+  - host: leads-broker-st1.matic.com
+    gateway: external-matic-com
     destination: webserver
     deny_locations:
       - /admin
-  - host: leads-broker-st2.matic.link
-    gateway: wildcard-matic-link
-    destination: webserver
+    allow_locations:
+      - /api
+      - /public

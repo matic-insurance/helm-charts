@@ -1,0 +1,46 @@
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-websockets
+spec:
+  hosts:
+    - leads-broker-websockets.app-component-test00000.svc.cluster.local
+  gateways:
+    - mesh
+  http:
+    - route:
+        - destination:
+            host: leads-broker-websockets.app-component-test00000.svc.cluster.local
+            subset: default
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-53e507b3
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "ws-amp-st1.matic.link"
+spec:
+  hosts:
+    - ws-amp-st1.matic.link
+  gateways:
+    - istio-ingress/private-matic-link
+  http:
+    - route:
+        name: deny-ingress-spec
+        match:
+          - uri:
+              prefix: /api
+          - uri:
+              prefix: /upload
+        directResponse:
+          status: 403
+          body:
+            string: Access Denied
+    - route:
+        name: allow-all-locations
+        destination:
+          host: leads-broker-websockets.app-component-test00000.svc.cluster.local
+          subset: default
