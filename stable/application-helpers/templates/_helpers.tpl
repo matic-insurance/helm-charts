@@ -146,4 +146,10 @@ Construct full docker image
 {{ printf "%s:%s" $repository $tag }}
 {{- end }}
 
+{{/*
+Constructs short identifier from string
+*/}}
+{{- define "application-helpers.uniq-id" -}}
+{{ printf "%x" (atoi (adler32sum .)) }}
+{{- end }}
 

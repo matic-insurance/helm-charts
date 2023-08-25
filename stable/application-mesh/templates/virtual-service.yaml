@@ -28,7 +28,7 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: {{ include "application-helpers.name" $ }}-{{ printf "%x" (atoi (adler32sum $host)) }}
+  name: {{ include "application-helpers.name" $ }}-{{ include "application-helpers.uniq-id" $host }}
   annotations:
     external-dns.alpha.kubernetes.io/hostname: {{ $hosts | join ", " | quote }}
 spec:
