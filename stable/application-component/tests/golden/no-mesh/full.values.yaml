@@ -1,0 +1,69 @@
+global:
+  application:
+    product: olb
+    environment: production
+    version: release-1.2.3
+
+    environmentVariables:
+      RAILS_ENV: production
+      RAILS_SERVE_STATIC_FILES: "true"
+      VAULT_NAMESPACE: admin
+      VAULT_ROLE: olb
+      VAULT_ADDR: https://vault-st1.matic.link
+      VAULT_AUTH_BACKEND: staging-eks-3
+    configFiles:
+      app_settings: /app/config/app_settings.local.yml
+
+  applicationImage:
+    repository: matic/olb
+
+  applicationMonitoring:
+    datadog: true
+    sentry: true
+
+  mesh:
+    enabled: false
+
+component: webserver
+command: "bundle exec puma -t 8:8"
+availability: high
+placement: mixed
+resources: high
+
+ingress:
+  enabled: true
+  list:
+    - host: olb.matic.link
+      type: internal
+      tls: matic.link-tls
+
+    - host: olb.matic.com
+      type: external
+      deny_locations:
+        - /admin
+      tls: matic.com-tls
+
+deployment:
+  replicas: 2
+  port: 9292
+
+probes:
+  enabled: true
+
+service:
+  enabled: true
+
+serviceAccount:
+  create: true
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+  metrics:
+    - name: olb-requests-per-second
+      type: Datadog
+      query: ewma_10(avg:nginx_ingress.controller.requests{service:olb-webserver}.as_count().rollup(avg, 60))
+      target:
+        type: AverageValue
+        averageValue: 12000m

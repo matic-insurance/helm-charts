@@ -141,6 +141,10 @@ func TestGoldenTemplates(t *testing.T) {
 	        GoldenFileName: "regular-webserver/full.golden.yaml",
 	        ValuesFiles: []string{"regular-webserver/full.values.yaml"},
 	    },
+	    {
+	        GoldenFileName: "no-mesh/full.golden.yaml",
+	        ValuesFiles: []string{"no-mesh/full.values.yaml"},
+	    },
 	}
 
 	for _, testCase := range testCases {

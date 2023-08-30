@@ -4,4 +4,5 @@ global:
     environment: test
     version: "0.0.0"
 
-enabled: false
+  mesh:
+    enabled: false

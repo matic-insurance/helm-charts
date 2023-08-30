@@ -1,4 +1,4 @@
-{{- if .Values.enabled }}
+{{- if .Values.global.mesh.enabled }}
 {{- range $_, $destination := .Values.destinations }}
 ---
 apiVersion: networking.istio.io/v1beta1

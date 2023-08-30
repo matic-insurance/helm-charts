@@ -1,4 +1,4 @@
-{{- if .Values.enabled }}
+{{- if .Values.global.mesh.enabled }}
 {{/* Root virtual services that configure routing inside of the mesh */}}
 {{- range $_, $destination := .Values.destinations }}
 {{ $service_host := include "application-mesh.service-host" (merge (dict "component" $destination.component) $) }}

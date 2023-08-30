@@ -15,8 +15,10 @@ global:
     # Provision environment variables for Sentry exception tracking
     sentry: false
 
-# Kill switch for mesh deployment
-enabled: true
+  # Global mesh configurations
+  mesh:
+    # Kill switch for mesh deployment. Should be set to false to deploy application without service mesh configurations
+    enabled: true
 
 # List of destinations for the mesh traffic together with rules
 destinations:
