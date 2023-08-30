@@ -32,11 +32,13 @@ spec:
     metadata:
       annotations:
         rollme: "123abc"
+        sidecar.istio.io/inject: "true"
         ad.datadoghq.com/myproduct-webserver.logs: '[{"source": "ruby"}]'
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-webserver
         app.kubernetes.io/component: webserver
+        app.kubernetes.io/version: 0.0.0
         tags.datadoghq.com/env: staging
         tags.datadoghq.com/service: myproduct
         tags.datadoghq.com/version: "0.0.0"

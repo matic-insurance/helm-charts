@@ -26,6 +26,11 @@ global:
     # Provision environment variables for Sentry exception tracking
     sentry: false
 
+  # Global mesh configurations
+  mesh:
+    # Kill switch for mesh deployment. Should be set to false to deploy application without service mesh configurations
+    enabled: true
+
 # Current Application component that is deployed. Impacts k8s naming/labels
 component: ""
 

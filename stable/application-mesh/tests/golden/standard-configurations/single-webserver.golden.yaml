@@ -14,7 +14,13 @@ spec:
     loadBalancer:
       simple: LEAST_REQUEST
   subsets:
-    - name: default
+    - name: all-versions # Route traffic to all pods regardless of the deployed version. Current deployment model.
+      labels:
+        app.kubernetes.io/instance: leads-broker-webserver
+    - name: current-version # Should be used for proper blue-green deployment procedures
+      labels:
+        app.kubernetes.io/instance: leads-broker-webserver
+        app.kubernetes.io/version: "release-2023-08-30-02"
 ---
 # Source: application-mesh/templates/virtual-service.yaml
 apiVersion: networking.istio.io/v1beta1
@@ -31,7 +37,7 @@ spec:
       route:
         - destination:
             host: leads-broker-webserver.app-component-test00000.svc.cluster.local
-            subset: default
+            subset: all-versions
 ---
 # Source: application-mesh/templates/virtual-service.yaml
 apiVersion: networking.istio.io/v1beta1
@@ -58,7 +64,7 @@ spec:
       route:
         - destination:
             host: leads-broker-webserver.app-component-test00000.svc.cluster.local
-            subset: default
+            subset: all-versions
 ---
 # Source: application-mesh/templates/virtual-service.yaml
 apiVersion: networking.istio.io/v1beta1
@@ -77,4 +83,4 @@ spec:
       route:
         - destination:
             host: leads-broker-webserver.app-component-test00000.svc.cluster.local
-            subset: default
+            subset: all-versions

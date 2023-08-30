@@ -14,4 +14,10 @@ spec:
     loadBalancer:
       simple: LEAST_REQUEST
   subsets:
-    - name: default
+    - name: all-versions # Route traffic to all pods regardless of the deployed version. Current deployment model.
+      labels:
+        app.kubernetes.io/instance: leads-broker-backend
+    - name: current-version # Should be used for proper blue-green deployment procedures
+      labels:
+        app.kubernetes.io/instance: leads-broker-backend
+        app.kubernetes.io/version: "0.0.0"

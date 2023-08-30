@@ -2,4 +2,4 @@ global:
   application:
     product: leads-broker
     environment: test
-    version: "0.0.0"
+    version: "0.1.0"

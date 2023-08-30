@@ -1,4 +1,4 @@
-{{- if .Values.enabled }}
+{{- if .Values.global.mesh.enabled }}
 {{/* Root virtual services that configure routing inside of the mesh */}}
 {{- range $_, $destination := .Values.destinations }}
 {{ $service_host := include "application-mesh.service-host" (merge (dict "component" $destination.component) $) }}
@@ -17,7 +17,7 @@ spec:
       route:
         - destination:
             host: {{ $service_host }}
-            subset: default
+            subset: all-versions
 {{- end }}
 {{/* Virtual Services for pre-existing gateway (wildcard domain). Required to populate ExternalDNS and configure routing */}}
 {{- range $_, $ingress := .Values.ingress }}
@@ -65,7 +65,7 @@ spec:
       route:
         - destination:
             host: {{ $service_host }}
-            subset: default
+            subset: all-versions
     - name: deny-everything-except-allowed
       directResponse:
         status: 403
@@ -77,7 +77,7 @@ spec:
       route:
         - destination:
             host: {{ $service_host }}
-            subset: default
+            subset: all-versions
     {{- end }}
 {{- end }}
 {{- end }}

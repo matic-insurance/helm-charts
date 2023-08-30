@@ -14,7 +14,7 @@ spec:
       route:
         - destination:
             host: leads-broker-websockets.app-component-test00000.svc.cluster.local
-            subset: default
+            subset: all-versions
 ---
 # Source: application-mesh/templates/virtual-service.yaml
 apiVersion: networking.istio.io/v1beta1
@@ -43,4 +43,4 @@ spec:
       route:
         - destination:
             host: leads-broker-websockets.app-component-test00000.svc.cluster.local
-            subset: default
+            subset: all-versions

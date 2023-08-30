@@ -26,10 +26,12 @@ spec:
     metadata:
       annotations:
         rollme: "123abc"
+        sidecar.istio.io/inject: "true"
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-webserver
         app.kubernetes.io/component: webserver
+        app.kubernetes.io/version: 0.0.0
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirstWithHostNet
