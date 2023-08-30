@@ -26,6 +26,7 @@ spec:
     metadata:
       annotations:
         rollme: "123abc"
+        sidecar.istio.io/inject: "true"
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-webserver

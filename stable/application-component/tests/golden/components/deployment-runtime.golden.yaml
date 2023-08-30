@@ -30,6 +30,7 @@ spec:
       annotations:
         rollme: "123abc"
         test: true
+        sidecar.istio.io/inject: "true"
       labels:
         app.kubernetes.io/name: myproduct
         app.kubernetes.io/instance: myproduct-websocket
