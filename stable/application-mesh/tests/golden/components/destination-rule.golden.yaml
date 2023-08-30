@@ -14,4 +14,6 @@ spec:
     loadBalancer:
       simple: LEAST_REQUEST
   subsets:
-    - name: default
+    - name: all-versions
+      labels:
+        app.kubernetes.io/instance: leads-broker-backend
