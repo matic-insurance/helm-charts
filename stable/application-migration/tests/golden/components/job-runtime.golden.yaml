@@ -50,7 +50,7 @@ spec:
               echo 'Istio ready. Running the command...';
               rails db:migrate;
               x=$(echo $?);
-              wget quiet --post-data="Please exit" -o /dev/null http://localhost:15020/quitquitquit && exit $x
+              wget --quiet --post-data="Please exit" -o /dev/null http://localhost:15020/quitquitquit && exit $x
           imagePullPolicy: IfNotPresent
           env:
             - name: MY_APP

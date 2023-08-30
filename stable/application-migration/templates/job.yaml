@@ -64,7 +64,7 @@ spec:
               echo 'Istio ready. Running the command...';
               {{ .Values.command }};
               x=$(echo $?);
-              wget quiet --post-data="Please exit" -o /dev/null http://localhost:15020/quitquitquit && exit $x
+              wget --quiet --post-data="Please exit" -o /dev/null http://localhost:15020/quitquitquit && exit $x
             {{- else }}
             - {{ .Values.command | quote }}
             {{- end }}
