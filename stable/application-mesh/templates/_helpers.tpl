@@ -2,7 +2,7 @@
 Constructs FQDN domain name for particular component
 */}}
 {{- define "application-mesh.service-host" -}}
-{{ include "application-helpers.name" . }}-{{ .component }}.{{ .Release.Namespace }}.svc.cluster.local
+{{ include "application-mesh.component-fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
 {{- end }}
 
 {{- define "application-mesh.component-fullname" -}}
