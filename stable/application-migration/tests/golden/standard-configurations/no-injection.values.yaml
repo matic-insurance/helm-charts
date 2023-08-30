@@ -1,0 +1,28 @@
+global:
+  application:
+    product: olb
+    environment: production
+    version: release-1.2.3
+
+    environmentVariables:
+      RAILS_ENV: production
+      RAILS_SERVE_STATIC_FILES: "true"
+      VAULT_NAMESPACE: admin
+      VAULT_ROLE: olb
+      VAULT_ADDR: https://vault-st1.matic.link
+      VAULT_AUTH_BACKEND: staging-eks-3
+    configFiles:
+      app_settings: /app/config/app_settings.local.yml
+
+  applicationImage:
+    repository: matic/olb
+
+  applicationMonitoring:
+    datadog: true
+    sentry: true
+
+  mesh:
+    injectionEnabled: false
+
+component: migration
+command: "rails db:setup db:migrate"

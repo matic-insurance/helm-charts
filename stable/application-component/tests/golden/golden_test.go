@@ -138,12 +138,16 @@ func TestGoldenTemplates(t *testing.T) {
 	        ValuesFiles: []string{"deployment-schemes/irrelevant-spot.values.yaml"},
 	    },
 	    {
-	        GoldenFileName: "regular-webserver/full.golden.yaml",
-	        ValuesFiles: []string{"regular-webserver/full.values.yaml"},
+	        GoldenFileName: "standard-configurations/regular-webserver.golden.yaml",
+	        ValuesFiles: []string{"standard-configurations/regular-webserver.values.yaml"},
 	    },
 	    {
-	        GoldenFileName: "no-mesh/full.golden.yaml",
-	        ValuesFiles: []string{"no-mesh/full.values.yaml"},
+	        GoldenFileName: "standard-configurations/no-injection.golden.yaml",
+	        ValuesFiles: []string{"standard-configurations/no-injection.values.yaml"},
+	    },
+	    {
+	        GoldenFileName: "standard-configurations/no-mesh.golden.yaml",
+	        ValuesFiles: []string{"standard-configurations/no-mesh.values.yaml"},
 	    },
 	}
 

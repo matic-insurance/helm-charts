@@ -26,7 +26,7 @@ spec:
         {{- with .Values.deployment.annotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- if .Values.global.mesh.enabled }}
+        {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled }}
         sidecar.istio.io/inject: "true"
         {{- end }}
         {{- if .Values.global.applicationMonitoring.datadog }}
@@ -67,7 +67,7 @@ spec:
           command:
             - "sh"
             - "-c"
-            {{- if .Values.global.mesh.enabled }}
+            {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled }}
             - |
               until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done;
               echo 'Istio ready. Running the command...';

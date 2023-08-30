@@ -79,6 +79,10 @@ func TestGoldenTemplates(t *testing.T) {
 	        ValuesFiles: []string{"standard-configurations/regular-migration.values.yaml"},
 	    },
 	    {
+	        GoldenFileName: "standard-configurations/no-injection.golden.yaml",
+	        ValuesFiles: []string{"standard-configurations/no-injection.values.yaml"},
+	    },
+	    {
 	        GoldenFileName: "standard-configurations/no-mesh.golden.yaml",
 	        ValuesFiles: []string{"standard-configurations/no-mesh.values.yaml"},
 	    },
