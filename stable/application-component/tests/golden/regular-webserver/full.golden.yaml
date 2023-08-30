@@ -59,6 +59,7 @@ spec:
         app.kubernetes.io/name: olb
         app.kubernetes.io/instance: olb-webserver
         app.kubernetes.io/component: webserver
+        app.kubernetes.io/version: release-1.2.3
         tags.datadoghq.com/env: production
         tags.datadoghq.com/service: olb
         tags.datadoghq.com/version: "release-1.2.3"
