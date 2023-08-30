@@ -2,7 +2,7 @@ global:
   application:
     product: leads-broker
     environment: test
-    version: "0.0.0"
+    version: "release-2023-08-30-02"
 
 destinations:
   - component: webserver

@@ -15,8 +15,12 @@ spec:
     loadBalancer:
       simple: LEAST_REQUEST
   subsets:
-    - name: all-versions
+    - name: all-versions # Route traffic to all pods regardless of the deployed version. Current deployment model.
       labels:
         app.kubernetes.io/instance: {{ include "application-mesh.component-fullname" (merge (dict "component" $destination.component) $) }}
+    - name: current-version # Should be used for proper blue-green deployment procedures
+      labels:
+        app.kubernetes.io/instance: {{ include "application-mesh.component-fullname" (merge (dict "component" $destination.component) $) }}
+        {{ include "application-mesh.current-version-label" $ }}
 {{- end }}
 {{- end }}
