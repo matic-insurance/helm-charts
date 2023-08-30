@@ -41,7 +41,15 @@ spec:
       containers:
         - name: myproduct-migrations
           image: "bitnami/ruby:0.0.0"
-          command: ["sh","-c","rails db:migrate"]
+          command:
+            - "sh"
+            - "-c"
+            - |
+              until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done;
+              echo 'Istio ready. Running the command...';
+              rails db:migrate;
+              x=$(echo $?);
+              wget quiet --post-data="Please exit" -o /dev/null http://localhost:15020/quitquitquit && exit $x
           imagePullPolicy: IfNotPresent
           env:
             - name: MY_APP

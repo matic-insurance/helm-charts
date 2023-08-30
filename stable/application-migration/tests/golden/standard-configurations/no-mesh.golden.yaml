@@ -47,7 +47,10 @@ spec:
       containers:
         - name: olb-migration
           image: "matic/olb:release-1.2.3"
-          command: ["sh","-c","rails db:setup db:migrate"]
+          command:
+            - "sh"
+            - "-c"
+            - "rails db:setup db:migrate"
           imagePullPolicy: IfNotPresent
           env:
             - name: DD_AGENT_HOST
