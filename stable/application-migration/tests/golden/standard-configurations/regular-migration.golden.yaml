@@ -1,19 +1,20 @@
+
 ---
 # Source: application-migration/templates/job.yaml
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: myproduct-migrations
+  name: olb-migration
   labels:
-    app.kubernetes.io/name: myproduct
-    app.kubernetes.io/instance: myproduct-migrations
+    app.kubernetes.io/name: olb
+    app.kubernetes.io/instance: olb-migration
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: migrations
-    app.kubernetes.io/part-of: myproduct
-    app.kubernetes.io/version: "0.0.0"
-    tags.datadoghq.com/env: staging
-    tags.datadoghq.com/service: myproduct
-    tags.datadoghq.com/version: "0.0.0"
+    app.kubernetes.io/component: migration
+    app.kubernetes.io/part-of: olb
+    app.kubernetes.io/version: "release-1.2.3"
+    tags.datadoghq.com/env: production
+    tags.datadoghq.com/service: olb
+    tags.datadoghq.com/version: "release-1.2.3"
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation
@@ -24,16 +25,16 @@ spec:
       annotations:
         rollme: "123abc"
         sidecar.istio.io/inject: "true"
-        ad.datadoghq.com/myproduct-migrations.logs: '[{"source": "ruby"}]'
+        ad.datadoghq.com/olb-migration.logs: '[{"source": "ruby"}]'
       labels:
-        app.kubernetes.io/name: myproduct
-        app.kubernetes.io/instance: myproduct-migrations
-        app.kubernetes.io/component: migrations
-        tags.datadoghq.com/env: staging
-        tags.datadoghq.com/service: myproduct
-        tags.datadoghq.com/version: "0.0.0"
+        app.kubernetes.io/name: olb
+        app.kubernetes.io/instance: olb-migration
+        app.kubernetes.io/component: migration
+        tags.datadoghq.com/env: production
+        tags.datadoghq.com/service: olb
+        tags.datadoghq.com/version: "release-1.2.3"
     spec:
-      serviceAccountName: myproduct
+      serviceAccountName: olb
       dnsPolicy: ClusterFirst
       dnsConfig:
         options:
@@ -45,8 +46,17 @@ spec:
         fsGroup: 1000
         runAsUser: 1000
       containers:
-        - name: myproduct-migrations
-          image: "bitnami/ruby:0.0.0"
+        - name: olb-migration
+          image: "matic/olb:release-1.2.3"
+          command:
+            - "sh"
+            - "-c"
+            - |
+              until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done;
+              echo 'Istio ready. Running the command...';
+              rails db:setup db:migrate;
+              x=$(echo $?);
+              wget quiet --post-data="Please exit" -o /dev/null http://localhost:15020/quitquitquit && exit $x
           imagePullPolicy: IfNotPresent
           env:
             - name: DD_AGENT_HOST
@@ -74,18 +84,25 @@ spec:
                 fieldRef:
                   fieldPath: metadata.uid
             - name: DD_TAGS
-              value: "product:myproduct,element:migrations"
+              value: "product:olb,element:migration"
             - name: DD_POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: SENTRY_RELEASE
-              value: "myproduct-0.0.0"
+              value: "olb-release-1.2.3"
             - name: SENTRY_ENVIRONMENT
-              value: staging
+              value: production
+          envFrom:
+            - secretRef:
+                name: olb-configs-environment
           volumeMounts:
             - name: dynamic-sa-token
               mountPath: /var/run/secrets/tokens
+              readOnly: true
+            - name: olb-configs-migration
+              mountPath: "/app/config/app_settings.local.yml"
+              subPath: "app_settings"
               readOnly: true
           resources:
             limits:
@@ -101,3 +118,6 @@ spec:
               - serviceAccountToken:
                   path: dynamic-sa-token
                   expirationSeconds: 600
+        - name: olb-configs-migration
+          secret:
+            secretName: olb-configs-migration

@@ -22,6 +22,9 @@ spec:
         {{- with .Values.job.annotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled }}
+        sidecar.istio.io/inject: "true"
+        {{- end }}
         {{- if .Values.global.applicationMonitoring.datadog }}
         ad.datadoghq.com/{{ include "application-helpers.fullname" . }}.logs: '[{"source": "{{ .Values.job.logs.source }}"}]'
         {{- end }}
@@ -52,7 +55,19 @@ spec:
         - name: {{ include "application-helpers.fullname" . }}
           image: {{ include "application-helpers.docker-image" . | quote }}
           {{- if .Values.command }}
-          command: ["sh","-c",{{ .Values.command | quote }}]
+          command:
+            - "sh"
+            - "-c"
+            {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled }}
+            - |
+              until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done;
+              echo 'Istio ready. Running the command...';
+              {{ .Values.command }};
+              x=$(echo $?);
+              wget quiet --post-data="Please exit" -o /dev/null http://localhost:15020/quitquitquit && exit $x
+            {{- else }}
+            - {{ .Values.command | quote }}
+            {{- end }}
           {{- end }}
           imagePullPolicy: {{ .Values.global.applicationImage.pullPolicy }}
           {{- if or .Values.global.applicationMonitoring.datadog .Values.global.applicationMonitoring.sentry .Values.job.env }}

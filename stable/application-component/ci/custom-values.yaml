@@ -7,6 +7,9 @@ global:
   applicationImage:
     repository: "bitnami/ruby"
 
+  mesh:
+    enabled: false
+
 component: webserver
 command: ruby -e "loop { puts 'working'; sleep 1}"
 

@@ -26,6 +26,13 @@ global:
     # Provision environment variables for Sentry exception tracking
     sentry: false
 
+  # Global mesh configurations
+  mesh:
+    # Kill switch for mesh deployment. Should be set to false to deploy application without service mesh configurations
+    enabled: true
+    # Allows to disable istio sidecar injection and command wrapping
+    injectionEnabled: true
+
 # Application component that is deployed
 component: migrations
 

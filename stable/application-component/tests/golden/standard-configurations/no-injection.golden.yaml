@@ -77,7 +77,10 @@ spec:
       containers:
         - name: olb-webserver
           image: "matic/olb:release-1.2.3"
-          command: ["sh","-c","bundle exec puma -t 8:8"]
+          command:
+            - "sh"
+            - "-c"
+            - "bundle exec puma -t 8:8"
           ports:
             - containerPort: 9292
           imagePullPolicy: IfNotPresent

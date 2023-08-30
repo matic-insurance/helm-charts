@@ -7,6 +7,9 @@ global:
   applicationImage:
     repository: "bitnami/ruby"
 
+  mesh:
+    enabled: false
+
 command: ruby -e "puts 'test'"
 
 serviceAccount:
