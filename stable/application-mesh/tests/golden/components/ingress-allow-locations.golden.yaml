@@ -23,6 +23,7 @@ metadata:
   name: leads-broker-6670087e
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "broker-hooks-st1.matic.com, zendesk-st1.matic.com, amp-hooks-st1.matic.com"
+    external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
     - broker-hooks-st1.matic.com

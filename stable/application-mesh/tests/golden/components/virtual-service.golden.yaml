@@ -23,6 +23,7 @@ metadata:
   name: leads-broker-2455050f
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "myhost1.local"
+    external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
     - myhost1.local

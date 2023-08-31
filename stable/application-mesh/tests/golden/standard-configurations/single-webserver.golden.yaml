@@ -7,10 +7,6 @@ metadata:
 spec:
   host: leads-broker-webserver.app-component-test00000.svc.cluster.local
   trafficPolicy:
-    connectionPool:
-      tcp:
-        maxConnections: 200
-        connectTimeout: 5s
     loadBalancer:
       simple: LEAST_REQUEST
   subsets:
@@ -46,6 +42,7 @@ metadata:
   name: leads-broker-83e409ab
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "leads-broker-st2.matic.com"
+    external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
     - leads-broker-st2.matic.com
@@ -73,6 +70,7 @@ metadata:
   name: leads-broker-8e0e0a1a
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "leads-broker-st2.matic.link"
+    external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
     - leads-broker-st2.matic.link

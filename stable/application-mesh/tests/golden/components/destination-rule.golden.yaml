@@ -7,10 +7,6 @@ metadata:
 spec:
   host: leads-broker-backend.app-component-test00000.svc.cluster.local
   trafficPolicy:
-    connectionPool:
-      tcp:
-        maxConnections: 200
-        connectTimeout: 5s
     loadBalancer:
       simple: LEAST_REQUEST
   subsets:

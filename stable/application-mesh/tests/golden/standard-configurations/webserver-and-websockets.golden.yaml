@@ -7,10 +7,6 @@ metadata:
 spec:
   host: leads-broker-webserver.app-component-test00000.svc.cluster.local
   trafficPolicy:
-    connectionPool:
-      tcp:
-        maxConnections: 200
-        connectTimeout: 5s
     loadBalancer:
       simple: LEAST_REQUEST
   subsets:
@@ -30,10 +26,6 @@ metadata:
 spec:
   host: leads-broker-websockets.app-component-test00000.svc.cluster.local
   trafficPolicy:
-    connectionPool:
-      tcp:
-        maxConnections: 200
-        connectTimeout: 5s
     loadBalancer:
       simple: LEAST_REQUEST
   subsets:
@@ -86,6 +78,7 @@ metadata:
   name: leads-broker-52ce0794
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "admin-st1.matic.com, broker-st1.matic.com, api-amp-st1.matic.com"
+    external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
     - admin-st1.matic.com
@@ -115,6 +108,7 @@ metadata:
   name: leads-broker-6670087e
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "ams360-st1.matic.com, scim-st1.matic.com, mailgun-st1.matic.com, amp-twilio-st1.matic.com, amp-hooks-st1.matic.com"
+    external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
     - ams360-st1.matic.com
@@ -154,6 +148,7 @@ metadata:
   name: leads-broker-ca030c53
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "ws-broker-st1.maticinsurance.com"
+    external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
     - ws-broker-st1.maticinsurance.com
