@@ -32,6 +32,16 @@ spec:
         tags.datadoghq.com/env: staging
         tags.datadoghq.com/service: myproduct
         tags.datadoghq.com/version: "0.0.0"
+        ad.datadoghq.com/istio-proxy.logs: '[{"source": "envoy"}]'
+        ad.datadoghq.com/istio-proxy.checks: |
+          {
+            "envoy": {
+              "init_config": {},
+              "instances": [{
+                  "openmetrics_endpoint": "http://%%host%%:15090/stats/prometheus"
+              }]
+            }
+          }
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst
