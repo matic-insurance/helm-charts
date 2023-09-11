@@ -65,6 +65,11 @@ func TestMeshGoldenTemplates(t *testing.T) {
 	        Templates: []string{"templates/virtual-service.yaml"},
 	    },
 	    {
+	        GoldenFileName: "components/service-entry.golden.yaml",
+	        ValuesFiles: []string{"components/service-entry.values.yaml"},
+	        Templates: []string{"templates/service-entry.yaml"},
+	    },
+	    {
 	        GoldenFileName: "standard-configurations/disabled.golden.yaml",
 	        ValuesFiles: []string{"standard-configurations/disabled.values.yaml"},
 	    },

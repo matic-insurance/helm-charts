@@ -1,0 +1,20 @@
+{{- if .Values.global.mesh.enabled }}
+{{- range $_, $egress := .Values.egress }}
+{{- if ne $egress.name "example-service" }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: {{ $egress.name }}
+spec:
+  hosts:
+    - {{ $egress.host }}
+  ports:
+    - number: {{ $egress.port }}
+      name: {{ $egress.type }}
+      protocol: TCP
+  resolution: DNS
+  location: MESH_EXTERNAL
+{{- end }}
+{{- end }}
+{{- end }}

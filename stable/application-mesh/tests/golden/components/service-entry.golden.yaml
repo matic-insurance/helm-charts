@@ -1,0 +1,45 @@
+---
+# Source: application-mesh/templates/service-entry.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: leads-broker-db
+spec:
+  hosts:
+    - lead-broker-staging.aws.db
+  ports:
+    - number: 5432
+      name: postgres
+      protocol: TCP
+  resolution: DNS
+  location: MESH_EXTERNAL
+---
+# Source: application-mesh/templates/service-entry.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: leads-broker-redis
+spec:
+  hosts:
+    - lead-broker-staging.aws.redis
+  ports:
+    - number: 6379
+      name: redis
+      protocol: TCP
+  resolution: DNS
+  location: MESH_EXTERNAL
+---
+# Source: application-mesh/templates/service-entry.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: some-external-website
+spec:
+  hosts:
+    - lob.com
+  ports:
+    - number: 443
+      name: https
+      protocol: TCP
+  resolution: DNS
+  location: MESH_EXTERNAL

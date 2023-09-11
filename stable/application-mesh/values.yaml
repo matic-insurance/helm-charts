@@ -63,6 +63,12 @@ ingress:
     # Additional annotations for ingress
     annotations: {}
 
+egress:
+  - name: example-service
+    type: https
+    host: example.com
+    port: 443
+
 defaults:
   # Default ingress configurations
   ingress:
