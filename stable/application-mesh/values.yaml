@@ -37,6 +37,7 @@ destinations:
     loadBalancer: LEAST_REQUEST
 
 
+# Inbound endpoints for application
 ingress:
   # Domain for ingress
   - host: myhost1.local
@@ -63,10 +64,16 @@ ingress:
     # Additional annotations for ingress
     annotations: {}
 
+# Outbound endpoints used by the application
 egress:
+  # Name of the external service. Product name will be added as prefix
   - name: example-service
-    type: https
+    # Type of the communication. This parameter has impact on communication protocol. Recognized values are: http, https, all others will set protocol to TCP
+    # Also this parameter will be used as name for the port
+    type: custom
+    # DNS host for the service
     host: example.com
+    # Port used for communication
     port: 443
 
 defaults:
@@ -92,3 +99,15 @@ defaults:
     # loadBalancer - what load balance algorithm to use (LEAST_REQUEST, ROUND_ROBIN, RANDOM)
     # https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-SimpleLB
     loadBalancer: LEAST_REQUEST
+
+  # Default egress entry parameters
+  egress:
+    # Mapping of entry type to protocol
+    protocol:
+      http: HTTP
+      https: TLS
+      grpc: GRPC
+      http2: HTTP2
+      postgres: TCP
+      redis: TCP
+      custom: TCP

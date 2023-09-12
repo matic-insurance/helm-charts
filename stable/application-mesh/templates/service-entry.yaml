@@ -5,16 +5,20 @@
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: {{ $egress.name }}
+  name: {{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
 spec:
   hosts:
     - {{ $egress.host }}
   ports:
-    - number: {{ $egress.port }}
-      name: {{ $egress.type }}
+    - name: {{ $egress.type }}
+      number: {{ $egress.port }}
+      {{- if hasKey $.Values.defaults.egress.protocol $egress.type }}
+      protocol: {{ get $.Values.defaults.egress.protocol $egress.type }}
+      {{- else }}
       protocol: TCP
-  resolution: DNS
+      {{- end }}
   location: MESH_EXTERNAL
+  resolution: DNS
 {{- end }}
 {{- end }}
 {{- end }}

@@ -18,6 +18,36 @@ spec:
         app.kubernetes.io/instance: leads-broker-webserver
         app.kubernetes.io/version: "release-2023-08-30-02"
 ---
+# Source: application-mesh/templates/service-entry.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: leads-broker-db
+spec:
+  hosts:
+    - leads-broker-staging.aws.db
+  ports:
+    - name: postgres
+      number: 5432
+      protocol: TCP
+  location: MESH_EXTERNAL
+  resolution: DNS
+---
+# Source: application-mesh/templates/service-entry.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: datalot
+spec:
+  hosts:
+    - datalot.com
+  ports:
+    - name: https
+      number: 443
+      protocol: TLS
+  location: MESH_EXTERNAL
+  resolution: DNS
+---
 # Source: application-mesh/templates/virtual-service.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService

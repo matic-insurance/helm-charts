@@ -16,3 +16,13 @@ ingress:
   - host: leads-broker-st2.matic.link
     gateway: wildcard-matic-link
     destination: webserver
+
+egress:
+  - name: db
+    type: postgres
+    host: leads-broker-staging.aws.db
+    port: 5432
+  - full_name: datalot
+    type: https
+    host: datalot.com
+    port: 443
