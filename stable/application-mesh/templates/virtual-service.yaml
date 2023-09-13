@@ -20,7 +20,8 @@ spec:
       route:
         - destination:
             host: {{ $service_host }}
-            port: {{ $.Values.features.rewritePort.to }}
+            port:
+              number: {{ $.Values.features.rewritePort.to }}
             subset: all-versions
     {{- end }}
     - name: allow-all-locations
