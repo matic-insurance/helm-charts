@@ -15,5 +15,7 @@ egress:
     port: 6379
   - name: some-external-website
     type: https
-    host: lob.com
+    hosts:
+      - api.lob.com
+      - auth.lob.com
     port: 443

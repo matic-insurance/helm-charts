@@ -8,7 +8,10 @@ metadata:
   name: {{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
 spec:
   hosts:
-    - {{ $egress.host }}
+    {{- $_ := required "Egress host or hosts list is required" ($egress.hosts | default $egress.host) }}
+    {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
+    - {{ $host }}
+    {{- end }}
   ports:
     - name: {{ $egress.type }}
       number: {{ $egress.port }}

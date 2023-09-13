@@ -36,7 +36,8 @@ metadata:
   name: leads-broker-some-external-website
 spec:
   hosts:
-    - lob.com
+    - api.lob.com
+    - auth.lob.com
   ports:
     - name: https
       number: 443
