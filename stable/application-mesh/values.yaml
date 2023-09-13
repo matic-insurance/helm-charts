@@ -102,12 +102,16 @@ defaults:
 
   # Default egress entry parameters
   egress:
-    # Mapping of entry type to protocol
-    protocol:
+    protocol: TCP
+    # Mapping of egress type to protocol
+    protocols_map:
       http: HTTP
       https: TLS
-      grpc: GRPC
-      http2: HTTP2
       postgres: TCP
       redis: TCP
-      custom: TCP
+    # Mapping of egress type to port
+    ports_map:
+      http: 80
+      https: 443
+      postgres: 5432
+      redis: 6379

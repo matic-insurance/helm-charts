@@ -8,15 +8,14 @@ metadata:
   name: {{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
 spec:
   hosts:
-    - {{ $egress.host }}
+    {{- $_ := required "Mesh Egress host or hosts attribute is required" ($egress.hosts | default $egress.host) }}
+    {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
+    - {{ $host }}
+    {{- end }}
   ports:
-    - name: {{ $egress.type }}
-      number: {{ $egress.port }}
-      {{- if hasKey $.Values.defaults.egress.protocol $egress.type }}
-      protocol: {{ get $.Values.defaults.egress.protocol $egress.type }}
-      {{- else }}
-      protocol: TCP
-      {{- end }}
+    - name: {{ required "Mesh Egress type is required" $egress.type }}
+      number: {{ required "Mesh Egress port is required for non standard type" ($egress.port | default (get $.Values.defaults.egress.ports_map $egress.type)) }}
+      protocol: {{ get $.Values.defaults.egress.protocols_map $egress.type | default $.Values.defaults.egress.protocol }}
   location: MESH_EXTERNAL
   resolution: DNS
 {{- end }}
