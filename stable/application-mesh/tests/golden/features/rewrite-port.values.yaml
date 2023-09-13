@@ -1,0 +1,12 @@
+global:
+  application:
+    product: leads-broker
+    environment: test
+    version: "release-2023-08-30-02"
+
+features:
+  rewritePort:
+    enabled: true
+
+destinations:
+  - component: webserver
