@@ -34,7 +34,7 @@ spec:
               service:
                 name: myproduct-webserver
                 port:
-                  number: 3010
+                  number: 3011
             path: /
             pathType: Prefix
   tls:
@@ -76,7 +76,7 @@ spec:
               service:
                 name: myproduct-webserver
                 port:
-                  number: 3010
+                  number: 3011
             path: /
             pathType: Prefix
   tls:
@@ -113,7 +113,7 @@ spec:
               service:
                 name: myproduct-webserver
                 port:
-                  number: 3010
+                  number: 3011
             path: /api/ams360/notification_events
             pathType: Prefix
   tls:
@@ -153,14 +153,14 @@ spec:
               service:
                 name: myproduct-webserver
                 port:
-                  number: 3010
+                  number: 3011
             path: /scim/v2
             pathType: Prefix
           - backend:
               service:
                 name: myproduct-webserver
                 port:
-                  number: 3010
+                  number: 3011
             path: /api/mailgun/docusign_envelope
             pathType: Prefix
   tls:
@@ -198,7 +198,7 @@ spec:
               service:
                 name: myproduct-webserver
                 port:
-                  number: 3010
+                  number: 3011
             path: /api/plain
             pathType: Prefix
 ---
@@ -217,7 +217,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 3010
+    - port: 3011
       targetPort: 3010
       protocol: TCP
       name: http

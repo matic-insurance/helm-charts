@@ -14,6 +14,7 @@ deployment:
 
 service:
   enabled: true
+  port: 3011
 
 ingress:
   enabled: true
