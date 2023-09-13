@@ -13,6 +13,16 @@ spec:
   gateways:
     - mesh
   http:
+    {{- if $.Values.features.rewritePort.enabled }}
+    - name: allow-all-locations-rewrite-port
+      match:
+        - port: {{ $.Values.features.rewritePort.from }}
+      route:
+        - destination:
+            host: {{ $service_host }}
+            port: {{ $.Values.features.rewritePort.to }}
+            subset: all-versions
+    {{- end }}
     - name: allow-all-locations
       route:
         - destination:

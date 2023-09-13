@@ -20,6 +20,14 @@ global:
     # Kill switch for mesh deployment. Should be set to false to deploy application without service mesh configurations
     enabled: true
 
+# Custom features controlling mesh configuration
+features:
+  # Change inbound traffic port. Used during migration to new default service port
+  rewritePort:
+    enabled: false
+    from: 9292
+    to: 80
+
 # List of destinations for the mesh traffic together with rules
 destinations:
   - component: webserver

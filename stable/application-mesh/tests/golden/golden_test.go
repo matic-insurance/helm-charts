@@ -70,6 +70,10 @@ func TestMeshGoldenTemplates(t *testing.T) {
 	        Templates: []string{"templates/service-entry.yaml"},
 	    },
 	    {
+	        GoldenFileName: "features/rewrite-port.golden.yaml",
+	        ValuesFiles: []string{"features/rewrite-port.values.yaml"},
+	    },
+	    {
 	        GoldenFileName: "standard-configurations/disabled.golden.yaml",
 	        ValuesFiles: []string{"standard-configurations/disabled.values.yaml"},
 	    },
