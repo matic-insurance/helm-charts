@@ -14,7 +14,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 9292
+    - port: 80
       targetPort: 9292
       protocol: TCP
       name: http
@@ -236,7 +236,7 @@ spec:
               service:
                 name: olb-webserver
                 port:
-                  number: 9292
+                  number: 80
             path: /
             pathType: Prefix
   tls:
@@ -279,7 +279,7 @@ spec:
               service:
                 name: olb-webserver
                 port:
-                  number: 9292
+                  number: 80
             path: /
             pathType: Prefix
   tls:

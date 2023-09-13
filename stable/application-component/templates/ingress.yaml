@@ -61,7 +61,7 @@ spec:
               service:
                 name: {{ include "application-helpers.fullname" $ }}
                 port:
-                  number: {{ $.Values.deployment.port }}
+                  number: {{ $.Values.service.port }}
             path: {{ $path }}
             pathType: Prefix
           {{- end }}

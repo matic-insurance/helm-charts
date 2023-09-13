@@ -155,6 +155,8 @@ service:
   enabled: false
   # Type of the service
   type: ClusterIP
+  # Port exposed by service
+  port: 80
 
 # Ingress configuration
 # Ingress will forward all requests to the service configured above. Ingress is not created when service disabled
