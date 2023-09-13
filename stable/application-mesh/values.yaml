@@ -106,8 +106,11 @@ defaults:
     protocol:
       http: HTTP
       https: TLS
-      grpc: GRPC
-      http2: HTTP2
       postgres: TCP
       redis: TCP
       custom: TCP
+    port:
+      http: 80
+      https: 443
+      postgres: 5432
+      redis: 6379

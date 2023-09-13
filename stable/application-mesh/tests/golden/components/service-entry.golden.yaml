@@ -3,7 +3,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: leads-broker-leads-broker-db
+  name: leads-broker-db
 spec:
   hosts:
     - lead-broker-staging.aws.db
@@ -18,7 +18,7 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: leads-broker-leads-broker-redis
+  name: leads-broker-redis
 spec:
   hosts:
     - lead-broker-staging.aws.redis
@@ -42,5 +42,20 @@ spec:
     - name: https
       number: 443
       protocol: TLS
+  location: MESH_EXTERNAL
+  resolution: DNS
+---
+# Source: application-mesh/templates/service-entry.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: kafka
+spec:
+  hosts:
+    - kafka.server.com
+  ports:
+    - name: kafka
+      number: 9001
+      protocol: TCP
   location: MESH_EXTERNAL
   resolution: DNS

@@ -14,7 +14,7 @@ spec:
     {{- end }}
   ports:
     - name: {{ $egress.type }}
-      number: {{ $egress.port }}
+      number: {{ required "Egress port is required for non standard type" ($egress.port | default (get $.Values.defaults.egress.port $egress.type)) }}
       {{- if hasKey $.Values.defaults.egress.protocol $egress.type }}
       protocol: {{ get $.Values.defaults.egress.protocol $egress.type }}
       {{- else }}

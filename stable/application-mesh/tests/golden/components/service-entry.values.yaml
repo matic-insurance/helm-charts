@@ -5,17 +5,18 @@ global:
     version: "0.0.0"
 
 egress:
-  - name: leads-broker-db
+  - name: db
     type: postgres
     host: lead-broker-staging.aws.db
-    port: 5432
-  - name: leads-broker-redis
+  - name: redis
     type: redis
     host: lead-broker-staging.aws.redis
-    port: 6379
   - name: some-external-website
     type: https
     hosts:
       - api.lob.com
       - auth.lob.com
-    port: 443
+  - full_name: kafka
+    type: kafka
+    host: kafka.server.com
+    port: 9001

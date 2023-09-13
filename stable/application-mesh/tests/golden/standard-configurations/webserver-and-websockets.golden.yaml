@@ -75,6 +75,7 @@ metadata:
 spec:
   hosts:
     - ams-360.vertafore.com
+    - policies.vertafore.com
   ports:
     - name: https
       number: 443
