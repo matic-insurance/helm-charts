@@ -1,0 +1,19 @@
+global:
+  application:
+    product: leads-broker
+    environment: test
+    version: "0.0.0"
+
+egress:
+  - name: leads-broker-db
+    type: postgres
+    host: lead-broker-staging.aws.db
+    port: 5432
+  - name: leads-broker-redis
+    type: redis
+    host: lead-broker-staging.aws.redis
+    port: 6379
+  - name: some-external-website
+    type: https
+    host: lob.com
+    port: 443

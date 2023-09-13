@@ -21,6 +21,7 @@ spec:
 {{- end }}
 {{/* Virtual Services for pre-existing gateway (wildcard domain). Required to populate ExternalDNS and configure routing */}}
 {{- range $_, $ingress := .Values.ingress }}
+{{- if ne $ingress.host "example.matic.com" }}
 {{ $service_host := include "application-mesh.service-host" (merge (dict "component" $ingress.destination) $) }}
 {{- $host := required "Ingress host must be specified" $ingress.host  }}
 {{- $hosts := append ($ingress.additional_hosts | default $.Values.defaults.ingress.additional_hosts) $ingress.host }}
@@ -80,5 +81,6 @@ spec:
             host: {{ $service_host }}
             subset: all-versions
     {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}

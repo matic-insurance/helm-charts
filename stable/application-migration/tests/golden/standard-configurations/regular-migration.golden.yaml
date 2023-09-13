@@ -26,6 +26,16 @@ spec:
         rollme: "123abc"
         sidecar.istio.io/inject: "true"
         ad.datadoghq.com/olb-migration.logs: '[{"source": "ruby"}]'
+        ad.datadoghq.com/istio-proxy.logs: '[{"source": "envoy"}]'
+        ad.datadoghq.com/istio-proxy.checks: |
+          {
+            "envoy": {
+              "init_config": {},
+              "instances": [{
+                  "openmetrics_endpoint": "http://%%host%%:15090/stats/prometheus"
+              }]
+            }
+          }
       labels:
         app.kubernetes.io/name: olb
         app.kubernetes.io/instance: olb-migration

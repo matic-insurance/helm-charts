@@ -31,6 +31,18 @@ spec:
         {{- end }}
         {{- if .Values.global.applicationMonitoring.datadog }}
         ad.datadoghq.com/{{ include "application-helpers.fullname" . }}.logs: '[{"source": "{{ .Values.deployment.logs.source }}"}]'
+        {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled }}
+        ad.datadoghq.com/istio-proxy.logs: '[{"source": "envoy"}]'
+        ad.datadoghq.com/istio-proxy.checks: |
+          {
+            "envoy": {
+              "init_config": {},
+              "instances": [{
+                  "openmetrics_endpoint": "http://%%host%%:15090/stats/prometheus"
+              }]
+            }
+          }
+        {{- end }}
         {{- end }}
       labels:
         {{- include "application-helpers.selectorLabels" . | nindent 8 }}

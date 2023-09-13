@@ -28,3 +28,17 @@ ingress:
   - host: ws-broker-st1.maticinsurance.com
     gateway: private-matic-com
     destination: websockets
+
+egress:
+  - name: db
+    type: postgres
+    host: amp-staging.aws.db
+    port: 5432
+  - name: redis
+    type: redis
+    host: amp-staging.aws.redis
+    port: 6379
+  - full_name: ams-360
+    type: https
+    host: ams-360.vertafore.com
+    port: 443
