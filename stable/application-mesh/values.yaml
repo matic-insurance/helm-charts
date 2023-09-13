@@ -40,7 +40,7 @@ destinations:
 # Inbound endpoints for application
 ingress:
   # Domain for ingress
-  - host: myhost1.local
+  - host: example.matic.com
     # List of additional domains to support by this ingress
     additional_hosts: []
     # Gateway to attach for this ingress. Supported list:
