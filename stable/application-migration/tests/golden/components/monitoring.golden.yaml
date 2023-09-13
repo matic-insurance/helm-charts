@@ -25,13 +25,6 @@ spec:
         rollme: "123abc"
         sidecar.istio.io/inject: "true"
         ad.datadoghq.com/myproduct-migrations.logs: '[{"source": "ruby"}]'
-      labels:
-        app.kubernetes.io/name: myproduct
-        app.kubernetes.io/instance: myproduct-migrations
-        app.kubernetes.io/component: migrations
-        tags.datadoghq.com/env: staging
-        tags.datadoghq.com/service: myproduct
-        tags.datadoghq.com/version: "0.0.0"
         ad.datadoghq.com/istio-proxy.logs: '[{"source": "envoy"}]'
         ad.datadoghq.com/istio-proxy.checks: |
           {
@@ -42,6 +35,13 @@ spec:
               }]
             }
           }
+      labels:
+        app.kubernetes.io/name: myproduct
+        app.kubernetes.io/instance: myproduct-migrations
+        app.kubernetes.io/component: migrations
+        tags.datadoghq.com/env: staging
+        tags.datadoghq.com/service: myproduct
+        tags.datadoghq.com/version: "0.0.0"
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst

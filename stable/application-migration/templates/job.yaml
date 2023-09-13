@@ -27,12 +27,6 @@ spec:
         {{- end }}
         {{- if .Values.global.applicationMonitoring.datadog }}
         ad.datadoghq.com/{{ include "application-helpers.fullname" . }}.logs: '[{"source": "{{ .Values.job.logs.source }}"}]'
-        {{- end }}
-      labels:
-        {{- include "application-helpers.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: {{ .Values.component }}
-        {{- if .Values.global.applicationMonitoring.datadog }}
-        {{- include "application-helpers.monitoring.datadog.labels" . | nindent 8 }}
         {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled }}
         ad.datadoghq.com/istio-proxy.logs: '[{"source": "envoy"}]'
         ad.datadoghq.com/istio-proxy.checks: |
@@ -45,6 +39,12 @@ spec:
             }
           }
         {{- end }}
+        {{- end }}
+      labels:
+        {{- include "application-helpers.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: {{ .Values.component }}
+        {{- if .Values.global.applicationMonitoring.datadog }}
+        {{- include "application-helpers.monitoring.datadog.labels" . | nindent 8 }}
         {{- end }}
     spec:
       {{- if .Values.global.applicationImage.pullSecret }}

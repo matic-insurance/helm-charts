@@ -26,13 +26,6 @@ spec:
         rollme: "123abc"
         sidecar.istio.io/inject: "true"
         ad.datadoghq.com/olb-migration.logs: '[{"source": "ruby"}]'
-      labels:
-        app.kubernetes.io/name: olb
-        app.kubernetes.io/instance: olb-migration
-        app.kubernetes.io/component: migration
-        tags.datadoghq.com/env: production
-        tags.datadoghq.com/service: olb
-        tags.datadoghq.com/version: "release-1.2.3"
         ad.datadoghq.com/istio-proxy.logs: '[{"source": "envoy"}]'
         ad.datadoghq.com/istio-proxy.checks: |
           {
@@ -43,6 +36,13 @@ spec:
               }]
             }
           }
+      labels:
+        app.kubernetes.io/name: olb
+        app.kubernetes.io/instance: olb-migration
+        app.kubernetes.io/component: migration
+        tags.datadoghq.com/env: production
+        tags.datadoghq.com/service: olb
+        tags.datadoghq.com/version: "release-1.2.3"
     spec:
       serviceAccountName: olb
       dnsPolicy: ClusterFirst
