@@ -353,7 +353,7 @@ spec:
     - type: External
       external:
         metric:
-          name: datadogmetric@production:olb-requests-per-second
+          name: "datadogmetric@app-component-test00000:olb-requests-per-second"
         target:
           averageValue: 12000m
           type: AverageValue

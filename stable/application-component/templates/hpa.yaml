@@ -22,7 +22,7 @@ spec:
     - type: External
       external:
         metric:
-          name: datadogmetric@{{ $.Values.global.application.environment  }}:{{ $metric.name }}
+          name: "datadogmetric@{{ $.Release.Namespace  }}:{{ $metric.name }}"
         target:
         {{- toYaml $metric.target | nindent 10 }}
     {{- else if eq $metric.type "External" }}

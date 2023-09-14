@@ -207,6 +207,7 @@ func (s *GoldenTestSuite) ReadGoldenFile() string {
 func stripRandomData(template string) string {
     template = stripRegexp(template, `\s+helm.sh/chart:\s+.*`, "")
     template = stripRegexp(template, `rollme:\s+.*`, "rollme: \"123abc\"")
+    template = stripRegexp(template, `app-component-test[a-z0-9]{6}`, "app-component-test00000")
 
     return template
 }
