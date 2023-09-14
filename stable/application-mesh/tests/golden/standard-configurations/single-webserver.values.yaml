@@ -4,6 +4,9 @@ global:
     environment: test
     version: "release-2023-08-30-02"
 
+  applicationMonitoring:
+    datadog: true
+
 destinations:
   - component: webserver
 
