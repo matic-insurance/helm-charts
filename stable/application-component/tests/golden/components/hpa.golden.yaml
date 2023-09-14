@@ -25,14 +25,14 @@ spec:
     - type: External
       external:
         metric:
-          name: datadogmetric@staging:origin-p95-latency
+          name: "datadogmetric@app-component-test00000:origin-p95-latency"
         target:
           type: Value
           value: 500m
     - type: External
       external:
         metric:
-          name: datadogmetric@staging:origin-requests-per-second
+          name: "datadogmetric@app-component-test00000:origin-requests-per-second"
         target:
           averageValue: 12
           type: AverageValue
