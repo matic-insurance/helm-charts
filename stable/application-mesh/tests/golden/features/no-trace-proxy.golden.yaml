@@ -29,15 +29,6 @@ spec:
   gateways:
     - mesh
   http:
-    - name: allow-all-locations-rewrite-port
-      match:
-        - port: 9292
-      route:
-        - destination:
-            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
-            port:
-              number: 80
-            subset: all-versions
     - name: allow-all-locations
       route:
         - destination:

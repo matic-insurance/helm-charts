@@ -99,6 +99,10 @@ spec:
         - destination:
             host: leads-broker-webserver.app-component-test00000.svc.cluster.local
             subset: all-versions
+          headers:
+            request:
+              add:
+                "x-request-start": "t=%START_TIME(%s.%3f)%"
 ---
 # Source: application-mesh/templates/virtual-service.yaml
 apiVersion: networking.istio.io/v1beta1
@@ -116,6 +120,10 @@ spec:
         - destination:
             host: leads-broker-websockets.app-component-test00000.svc.cluster.local
             subset: all-versions
+          headers:
+            request:
+              add:
+                "x-request-start": "t=%START_TIME(%s.%3f)%"
 ---
 # Source: application-mesh/templates/virtual-service.yaml
 apiVersion: networking.istio.io/v1beta1
@@ -146,6 +154,10 @@ spec:
         - destination:
             host: leads-broker-webserver.app-component-test00000.svc.cluster.local
             subset: all-versions
+          headers:
+            request:
+              add:
+                "x-request-start": "t=%START_TIME(%s.%3f)%"
 ---
 # Source: application-mesh/templates/virtual-service.yaml
 apiVersion: networking.istio.io/v1beta1
@@ -181,6 +193,10 @@ spec:
         - destination:
             host: leads-broker-webserver.app-component-test00000.svc.cluster.local
             subset: all-versions
+          headers:
+            request:
+              add:
+                "x-request-start": "t=%START_TIME(%s.%3f)%"
     - name: deny-everything-except-allowed
       directResponse:
         status: 403
@@ -206,3 +222,7 @@ spec:
         - destination:
             host: leads-broker-websockets.app-component-test00000.svc.cluster.local
             subset: all-versions
+          headers:
+            request:
+              add:
+                "x-request-start": "t=%START_TIME(%s.%3f)%"

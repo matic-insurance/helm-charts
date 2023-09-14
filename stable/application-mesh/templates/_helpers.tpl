@@ -19,3 +19,14 @@ Generate version label for currently deployed pods
 app.kubernetes.io/version: {{ (required ".Values.global.application.version is required for applicaiton deployment" .Values.global.application.version) | quote }}
 {{- end }}
 
+{{/*
+Add header at virtual service for datadog proxy tracing
+*/}}
+{{- define "application-mesh.proxy-tracing-headers" -}}
+{{- if .Values.global.applicationMonitoring.datadog -}}
+headers:
+  request:
+    add:
+      "x-request-start": "t=%START_TIME(%s.%3f)%"
+{{- end }}
+{{- end }}

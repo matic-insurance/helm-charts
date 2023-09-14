@@ -48,6 +48,7 @@ spec:
         - destination:
             host: leads-broker-webserver.app-component-test00000.svc.cluster.local
             subset: all-versions
+          
     - name: deny-everything-except-allowed
       directResponse:
         status: 403

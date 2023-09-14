@@ -70,8 +70,8 @@ func TestMeshGoldenTemplates(t *testing.T) {
 	        Templates: []string{"templates/service-entry.yaml"},
 	    },
 	    {
-	        GoldenFileName: "features/rewrite-port.golden.yaml",
-	        ValuesFiles: []string{"features/rewrite-port.values.yaml"},
+	        GoldenFileName: "features/no-trace-proxy.golden.yaml",
+	        ValuesFiles: []string{"features/no-trace-proxy.values.yaml"},
 	    },
 	    {
 	        GoldenFileName: "standard-configurations/disabled.golden.yaml",

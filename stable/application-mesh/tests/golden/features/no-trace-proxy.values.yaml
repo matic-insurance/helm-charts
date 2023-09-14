@@ -4,9 +4,11 @@ global:
     environment: test
     version: "release-2023-08-30-02"
 
+  applicationMonitoring:
+    datadog: false
+
 features:
-  rewritePort:
-    enabled: true
+  trace_proxy: false
 
 destinations:
   - component: webserver

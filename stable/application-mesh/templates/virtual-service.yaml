@@ -13,22 +13,12 @@ spec:
   gateways:
     - mesh
   http:
-    {{- if $.Values.features.rewritePort.enabled }}
-    - name: allow-all-locations-rewrite-port
-      match:
-        - port: {{ $.Values.features.rewritePort.from }}
-      route:
-        - destination:
-            host: {{ $service_host }}
-            port:
-              number: {{ $.Values.features.rewritePort.to }}
-            subset: all-versions
-    {{- end }}
     - name: allow-all-locations
       route:
         - destination:
             host: {{ $service_host }}
             subset: all-versions
+          {{- include "application-mesh.proxy-tracing-headers" $ | nindent 10 }}
 {{- end }}
 {{/* Virtual Services for pre-existing gateway (wildcard domain). Required to populate ExternalDNS and configure routing */}}
 {{- range $_, $ingress := .Values.ingress }}
@@ -79,6 +69,7 @@ spec:
         - destination:
             host: {{ $service_host }}
             subset: all-versions
+          {{- include "application-mesh.proxy-tracing-headers" $ | nindent 10 }}
     - name: deny-everything-except-allowed
       directResponse:
         status: 403
@@ -91,6 +82,7 @@ spec:
         - destination:
             host: {{ $service_host }}
             subset: all-versions
+          {{- include "application-mesh.proxy-tracing-headers" $ | nindent 10 }}
     {{- end }}
 {{- end }}
 {{- end }}

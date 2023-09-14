@@ -22,11 +22,8 @@ global:
 
 # Custom features controlling mesh configuration
 features:
-  # Change inbound traffic port. Used during migration to new default service port
-  rewritePort:
-    enabled: false
-    from: 9292
-    to: 80
+  # Add headers that allow datadog to trace time request stays in proxy server queue
+  trace_proxy: true
 
 # List of destinations for the mesh traffic together with rules
 destinations:
