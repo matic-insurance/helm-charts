@@ -6,6 +6,8 @@ apiVersion: datadoghq.com/v1alpha1
 kind: DatadogMetric
 metadata:
   name: {{ $metric.name }}
+  labels:
+    {{- include "application-helpers.labels" $ | nindent 4 }}
 spec:
   query: {{ $metric.query }}
 {{- end }}

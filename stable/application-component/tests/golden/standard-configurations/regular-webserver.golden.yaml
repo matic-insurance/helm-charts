@@ -193,13 +193,28 @@ spec:
           secret:
             secretName: olb-configs-runtime
       topologySpreadConstraints:
-        - maxSkew: 2
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: olb
+              app.kubernetes.io/instance: olb-webserver
+              app.kubernetes.io/version: release-1.2.3
+          maxSkew: 2
           topologyKey: eks.amazonaws.com/capacityType
           whenUnsatisfiable: DoNotSchedule
-        - maxSkew: 2
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: olb
+              app.kubernetes.io/instance: olb-webserver
+              app.kubernetes.io/version: release-1.2.3
+          maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
-        - maxSkew: 1
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: olb
+              app.kubernetes.io/instance: olb-webserver
+              app.kubernetes.io/version: release-1.2.3
+          maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: ScheduleAnyway
 ---
@@ -292,6 +307,13 @@ apiVersion: datadoghq.com/v1alpha1
 kind: DatadogMetric
 metadata:
   name: olb-requests-per-second
+  labels:
+    app.kubernetes.io/name: olb
+    app.kubernetes.io/instance: olb-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: olb
+    app.kubernetes.io/version: "release-1.2.3"
 spec:
   query: ewma_10(avg:nginx_ingress.controller.requests{service:olb-webserver}.as_count().rollup(avg, 60))
 ---
@@ -300,6 +322,13 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: olb-webserver
+  labels:
+    app.kubernetes.io/name: olb
+    app.kubernetes.io/instance: olb-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: olb
+    app.kubernetes.io/version: "release-1.2.3"
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "1"

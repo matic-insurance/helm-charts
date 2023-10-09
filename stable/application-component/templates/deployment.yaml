@@ -239,6 +239,12 @@ spec:
       {{- else }}
       {{- with get (get .Values.defaults.topologySpreadConstraints .Values.availability) .Values.placement }}
       topologySpreadConstraints:
-        {{- toYaml . | nindent 8 }}
+        {{- range $_, $constraint := . }}
+        - labelSelector:
+            matchLabels:
+              {{- include "application-helpers.selectorLabels" $ | nindent 14 }}
+              app.kubernetes.io/version: {{ $.Values.global.application.version }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       {{- end }}
       {{- end }}
