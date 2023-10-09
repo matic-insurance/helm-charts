@@ -110,10 +110,20 @@ spec:
                 - ON_DEMAND
             weight: 1
       topologySpreadConstraints:
-        - maxSkew: 1
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: myproduct
+              app.kubernetes.io/instance: myproduct-webserver
+              app.kubernetes.io/version: 0.0.0
+          maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
-        - maxSkew: 1
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: myproduct
+              app.kubernetes.io/instance: myproduct-webserver
+              app.kubernetes.io/version: 0.0.0
+          maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: ScheduleAnyway
 ---

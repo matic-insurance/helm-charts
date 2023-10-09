@@ -179,13 +179,28 @@ spec:
           secret:
             secretName: olb-configs-runtime
       topologySpreadConstraints:
-        - maxSkew: 2
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: olb
+              app.kubernetes.io/instance: olb-webserver
+              app.kubernetes.io/version: release-1.2.3
+          maxSkew: 2
           topologyKey: eks.amazonaws.com/capacityType
           whenUnsatisfiable: DoNotSchedule
-        - maxSkew: 2
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: olb
+              app.kubernetes.io/instance: olb-webserver
+              app.kubernetes.io/version: release-1.2.3
+          maxSkew: 2
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
-        - maxSkew: 1
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: olb
+              app.kubernetes.io/instance: olb-webserver
+              app.kubernetes.io/version: release-1.2.3
+          maxSkew: 1
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: ScheduleAnyway
 ---
