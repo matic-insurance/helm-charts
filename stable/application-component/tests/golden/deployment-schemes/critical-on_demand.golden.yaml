@@ -122,6 +122,13 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: myproduct-webserver
+  labels:
+    app.kubernetes.io/name: myproduct
+    app.kubernetes.io/instance: myproduct-webserver
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: myproduct
+    app.kubernetes.io/version: "0.0.0"
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "1"
