@@ -432,7 +432,7 @@ defaults:
       # requires uneven distribution across hosts
       # asks pods to be distributed across zones
       spot:
-        - maxSkew: 2
+        - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
         - maxSkew: 1
@@ -441,7 +441,7 @@ defaults:
       # requires uneven distribution across hosts
       # asks pods to be distributed across zones
       on_demand:
-        - maxSkew: 2
+        - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
         - maxSkew: 1
@@ -453,7 +453,7 @@ defaults:
         - maxSkew: 2
           topologyKey: eks.amazonaws.com/capacityType
           whenUnsatisfiable: DoNotSchedule
-        - maxSkew: 2
+        - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
         - maxSkew: 1
