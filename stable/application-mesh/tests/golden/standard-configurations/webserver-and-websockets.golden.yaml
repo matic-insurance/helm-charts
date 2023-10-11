@@ -131,12 +131,12 @@ kind: VirtualService
 metadata:
   name: leads-broker-52ce0794
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "admin-st1.matic.com, broker-st1.matic.com, api-amp-st1.matic.com"
+    external-dns.alpha.kubernetes.io/hostname: "admin-st1.matic.com, amp-st1.matic.com, api-amp-st1.matic.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
     - admin-st1.matic.com
-    - broker-st1.matic.com
+    - amp-st1.matic.com
     - api-amp-st1.matic.com
   gateways:
     - istio-ingress/private-matic-com
@@ -209,11 +209,11 @@ kind: VirtualService
 metadata:
   name: leads-broker-ca030c53
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "ws-broker-st1.maticinsurance.com"
+    external-dns.alpha.kubernetes.io/hostname: "ws-amp-st1.matic.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
-    - ws-broker-st1.maticinsurance.com
+    - ws-amp-st1.matic.com
   gateways:
     - istio-ingress/private-matic-com
   http:

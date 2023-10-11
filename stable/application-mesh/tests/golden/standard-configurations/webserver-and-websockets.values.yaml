@@ -15,20 +15,19 @@ ingress:
   - host: api-amp-st1.matic.com
     gateway: private-matic-com
     destination: webserver
-    additional_hosts: ["admin-st1.matic.com", "broker-st1.matic.com"]
+    additional_hosts: ["admin-st1.matic.com", "amp-st1.matic.com"]
     deny_locations:
       - /uploads/document
   - host: amp-hooks-st1.matic.com
     gateway: public-matic-com
     destination: webserver
-    additional_hosts: ["ams360-st1.matic.com", "scim-st1.matic.com", "mailgun-st1.matic.com", "amp-twilio-st1.matic.com"]
     allow_locations:
       - /api/ams360/notification_events
       - /scim/v2
       - /api/mailgun/docusign_envelope
       - /api/twilio
       - /api/zendesk
-  - host: ws-broker-st1.maticinsurance.com
+  - host: ws-amp-st1.matic.com
     gateway: private-matic-com
     destination: websockets
 
