@@ -9,14 +9,14 @@ metadata:
   name: {{ include "application-helpers.name" $ }}-{{ $destination.component }}
 spec:
   hosts:
-    - {{ $service_host }}
+    - {{ $service_host | quote }}
   gateways:
     - mesh
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: {{ $service_host }}
+            host: {{ $service_host | quote }}
             subset: all-versions
           {{- include "application-mesh.proxy-tracing-headers" $ | nindent 10 }}
 {{- end }}
@@ -67,7 +67,7 @@ spec:
         {{- end }}
       route:
         - destination:
-            host: {{ $service_host }}
+            host: {{ $service_host | quote }}
             subset: all-versions
           {{- include "application-mesh.proxy-tracing-headers" $ | nindent 10 }}
     - name: deny-everything-except-allowed
@@ -80,7 +80,7 @@ spec:
     - name: allow-all-locations
       route:
         - destination:
-            host: {{ $service_host }}
+            host: {{ $service_host | quote }}
             subset: all-versions
           {{- include "application-mesh.proxy-tracing-headers" $ | nindent 10 }}
     {{- end }}
