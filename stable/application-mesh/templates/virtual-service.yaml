@@ -34,6 +34,9 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: {{ $hosts | join ", " | quote }}
     external-dns.alpha.kubernetes.io/ttl: "60"
+    {{- range $key, $value := $ingress.annotations }}
+    {{ $key }}: {{ $value | quote}}
+    {{- end }}
 spec:
   hosts:
     {{- range $host := $hosts }}
