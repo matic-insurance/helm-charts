@@ -55,6 +55,7 @@ spec:
       annotations:
         rollme: "123abc"
         sidecar.istio.io/inject: "true"
+        inject.istio.io/templates: sidecar,datadog-ust
         ad.datadoghq.com/olb-webserver.logs: '[{"source": "ruby"}]'
         ad.datadoghq.com/istio-proxy.logs: '[{"source": "envoy"}]'
         ad.datadoghq.com/istio-proxy.checks: |
