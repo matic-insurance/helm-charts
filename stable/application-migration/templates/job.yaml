@@ -23,12 +23,20 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled }}
+        {{- /* Inject istio sidecar */}}
         sidecar.istio.io/inject: "true"
+        {{- if .Values.global.applicationMonitoring.datadog }}
+        {{- /* Custom injection template to define datadog env variables for sidecar. Configured at istio-system */}}
+        inject.istio.io/templates: sidecar,datadog-ust
+        {{- end }}
         {{- end }}
         {{- if .Values.global.applicationMonitoring.datadog }}
+        {{- /* Correctly attribute applciation logs */}}
         ad.datadoghq.com/{{ include "application-helpers.fullname" . }}.logs: '[{"source": "{{ .Values.job.logs.source }}"}]'
         {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled }}
+        {{- /* Correctly attribute istio logs */}}
         ad.datadoghq.com/istio-proxy.logs: '[{"source": "envoy"}]'
+        {{- /* Collect istio metrics from sidecar */}}
         ad.datadoghq.com/istio-proxy.checks: |
           {
             "envoy": {

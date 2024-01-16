@@ -6,14 +6,14 @@ metadata:
   name: leads-broker-backend
 spec:
   hosts:
-    - leads-broker-backend.app-component-test00000.svc.cluster.local
+    - "leads-broker-backend.app-component-test00000.svc.cluster.local"
   gateways:
     - mesh
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: leads-broker-backend.app-component-test00000.svc.cluster.local
+            host: "leads-broker-backend.app-component-test00000.svc.cluster.local"
             subset: all-versions
 ---
 # Source: application-mesh/templates/virtual-service.yaml
@@ -26,9 +26,9 @@ metadata:
     external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
-    - broker-hooks-st1.matic.com
-    - zendesk-st1.matic.com
-    - amp-hooks-st1.matic.com
+    - "broker-hooks-st1.matic.com"
+    - "zendesk-st1.matic.com"
+    - "amp-hooks-st1.matic.com"
   gateways:
     - istio-ingress/external-matic-com
   http:
@@ -42,7 +42,7 @@ spec:
             prefix: /api/status
       route:
         - destination:
-            host: leads-broker-backend.app-component-test00000.svc.cluster.local
+            host: "leads-broker-backend.app-component-test00000.svc.cluster.local"
             subset: all-versions
           
     - name: deny-everything-except-allowed

@@ -6,12 +6,12 @@ metadata:
   name: leads-broker-backend
 spec:
   hosts:
-    - leads-broker-backend.app-component-test00000.svc.cluster.local
+    - "leads-broker-backend.app-component-test00000.svc.cluster.local"
   gateways:
     - mesh
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: leads-broker-backend.app-component-test00000.svc.cluster.local
+            host: "leads-broker-backend.app-component-test00000.svc.cluster.local"
             subset: all-versions
