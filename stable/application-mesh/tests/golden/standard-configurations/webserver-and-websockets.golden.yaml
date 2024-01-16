@@ -90,14 +90,14 @@ metadata:
   name: leads-broker-webserver
 spec:
   hosts:
-    - leads-broker-webserver.app-component-test00000.svc.cluster.local
+    - "leads-broker-webserver.app-component-test00000.svc.cluster.local"
   gateways:
     - mesh
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
             subset: all-versions
           headers:
             request:
@@ -111,14 +111,14 @@ metadata:
   name: leads-broker-websockets
 spec:
   hosts:
-    - leads-broker-websockets.app-component-test00000.svc.cluster.local
+    - "leads-broker-websockets.app-component-test00000.svc.cluster.local"
   gateways:
     - mesh
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: leads-broker-websockets.app-component-test00000.svc.cluster.local
+            host: "leads-broker-websockets.app-component-test00000.svc.cluster.local"
             subset: all-versions
           headers:
             request:
@@ -135,9 +135,9 @@ metadata:
     external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
-    - admin-st1.matic.com
-    - broker-st1.matic.com
-    - api-amp-st1.matic.com
+    - "admin-st1.matic.com"
+    - "broker-st1.matic.com"
+    - "api-amp-st1.matic.com"
   gateways:
     - istio-ingress/private-matic-com
   http:
@@ -152,7 +152,7 @@ spec:
     - name: allow-all-locations
       route:
         - destination:
-            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
             subset: all-versions
           headers:
             request:
@@ -169,11 +169,11 @@ metadata:
     external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
-    - ams360-st1.matic.com
-    - scim-st1.matic.com
-    - mailgun-st1.matic.com
-    - amp-twilio-st1.matic.com
-    - amp-hooks-st1.matic.com
+    - "ams360-st1.matic.com"
+    - "scim-st1.matic.com"
+    - "mailgun-st1.matic.com"
+    - "amp-twilio-st1.matic.com"
+    - "amp-hooks-st1.matic.com"
   gateways:
     - istio-ingress/public-matic-com
   http:
@@ -191,7 +191,7 @@ spec:
             prefix: /api/zendesk
       route:
         - destination:
-            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
             subset: all-versions
           headers:
             request:
@@ -213,14 +213,14 @@ metadata:
     external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
-    - ws-broker-st1.maticinsurance.com
+    - "ws-broker-st1.maticinsurance.com"
   gateways:
     - istio-ingress/private-matic-com
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: leads-broker-websockets.app-component-test00000.svc.cluster.local
+            host: "leads-broker-websockets.app-component-test00000.svc.cluster.local"
             subset: all-versions
           headers:
             request:

@@ -6,14 +6,14 @@ metadata:
   name: leads-broker-websockets
 spec:
   hosts:
-    - leads-broker-websockets.app-component-test00000.svc.cluster.local
+    - "leads-broker-websockets.app-component-test00000.svc.cluster.local"
   gateways:
     - mesh
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: leads-broker-websockets.app-component-test00000.svc.cluster.local
+            host: "leads-broker-websockets.app-component-test00000.svc.cluster.local"
             subset: all-versions
 ---
 # Source: application-mesh/templates/virtual-service.yaml
@@ -26,7 +26,7 @@ metadata:
     external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
-    - ws-amp-st1.matic.link
+    - "ws-amp-st1.matic.link"
   gateways:
     - istio-ingress/private-matic-link
   http:
@@ -43,5 +43,5 @@ spec:
     - name: allow-all-locations
       route:
         - destination:
-            host: leads-broker-websockets.app-component-test00000.svc.cluster.local
+            host: "leads-broker-websockets.app-component-test00000.svc.cluster.local"
             subset: all-versions

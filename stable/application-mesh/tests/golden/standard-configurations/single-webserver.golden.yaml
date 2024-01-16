@@ -55,14 +55,14 @@ metadata:
   name: leads-broker-webserver
 spec:
   hosts:
-    - leads-broker-webserver.app-component-test00000.svc.cluster.local
+    - "leads-broker-webserver.app-component-test00000.svc.cluster.local"
   gateways:
     - mesh
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
             subset: all-versions
           headers:
             request:
@@ -79,7 +79,7 @@ metadata:
     external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
-    - leads-broker-st2.matic.com
+    - "leads-broker-st2.matic.com"
   gateways:
     - istio-ingress/wildcard-matic-com
   http:
@@ -94,7 +94,7 @@ spec:
     - name: allow-all-locations
       route:
         - destination:
-            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
             subset: all-versions
           headers:
             request:
@@ -111,14 +111,14 @@ metadata:
     external-dns.alpha.kubernetes.io/ttl: "60"
 spec:
   hosts:
-    - leads-broker-st2.matic.link
+    - "leads-broker-st2.matic.link"
   gateways:
     - istio-ingress/wildcard-matic-link
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
             subset: all-versions
           headers:
             request:
