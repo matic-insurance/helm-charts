@@ -1,7 +1,7 @@
 {{- if .Values.global.mesh.enabled }}
 {{- range $_, $ingress := .Values.ingress }}
 {{- if ne $ingress.host "example.matic.com" }}
-{{- if gt $ingress.max_request_bytes 1048576 }}
+{{- if gt (int $ingress.max_request_bytes) 1048576 }}
 {{- $host := required "Ingress host must be specified" $ingress.host  }}
 ---
 apiVersion: networking.istio.io/v1alpha3
