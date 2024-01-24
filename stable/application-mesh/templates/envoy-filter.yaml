@@ -1,0 +1,34 @@
+{{- if .Values.global.mesh.enabled }}
+{{- range $_, $ingress := .Values.ingress }}
+{{- if ne $ingress.host "example.matic.com" }}
+{{- if gt $ingress.max_request_bytes 1048576 }}
+{{- $host := required "Ingress host must be specified" $ingress.host  }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: {{ include "application-helpers.name" $ }}-{{ include "application-helpers.uniq-id" $host }}
+spec:
+  workloadSelector:
+    labels:
+      istio: {{ if eq $ingress.gateway "internal" }} ingress-private-gateway {{ else }} ingress-public-gateway {{ end }}
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          sni: {{ $ingress.host }}
+          filter:
+            name: envoy.filters.network.http_connection_manager
+    patch:
+      operation: INSERT_BEFORE
+      value:
+        name: envoy.filters.http.buffer
+        typed_config:
+          '@type': type.googleapis.com/envoy.extensions.filters.http.buffer.v3.Buffer
+          max_request_bytes: {{ $ingress.max_request_bytes | default "1048576" }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
