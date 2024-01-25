@@ -27,7 +27,7 @@ spec:
         name: envoy.filters.http.buffer
         typed_config:
           '@type': type.googleapis.com/envoy.extensions.filters.http.buffer.v3.Buffer
-          max_request_bytes: {{ $ingress.max_request_bytes | default "1048576" }}
+          max_request_bytes: {{ $ingress.max_request_bytes }}
 {{- end }}
 {{- end }}
 {{- end }}
