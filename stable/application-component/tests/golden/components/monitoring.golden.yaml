@@ -49,10 +49,10 @@ spec:
         app.kubernetes.io/instance: myproduct-webserver
         app.kubernetes.io/component: webserver
         app.kubernetes.io/version: 0.0.0
-        sidecar.istio.io/inject: "true"
         tags.datadoghq.com/env: staging
         tags.datadoghq.com/service: myproduct
         tags.datadoghq.com/version: "0.0.0"
+        sidecar.istio.io/inject: "true"
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst
