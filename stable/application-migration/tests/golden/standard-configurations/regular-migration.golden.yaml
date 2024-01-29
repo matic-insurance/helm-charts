@@ -24,7 +24,6 @@ spec:
     metadata:
       annotations:
         rollme: "123abc"
-        sidecar.istio.io/inject: "true"
         inject.istio.io/templates: sidecar,datadog-ust
         ad.datadoghq.com/olb-migration.logs: '[{"source": "ruby"}]'
         ad.datadoghq.com/istio-proxy.logs: '[{"source": "envoy"}]'
@@ -41,6 +40,7 @@ spec:
         app.kubernetes.io/name: olb
         app.kubernetes.io/instance: olb-migration
         app.kubernetes.io/component: migration
+        sidecar.istio.io/inject: "true"
         tags.datadoghq.com/env: production
         tags.datadoghq.com/service: olb
         tags.datadoghq.com/version: "release-1.2.3"

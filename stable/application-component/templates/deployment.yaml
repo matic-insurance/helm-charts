@@ -28,7 +28,6 @@ spec:
         {{- end }}
         {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled }}
         {{- /* Inject istio sidecar */}}
-        sidecar.istio.io/inject: "true"
         {{- if .Values.global.applicationMonitoring.datadog }}
         {{- /* Custom injection template to define datadog env variables for sidecar. Configured at istio-system */}}
         inject.istio.io/templates: sidecar,datadog-ust
@@ -56,6 +55,7 @@ spec:
         {{- include "application-helpers.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: {{ .Values.component }}
         app.kubernetes.io/version: {{ .Values.global.application.version }}
+        sidecar.istio.io/inject: "true"
         {{- if .Values.global.applicationMonitoring.datadog }}
         {{- include "application-helpers.monitoring.datadog.labels" . | nindent 8 }}
         {{- end }}
