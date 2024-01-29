@@ -32,7 +32,6 @@ spec:
     metadata:
       annotations:
         rollme: "123abc"
-        sidecar.istio.io/inject: "true"
         inject.istio.io/templates: sidecar,datadog-ust
         ad.datadoghq.com/myproduct-webserver.logs: '[{"source": "ruby"}]'
         ad.datadoghq.com/istio-proxy.logs: '[{"source": "envoy"}]'
@@ -53,6 +52,7 @@ spec:
         tags.datadoghq.com/env: staging
         tags.datadoghq.com/service: myproduct
         tags.datadoghq.com/version: "0.0.0"
+        sidecar.istio.io/inject: "true"
     spec:
       serviceAccountName: myproduct
       dnsPolicy: ClusterFirst

@@ -54,7 +54,6 @@ spec:
     metadata:
       annotations:
         rollme: "123abc"
-        sidecar.istio.io/inject: "true"
         inject.istio.io/templates: sidecar,datadog-ust
         ad.datadoghq.com/olb-webserver.logs: '[{"source": "ruby"}]'
         ad.datadoghq.com/istio-proxy.logs: '[{"source": "envoy"}]'
@@ -75,6 +74,7 @@ spec:
         tags.datadoghq.com/env: production
         tags.datadoghq.com/service: olb
         tags.datadoghq.com/version: "release-1.2.3"
+        sidecar.istio.io/inject: "true"
     spec:
       serviceAccountName: olb
       dnsPolicy: ClusterFirst
