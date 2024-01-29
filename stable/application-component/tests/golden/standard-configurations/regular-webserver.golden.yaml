@@ -71,10 +71,10 @@ spec:
         app.kubernetes.io/instance: olb-webserver
         app.kubernetes.io/component: webserver
         app.kubernetes.io/version: release-1.2.3
-        sidecar.istio.io/inject: "true"
         tags.datadoghq.com/env: production
         tags.datadoghq.com/service: olb
         tags.datadoghq.com/version: "release-1.2.3"
+        sidecar.istio.io/inject: "true"
     spec:
       serviceAccountName: olb
       dnsPolicy: ClusterFirst
