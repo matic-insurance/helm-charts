@@ -1,0 +1,15 @@
+global:
+  application:
+    product: leads-broker
+    environment: test
+    version: "0.0.0"
+
+destinations:
+  - component: webserver
+
+ingress:
+  - host: leads-broker-st1.matic.com
+    gateway: external-matic-com
+    destination: webserver
+    settings:
+      max_request_bytes: "67108864"

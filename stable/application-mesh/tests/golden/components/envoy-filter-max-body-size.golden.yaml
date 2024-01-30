@@ -1,0 +1,26 @@
+---
+# Source: application-mesh/templates/envoy-filter.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: leads-broker-83d909aa
+spec:
+  workloadSelector:
+    labels:
+      istio: ingress-public-gateway
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          sni: leads-broker-st1.matic.com
+          filter:
+            name: envoy.filters.network.http_connection_manager
+    patch:
+      operation: INSERT_BEFORE
+      value:
+        name: envoy.filters.http.buffer
+        typed_config:
+          '@type': type.googleapis.com/envoy.extensions.filters.http.buffer.v3.Buffer
+          max_request_bytes: 67108864

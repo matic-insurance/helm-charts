@@ -57,6 +57,9 @@ ingress:
     gateway: external
     # Destination that should receive ingress traffic
     destination: webserver
+    settings:
+      # The proxy-body-size nginx annotation analogue, default "1048576" - equivalent of 1mb in bytes
+      max_request_bytes: "67108864"
     # List of allowed locations. Default "/"
     allow_locations:
       - /api
