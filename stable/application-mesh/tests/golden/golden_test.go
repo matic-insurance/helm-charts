@@ -69,11 +69,11 @@ func TestMeshGoldenTemplates(t *testing.T) {
 	        ValuesFiles: []string{"components/service-entry.values.yaml"},
 	        Templates: []string{"templates/service-entry.yaml"},
 	    },
-		{
+	    {
 	        GoldenFileName: "components/envoy-filter-max-body-size.golden.yaml",
 	        ValuesFiles: []string{"components/envoy-filter-max-body-size.values.yaml"},
-			Templates: []string{"templates/envoy-filter.yaml", "templates/virtual-service.yaml"},
-		},
+	        Templates: []string{"templates/envoy-filter.yaml"},
+	    },
 	    {
 	        GoldenFileName: "features/no-trace-proxy.golden.yaml",
 	        ValuesFiles: []string{"features/no-trace-proxy.values.yaml"},

@@ -1,8 +1,8 @@
 {{- if .Values.global.mesh.enabled }}
 {{- range $_, $ingress := .Values.ingress }}
 {{- if ne $ingress.host "example.matic.com" }}
-{{- if $ingress.max_request_bytes }}
-{{- $host := required "Ingress host must be specified" $ingress.host  }}
+{{- if and $ingress.settings $ingress.settings.max_request_bytes }}
+{{- $host := required "Ingress host must be specified" $ingress.host }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
@@ -27,7 +27,7 @@ spec:
         name: envoy.filters.http.buffer
         typed_config:
           '@type': type.googleapis.com/envoy.extensions.filters.http.buffer.v3.Buffer
-          max_request_bytes: {{ $ingress.max_request_bytes }}
+          max_request_bytes: {{ $ingress.settings.max_request_bytes }}
 {{- end }}
 {{- end }}
 {{- end }}
