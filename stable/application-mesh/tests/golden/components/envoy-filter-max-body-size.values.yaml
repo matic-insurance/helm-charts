@@ -11,4 +11,4 @@ ingress:
   - host: leads-broker-st1.matic.com
     gateway: external-matic-com
     destination: webserver
-    max_body_size: 16777216
+    max_request_bytes: "67108864"

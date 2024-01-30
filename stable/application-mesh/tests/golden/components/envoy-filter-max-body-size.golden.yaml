@@ -1,25 +1,9 @@
 ---
-# Source: application-mesh/templates/virtual-service.yaml
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: leads-broker-backend
-spec:
-  hosts:
-    - "leads-broker-st1.matic.com"
-  gateways:
-    - istio-ingress/external-matic-com
-  http:
-    - name: allow-all-locations
-      route:
-        - destination:
-            host: "leads-broker-st1.matic.com"
-            subset: all-versions
----
+# Source: application-mesh/templates/envoy-filter.yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: leads-broker-53e507b3
+  name: leads-broker-83d909aa
 spec:
   workloadSelector:
     labels:
@@ -39,4 +23,41 @@ spec:
         name: envoy.filters.http.buffer
         typed_config:
           '@type': type.googleapis.com/envoy.extensions.filters.http.buffer.v3.Buffer
-          max_request_bytes: 16777216
+          max_request_bytes: 67108864
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-webserver
+spec:
+  hosts:
+    - "leads-broker-webserver.app-component-test00000.svc.cluster.local"
+  gateways:
+    - mesh
+  http:
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
+            subset: all-versions
+---
+# Source: application-mesh/templates/virtual-service.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-83d909aa
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "leads-broker-st1.matic.com"
+    external-dns.alpha.kubernetes.io/ttl: "60"
+spec:
+  hosts:
+    - "leads-broker-st1.matic.com"
+  gateways:
+    - istio-ingress/external-matic-com
+  http:
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
+            subset: all-versions

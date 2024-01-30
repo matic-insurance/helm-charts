@@ -11,7 +11,7 @@ metadata:
 spec:
   workloadSelector:
     labels:
-      istio: {{ if eq $ingress.gateway "internal" }} ingress-private-gateway {{ else }} ingress-public-gateway {{ end }}
+      istio: {{ if eq (index (splitList "-" $ingress.gateway) 0) "external" }}ingress-public-gateway{{ else }}ingress-private-gateway{{ end }}
   configPatches:
   - applyTo: HTTP_FILTER
     match:
