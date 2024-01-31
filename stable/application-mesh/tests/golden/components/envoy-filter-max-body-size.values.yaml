@@ -13,3 +13,7 @@ ingress:
     destination: webserver
     settings:
       max_request_bytes: "67108864"
+
+  - host: leads-broker-st2.matic.com
+    gateway: external-matic-com
+    destination: webserver
