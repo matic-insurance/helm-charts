@@ -1,36 +1,24 @@
 {{- if .Values.global.mesh.enabled }}
-{{- range $_, $ingress := .Values.ingress }}
-{{- if ne $ingress.host "example.matic.com" }}
-{{- if $ingress.settings }}
-{{- if $ingress.settings.max_request_bytes }}
-{{- $host := required "Ingress host must be specified" $ingress.host }}
+{{- if .Values.max_request_bytes }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: {{ include "application-helpers.name" $ }}-{{ include "application-helpers.uniq-id" $host }}
+  name: {{ include "application-helpers.name" $ }}
 spec:
   workloadSelector:
     labels:
-      istio: {{ if eq (index (splitList "-" $ingress.gateway) 0) "external" }}ingress-public-gateway{{ else }}ingress-private-gateway{{ end }}
+      app.kubernetes.io/name: {{ .Values.global.application.product }}
   configPatches:
   - applyTo: HTTP_FILTER
     match:
-      context: GATEWAY
-      listener:
-        filterChain:
-          sni: {{ $ingress.host }}
-          filter:
-            name: envoy.filters.network.http_connection_manager
+      context: SIDECAR_INBOUND
     patch:
       operation: INSERT_BEFORE
       value:
         name: envoy.filters.http.buffer
         typed_config:
           '@type': type.googleapis.com/envoy.extensions.filters.http.buffer.v3.Buffer
-          max_request_bytes: {{ $ingress.settings.max_request_bytes | int }}
-{{- end }}
-{{- end }}
-{{- end }}
+          max_request_bytes: {{ .Values.max_request_bytes | int }}
 {{- end }}
 {{- end }}
