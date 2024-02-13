@@ -1,14 +1,15 @@
 {{- if .Values.global.mesh.enabled }}
-{{- if .Values.max_request_bytes }}
+{{- range $_, $destination := .Values.destinations }}
+{{- if $destination.max_request_bytes }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: {{ include "application-helpers.name" $ }}
+  name: {{ include "application-helpers.name" $ }}-{{ $destination.component }}
 spec:
   workloadSelector:
     labels:
-      app.kubernetes.io/name: {{ .Values.global.application.product }}
+      app.kubernetes.io/instance: {{ include "application-helpers.name" $ }}-{{ $destination.component }}
   configPatches:
   - applyTo: HTTP_FILTER
     match:
@@ -19,6 +20,7 @@ spec:
         name: envoy.filters.http.buffer
         typed_config:
           '@type': type.googleapis.com/envoy.extensions.filters.http.buffer.v3.Buffer
-          max_request_bytes: {{ .Values.max_request_bytes | int }}
+          max_request_bytes: {{ $destination.max_request_bytes | int }}
+{{- end }}
 {{- end }}
 {{- end }}
