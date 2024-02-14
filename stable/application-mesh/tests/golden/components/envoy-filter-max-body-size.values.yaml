@@ -6,7 +6,8 @@ global:
 
 destinations:
   - component: webserver
-    max_request_bytes: "67108864"
+    settings:
+      max_request_bytes: "67108864"
 
 ingress:
   - host: leads-broker-st1.matic.com

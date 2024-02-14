@@ -3,7 +3,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: leads-broker-webserver
+  name: leads-broker-webserver-request-size
 spec:
   workloadSelector:
     labels:

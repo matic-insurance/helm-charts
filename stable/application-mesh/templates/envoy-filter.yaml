@@ -1,11 +1,11 @@
 {{- if .Values.global.mesh.enabled }}
 {{- range $_, $destination := .Values.destinations }}
-{{- if $destination.max_request_bytes }}
+{{- if and $destination.settings $destination.settings.max_request_bytes }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: {{ include "application-helpers.name" $ }}-{{ $destination.component }}
+  name: {{ include "application-helpers.name" $ }}-{{ $destination.component }}-request-size
 spec:
   workloadSelector:
     labels:
@@ -20,7 +20,7 @@ spec:
         name: envoy.filters.http.buffer
         typed_config:
           '@type': type.googleapis.com/envoy.extensions.filters.http.buffer.v3.Buffer
-          max_request_bytes: {{ $destination.max_request_bytes | int }}
+          max_request_bytes: {{ $destination.settings.max_request_bytes | int }}
 {{- end }}
 {{- end }}
 {{- end }}
