@@ -7,7 +7,7 @@ metadata:
 spec:
   workloadSelector:
     labels:
-      istio: ingress-public-gateway
+      app.kubernetes.io/instance: leads-broker-webserver
   configPatches:
   - applyTo: HTTP_FILTER
     match:
