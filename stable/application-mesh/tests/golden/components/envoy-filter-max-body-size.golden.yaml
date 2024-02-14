@@ -3,7 +3,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: leads-broker-83d909aa
+  name: leads-broker-webserver
 spec:
   workloadSelector:
     labels:
@@ -11,12 +11,7 @@ spec:
   configPatches:
   - applyTo: HTTP_FILTER
     match:
-      context: GATEWAY
-      listener:
-        filterChain:
-          sni: leads-broker-st1.matic.com
-          filter:
-            name: envoy.filters.network.http_connection_manager
+      context: SIDECAR_INBOUND
     patch:
       operation: INSERT_BEFORE
       value:
