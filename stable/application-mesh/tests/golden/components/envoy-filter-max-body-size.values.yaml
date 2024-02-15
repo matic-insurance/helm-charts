@@ -6,14 +6,18 @@ global:
 
 destinations:
   - component: webserver
+    settings:
+      max_request_bytes: "65000000"
+  - component: websocket
+    settings:
+      max_request_bytes: "67000000"
 
 ingress:
   - host: leads-broker-st1.matic.com
     gateway: external-matic-com
     destination: webserver
-    settings:
-      max_request_bytes: "67108864"
 
   - host: leads-broker-st2.matic.com
     gateway: external-matic-com
-    destination: webserver
+    destination: websocket
+

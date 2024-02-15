@@ -3,24 +3,40 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: leads-broker-83d909aa
+  name: leads-broker-webserver-request-size
 spec:
   workloadSelector:
     labels:
-      istio: ingress-public-gateway
+      app.kubernetes.io/instance: leads-broker-webserver
   configPatches:
   - applyTo: HTTP_FILTER
     match:
-      context: GATEWAY
-      listener:
-        filterChain:
-          sni: leads-broker-st1.matic.com
-          filter:
-            name: envoy.filters.network.http_connection_manager
+      context: SIDECAR_INBOUND
     patch:
       operation: INSERT_BEFORE
       value:
         name: envoy.filters.http.buffer
         typed_config:
           '@type': type.googleapis.com/envoy.extensions.filters.http.buffer.v3.Buffer
-          max_request_bytes: 67108864
+          max_request_bytes: 65000000
+---
+# Source: application-mesh/templates/envoy-filter.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: leads-broker-websocket-request-size
+spec:
+  workloadSelector:
+    labels:
+      app.kubernetes.io/instance: leads-broker-websocket
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: SIDECAR_INBOUND
+    patch:
+      operation: INSERT_BEFORE
+      value:
+        name: envoy.filters.http.buffer
+        typed_config:
+          '@type': type.googleapis.com/envoy.extensions.filters.http.buffer.v3.Buffer
+          max_request_bytes: 67000000
