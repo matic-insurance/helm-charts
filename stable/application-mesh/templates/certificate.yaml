@@ -1,5 +1,4 @@
 {{- if .Values.global.mesh.enabled }}
-{{/* Root virtual services that configure routing inside of the mesh */}}
 {{- range $_, $ingress := .Values.ingress }}
 {{- if ne $ingress.host "example.matic.com" }}
 {{- if or (eq $ingress.gateway "internal") (eq $ingress.gateway "external") }}
