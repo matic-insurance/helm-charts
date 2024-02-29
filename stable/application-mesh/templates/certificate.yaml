@@ -1,0 +1,23 @@
+{{- if .Values.global.mesh.enabled }}
+{{/* Root virtual services that configure routing inside of the mesh */}}
+{{- range $_, $ingress := .Values.ingress }}
+{{- if ne $ingress.host "example.matic.com" }}
+{{- if $ingress.custom_gateway }}
+{{- $host := required "Ingress host must be specified" $ingress.host  }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ $ingress.gateway }}
+  namespace: istio-ingress
+spec:
+  dnsNames:
+    - {{ $host }}
+  issuerRef:
+    name: cert-manager-webhook-dnsimple-production
+    kind: ClusterIssuer
+  secretName: {{ $ingress.gateway }}-tls
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,37 @@
+{{- if .Values.global.mesh.enabled }}
+{{/* Root virtual services that configure routing inside of the mesh */}}
+{{- range $_, $ingress := .Values.ingress }}
+{{- if ne $ingress.host "example.matic.com" }}
+{{- if $ingress.custom_gateway }}
+{{- $host := required "Ingress host must be specified" $ingress.host  }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ $ingress.gateway }}
+  annotations:
+    # Do not create dns records for this resource
+    external-dns.alpha.kubernetes.io/controller: "ignored-resource"
+spec:
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - {{ $host | quote }}
+      tls:
+        httpsRedirect: true
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - {{ $host | quote }}
+      tls:
+        mode: SIMPLE
+        credentialName: {{ $ingress.gateway }}-tls
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
