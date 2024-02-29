@@ -9,10 +9,13 @@ apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
   name: {{ $ingress.gateway }}
+  namespace: istio-ingress
   annotations:
     # Do not create dns records for this resource
     external-dns.alpha.kubernetes.io/controller: "ignored-resource"
 spec:
+  selector:
+    istio: ingress-private-gateway
   servers:
     - port:
         number: 80

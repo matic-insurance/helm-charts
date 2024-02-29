@@ -1,49 +1,28 @@
 {{- if .Values.global.mesh.enabled }}
-{{/* Root virtual services that configure routing inside of the mesh */}}
-{{- range $_, $destination := .Values.destinations }}
-{{ $service_host := include "application-mesh.service-host" (merge (dict "component" $destination.component) $) }}
----
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: {{ include "application-helpers.name" $ }}-{{ $destination.component }}
-spec:
-  hosts:
-    - {{ $service_host | quote }}
-  gateways:
-    - mesh
-  http:
-    - name: allow-all-locations
-      route:
-        - destination:
-            host: {{ $service_host | quote }}
-            subset: all-versions
-          {{- include "application-mesh.proxy-tracing-headers" $ | nindent 10 }}
-{{- end }}
-{{/* Virtual Services for pre-existing gateway (wildcard domain). Required to populate ExternalDNS and configure routing */}}
+{{/* Virtual Services with certificate and gateway defined for each domain. Required to populate ExternalDNS and configure routing */}}
 {{- range $_, $ingress := .Values.ingress }}
 {{- if ne $ingress.host "example.matic.com" }}
+{{- if or (eq $ingress.gateway "internal") (eq $ingress.gateway "external") }}
 {{ $service_host := include "application-mesh.service-host" (merge (dict "component" $ingress.destination) $) }}
-{{- $host := required "Ingress host must be specified" $ingress.host  }}
-{{- $hosts := append ($ingress.additional_hosts | default $.Values.defaults.ingress.additional_hosts) $ingress.host }}
+{{- $main_host := required "Ingress host must be specified" $ingress.host  }}
+{{- $hosts := append ($ingress.additional_hosts | default $.Values.defaults.ingress.additional_hosts) $main_host }}
+{{- range $host := $hosts }}
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: {{ include "application-helpers.name" $ }}-{{ include "application-helpers.uniq-id" $host }}
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: {{ $hosts | join ", " | quote }}
+    external-dns.alpha.kubernetes.io/hostname: {{ $host | quote }}
     external-dns.alpha.kubernetes.io/ttl: "60"
     {{- range $key, $value := $ingress.annotations }}
     {{ $key }}: {{ $value | quote}}
     {{- end }}
 spec:
   hosts:
-    {{- range $host := $hosts }}
     - {{ $host | quote }}
-    {{- end }}
   gateways:
-    - istio-ingress/{{ required "Ingress gateway must be specified" $ingress.gateway}}
+    - istio-ingress/{{ required "Ingress gateway must be specified" $host |replace "." "-"}}
   http:
     {{- $deny_locations := $ingress.deny_locations | default $.Values.defaults.ingress.deny_locations }}
     {{- $allow_locations := $ingress.allow_locations | default $.Values.defaults.ingress.allow_locations }}
@@ -87,6 +66,8 @@ spec:
             subset: all-versions
           {{- include "application-mesh.proxy-tracing-headers" $ | nindent 10 }}
     {{- end }}
+{{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

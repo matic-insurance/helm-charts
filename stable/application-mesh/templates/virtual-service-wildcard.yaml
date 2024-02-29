@@ -1,0 +1,71 @@
+{{- if .Values.global.mesh.enabled }}
+{{/* Virtual Services for pre-existing gateway (wildcard domain). Required to populate ExternalDNS and configure routing */}}
+{{- range $_, $ingress := .Values.ingress }}
+{{- if and (ne $ingress.host "example.matic.com") (ne $ingress.gateway "internal") (ne $ingress.gateway "external") }}
+{{ $service_host := include "application-mesh.service-host" (merge (dict "component" $ingress.destination) $) }}
+{{- $host := required "Ingress host must be specified" $ingress.host  }}
+{{- $hosts := append ($ingress.additional_hosts | default $.Values.defaults.ingress.additional_hosts) $ingress.host }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ include "application-helpers.name" $ }}-{{ include "application-helpers.uniq-id" $host }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ $hosts | join ", " | quote }}
+    external-dns.alpha.kubernetes.io/ttl: "60"
+    {{- range $key, $value := $ingress.annotations }}
+    {{ $key }}: {{ $value | quote}}
+    {{- end }}
+spec:
+  hosts:
+    {{- range $host := $hosts }}
+    - {{ $host | quote }}
+    {{- end }}
+  gateways:
+    - istio-ingress/{{ required "Ingress gateway must be specified" $ingress.gateway}}
+  http:
+    {{- $deny_locations := $ingress.deny_locations | default $.Values.defaults.ingress.deny_locations }}
+    {{- $allow_locations := $ingress.allow_locations | default $.Values.defaults.ingress.allow_locations }}
+    {{- if gt (len $deny_locations) 0 }}
+    {{- /* Has Deny locations specified */}}
+    - name: deny-ingress-spec
+      match:
+        {{- range $path := $deny_locations }}
+        - uri:
+            prefix: {{ $path }}
+        {{- end }}
+      directResponse:
+        status: 403
+        body:
+          string: Access Denied
+    {{- end }}
+    {{- if gt (len $allow_locations) 0 }}
+    {{- /* Has Allow locations specified */}}
+    - name: allow-ingress-spec
+      match:
+        {{- range $path := $allow_locations }}
+        - uri:
+            prefix: {{ $path }}
+        {{- end }}
+      route:
+        - destination:
+            host: {{ $service_host | quote }}
+            subset: all-versions
+          {{- include "application-mesh.proxy-tracing-headers" $ | nindent 10 }}
+    - name: deny-everything-except-allowed
+      directResponse:
+        status: 403
+        body:
+          string: Access Denied
+    {{ else }}
+    {{- /* Route everything to service */}}
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: {{ $service_host | quote }}
+            subset: all-versions
+          {{- include "application-mesh.proxy-tracing-headers" $ | nindent 10 }}
+    {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
