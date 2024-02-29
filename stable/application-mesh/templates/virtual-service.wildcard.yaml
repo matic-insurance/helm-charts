@@ -1,28 +1,32 @@
 {{- if .Values.global.mesh.enabled }}
-{{/* Virtual Services with certificate and gateway defined for each domain. Required to populate ExternalDNS and configure routing */}}
+{{/* Virtual Services for gateway. Required to populate ExternalDNS and configure routing */}}
 {{- range $_, $ingress := .Values.ingress }}
-{{- if ne $ingress.host "example.matic.com" }}
-{{- if or (eq $ingress.gateway "internal") (eq $ingress.gateway "external") }}
+{{- if and (ne $ingress.host "example.matic.com") }}
 {{ $service_host := include "application-mesh.service-host" (merge (dict "component" $ingress.destination) $) }}
-{{- $main_host := required "Ingress host must be specified" $ingress.host  }}
-{{- $hosts := append ($ingress.additional_hosts | default $.Values.defaults.ingress.additional_hosts) $main_host }}
-{{- range $host := $hosts }}
+{{- $host := required "Ingress host must be specified" $ingress.host  }}
+{{- $hosts := append ($ingress.additional_hosts | default $.Values.defaults.ingress.additional_hosts) $ingress.host }}
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: {{ include "application-helpers.name" $ }}-{{ include "application-helpers.uniq-id" $host }}
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: {{ $host | quote }}
+    external-dns.alpha.kubernetes.io/hostname: {{ $hosts | join ", " | quote }}
     external-dns.alpha.kubernetes.io/ttl: "60"
     {{- range $key, $value := $ingress.annotations }}
     {{ $key }}: {{ $value | quote}}
     {{- end }}
 spec:
   hosts:
+    {{- range $host := $hosts }}
     - {{ $host | quote }}
+    {{- end }}
   gateways:
-    - istio-ingress/{{ required "Ingress gateway must be specified" $host |replace "." "-"}}
+  {{- if or (eq $ingress.gateway "internal") (eq $ingress.gateway "external") }}
+    - istio-ingress/{{ required "Ingress gateway must be specified" $host | replace "." "-"  }}
+  {{- else }}
+    - istio-ingress/{{ required "Ingress gateway must be specified" $ingress.gateway }}
+  {{- end }}
   http:
     {{- $deny_locations := $ingress.deny_locations | default $.Values.defaults.ingress.deny_locations }}
     {{- $allow_locations := $ingress.allow_locations | default $.Values.defaults.ingress.allow_locations }}
@@ -66,8 +70,6 @@ spec:
             subset: all-versions
           {{- include "application-mesh.proxy-tracing-headers" $ | nindent 10 }}
     {{- end }}
-{{- end }}
-{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
