@@ -32,7 +32,6 @@ apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
   name: leads-broker-st1-matic-com
-  namespace: istio-ingress
   annotations:
     # Do not create dns records for this resource
     external-dns.alpha.kubernetes.io/controller: "ignored-resource"
@@ -56,14 +55,13 @@ spec:
         - "leads-broker-st1.matic.com"
       tls:
         mode: SIMPLE
-        credentialName: leads-broker-st1-matic-com-tls
+        credentialName: istio-ingress/leads-broker-st1-matic-com-tls
 ---
 # Source: application-mesh/templates/gateway.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
   name: leads-broker-st1-matic-link
-  namespace: istio-ingress
   annotations:
     # Do not create dns records for this resource
     external-dns.alpha.kubernetes.io/controller: "ignored-resource"
@@ -87,4 +85,4 @@ spec:
         - "leads-broker-st1.matic.link"
       tls:
         mode: SIMPLE
-        credentialName: leads-broker-st1-matic-link-tls
+        credentialName: istio-ingress/leads-broker-st1-matic-link-tls
