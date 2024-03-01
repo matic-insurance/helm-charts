@@ -23,7 +23,7 @@ spec:
     {{- end }}
   gateways:
   {{- if or (eq $ingress.gateway "internal") (eq $ingress.gateway "external") }}
-    - istio-ingress/{{ required "Ingress gateway must be specified" $host | replace "." "-"  }}
+    - {{ $.Release.Namespace }}/{{ required "Ingress gateway must be specified" $host | replace "." "-"  }}
   {{- else }}
     - istio-ingress/{{ required "Ingress gateway must be specified" $ingress.gateway }}
   {{- end }}
