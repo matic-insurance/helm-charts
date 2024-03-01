@@ -48,7 +48,7 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
-# Source: application-mesh/templates/virtual-service.yaml
+# Source: application-mesh/templates/virtual-service.mesh.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
@@ -69,7 +69,7 @@ spec:
               add:
                 "x-request-start": "t=%START_TIME(%s.%3f)%"
 ---
-# Source: application-mesh/templates/virtual-service.yaml
+# Source: application-mesh/templates/virtual-service.gateway.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
@@ -101,7 +101,7 @@ spec:
               add:
                 "x-request-start": "t=%START_TIME(%s.%3f)%"
 ---
-# Source: application-mesh/templates/virtual-service.yaml
+# Source: application-mesh/templates/virtual-service.gateway.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
