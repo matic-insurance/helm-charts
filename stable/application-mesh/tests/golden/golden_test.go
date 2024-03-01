@@ -47,22 +47,42 @@ func TestMeshGoldenTemplates(t *testing.T) {
 	    {
 	        GoldenFileName: "components/virtual-service.golden.yaml",
 	        ValuesFiles: []string{"components/virtual-service.values.yaml"},
-	        Templates: []string{"templates/virtual-service.yaml"},
+	        Templates: []string{"templates/virtual-service.mesh.yaml"},
 	    },
 	    {
 	        GoldenFileName: "components/ingress-allow-locations.golden.yaml",
 	        ValuesFiles: []string{"components/ingress-allow-locations.values.yaml"},
-	        Templates: []string{"templates/virtual-service.yaml"},
+	        Templates: []string{"templates/virtual-service.mesh.yaml"},
 	    },
 	    {
 	        GoldenFileName: "components/ingress-deny-locations.golden.yaml",
 	        ValuesFiles: []string{"components/ingress-deny-locations.values.yaml"},
-	        Templates: []string{"templates/virtual-service.yaml"},
+	        Templates: []string{"templates/virtual-service.mesh.yaml"},
 	    },
 	    {
 	        GoldenFileName: "components/ingress-deny-and-allow.golden.yaml",
 	        ValuesFiles: []string{"components/ingress-deny-and-allow.values.yaml"},
-	        Templates: []string{"templates/virtual-service.yaml"},
+	        Templates: []string{"templates/virtual-service.mesh.yaml"},
+	    },
+	    {
+	        GoldenFileName: "components/virtual-service.golden.yaml",
+	        ValuesFiles: []string{"components/virtual-service.values.yaml"},
+	        Templates: []string{"templates/virtual-service.gateway.yaml"},
+	    },
+	    {
+	        GoldenFileName: "components/ingress-allow-locations.golden.yaml",
+	        ValuesFiles: []string{"components/ingress-allow-locations.values.yaml"},
+	        Templates: []string{"templates/virtual-service.gateway.yaml"},
+	    },
+	    {
+	        GoldenFileName: "components/ingress-deny-locations.golden.yaml",
+	        ValuesFiles: []string{"components/ingress-deny-locations.values.yaml"},
+	        Templates: []string{"templates/virtual-service.gateway.yaml"},
+	    },
+	    {
+	        GoldenFileName: "components/ingress-deny-and-allow.golden.yaml",
+	        ValuesFiles: []string{"components/ingress-deny-and-allow.values.yaml"},
+	        Templates: []string{"templates/virtual-service.gateway.yaml"},
 	    },
 	    {
 	        GoldenFileName: "components/service-entry.golden.yaml",
