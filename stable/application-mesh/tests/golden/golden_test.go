@@ -50,11 +50,16 @@ func TestMeshGoldenTemplates(t *testing.T) {
 	        Templates: []string{"templates/virtual-service.mesh.yaml"},
 	    },
 	    {
-	        GoldenFileName: "components/ingress-allow-locations.golden.yaml",
+	        GoldenFileName: "components/ingress-allow-locations.golden.mesh.yaml",
 	        ValuesFiles: []string{"components/ingress-allow-locations.values.yaml"},
 	        Templates: []string{"templates/virtual-service.mesh.yaml"},
 	    },
 	    {
+	        GoldenFileName: "components/ingress-allow-locations.golden.gateway.yaml",
+	        ValuesFiles: []string{"components/ingress-allow-locations.values.yaml"},
+	        Templates: []string{"templates/virtual-service.gateway.yaml"},
+	    },
+		{
 	        GoldenFileName: "components/ingress-deny-locations.golden.yaml",
 	        ValuesFiles: []string{"components/ingress-deny-locations.values.yaml"},
 	        Templates: []string{"templates/virtual-service.mesh.yaml"},
@@ -67,11 +72,6 @@ func TestMeshGoldenTemplates(t *testing.T) {
 	    {
 	        GoldenFileName: "components/virtual-service.golden.yaml",
 	        ValuesFiles: []string{"components/virtual-service.values.yaml"},
-	        Templates: []string{"templates/virtual-service.gateway.yaml"},
-	    },
-	    {
-	        GoldenFileName: "components/ingress-allow-locations.golden.yaml",
-	        ValuesFiles: []string{"components/ingress-allow-locations.values.yaml"},
 	        Templates: []string{"templates/virtual-service.gateway.yaml"},
 	    },
 	    {
