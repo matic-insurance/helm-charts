@@ -4,16 +4,16 @@ import (
 	"flag"
 	"io/ioutil"
 	"path/filepath"
-	"testing"
 	"regexp"
 	"strings"
+	"testing"
 
-	"github.com/stretchr/testify/require"
-	"github.com/stretchr/testify/suite"
+	"github.com/google/go-cmp/cmp"
 	"github.com/gruntwork-io/terratest/modules/helm"
 	"github.com/gruntwork-io/terratest/modules/k8s"
 	"github.com/gruntwork-io/terratest/modules/random"
-	"github.com/google/go-cmp/cmp"
+	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
 )
 
 var update = flag.Bool("update-golden", false, "update golden test output files")
@@ -34,62 +34,67 @@ func TestMeshGoldenTemplates(t *testing.T) {
 	chartPath, err := filepath.Abs("../../")
 	require.NoError(t, err)
 
-	testCases := []GoldenTestSuite {
-	    {
-	        GoldenFileName: "defaults/defaults.golden.yaml",
-	        ValuesFiles: []string{"defaults/defaults.values.yaml"},
-	    },
-	    {
-	        GoldenFileName: "components/destination-rule.golden.yaml",
-	        ValuesFiles: []string{"components/destination-rule.values.yaml"},
-	        Templates: []string{"templates/destination-rule.yaml"},
-	    },
-	    {
-	        GoldenFileName: "components/virtual-service.golden.yaml",
-	        ValuesFiles: []string{"components/virtual-service.values.yaml"},
-	        Templates: []string{"templates/virtual-service.mesh.yaml"},
-	    },
-	    {
-	        GoldenFileName: "components/ingress-allow-locations.golden.yaml",
-	        ValuesFiles: []string{"components/ingress-allow-locations.values.yaml"},
-	        Templates: []string{"templates/virtual-service.mesh.yaml","templates/virtual-service.gateway.yaml"},
-	    },
+	testCases := []GoldenTestSuite{
 		{
-	        GoldenFileName: "components/ingress-deny-locations.golden.yaml",
-	        ValuesFiles: []string{"components/ingress-deny-locations.values.yaml"},
-	        Templates: []string{"templates/virtual-service.mesh.yaml","templates/virtual-service.gateway.yaml"},
-	    },
-	    {
-	        GoldenFileName: "components/ingress-deny-and-allow.golden.yaml",
-	        ValuesFiles: []string{"components/ingress-deny-and-allow.values.yaml"},
-	        Templates: []string{"templates/virtual-service.mesh.yaml","templates/virtual-service.gateway.yaml"},
-	    },
-	    {
-	        GoldenFileName: "components/service-entry.golden.yaml",
-	        ValuesFiles: []string{"components/service-entry.values.yaml"},
-	        Templates: []string{"templates/service-entry.yaml"},
-	    },
-	    {
-	        GoldenFileName: "components/envoy-filter-max-body-size.golden.yaml",
-	        ValuesFiles: []string{"components/envoy-filter-max-body-size.values.yaml"},
-	        Templates: []string{"templates/envoy-filter.yaml"},
-	    },
-	    {
-	        GoldenFileName: "features/no-trace-proxy.golden.yaml",
-	        ValuesFiles: []string{"features/no-trace-proxy.values.yaml"},
-	    },
-	    {
-	        GoldenFileName: "standard-configurations/disabled.golden.yaml",
-	        ValuesFiles: []string{"standard-configurations/disabled.values.yaml"},
-	    },
-	    {
-	        GoldenFileName: "standard-configurations/single-webserver.golden.yaml",
-	        ValuesFiles: []string{"standard-configurations/single-webserver.values.yaml"},
-	    },
-	    {
-	        GoldenFileName: "standard-configurations/webserver-and-websockets.golden.yaml",
-	        ValuesFiles: []string{"standard-configurations/webserver-and-websockets.values.yaml"},
-	    },
+			GoldenFileName: "defaults/defaults.golden.yaml",
+			ValuesFiles:    []string{"defaults/defaults.values.yaml"},
+		},
+		{
+			GoldenFileName: "components/destination-rule.golden.yaml",
+			ValuesFiles:    []string{"components/destination-rule.values.yaml"},
+			Templates:      []string{"templates/destination-rule.yaml"},
+		},
+		{
+			GoldenFileName: "components/virtual-service.golden.yaml",
+			ValuesFiles:    []string{"components/virtual-service.values.yaml"},
+			Templates:      []string{"templates/virtual-service.mesh.yaml"},
+		},
+		{
+			GoldenFileName: "components/ingress-allow-locations.golden.yaml",
+			ValuesFiles:    []string{"components/ingress-allow-locations.values.yaml"},
+			Templates:      []string{"templates/virtual-service.mesh.yaml", "templates/virtual-service.gateway.yaml"},
+		},
+		{
+			GoldenFileName: "components/ingress-deny-locations.golden.yaml",
+			ValuesFiles:    []string{"components/ingress-deny-locations.values.yaml"},
+			Templates:      []string{"templates/virtual-service.mesh.yaml", "templates/virtual-service.gateway.yaml"},
+		},
+		{
+			GoldenFileName: "components/ingress-deny-and-allow.golden.yaml",
+			ValuesFiles:    []string{"components/ingress-deny-and-allow.values.yaml"},
+			Templates:      []string{"templates/virtual-service.mesh.yaml", "templates/virtual-service.gateway.yaml"},
+		},
+		{
+			GoldenFileName: "components/service-entry.golden.yaml",
+			ValuesFiles:    []string{"components/service-entry.values.yaml"},
+			Templates:      []string{"templates/service-entry.yaml"},
+		},
+		{
+			GoldenFileName: "components/envoy-filter-max-body-size.golden.yaml",
+			ValuesFiles:    []string{"components/envoy-filter-max-body-size.values.yaml"},
+			Templates:      []string{"templates/envoy-filter.yaml"},
+		},
+		{
+			GoldenFileName: "components/external-gateway.golden.yaml",
+			ValuesFiles:    []string{"components/external-gateway.values.yaml"},
+			Templates:      []string{"templates/certificate.yaml", "templates/gateway.yaml"},
+		},
+		{
+			GoldenFileName: "features/no-trace-proxy.golden.yaml",
+			ValuesFiles:    []string{"features/no-trace-proxy.values.yaml"},
+		},
+		{
+			GoldenFileName: "standard-configurations/disabled.golden.yaml",
+			ValuesFiles:    []string{"standard-configurations/disabled.values.yaml"},
+		},
+		{
+			GoldenFileName: "standard-configurations/single-webserver.golden.yaml",
+			ValuesFiles:    []string{"standard-configurations/single-webserver.values.yaml"},
+		},
+		{
+			GoldenFileName: "standard-configurations/webserver-and-websockets.golden.yaml",
+			ValuesFiles:    []string{"standard-configurations/webserver-and-websockets.values.yaml"},
+		},
 	}
 
 	for _, testCase := range testCases {
@@ -107,30 +112,30 @@ func (s *GoldenTestSuite) TestTemplateMatchesGoldenFile() {
 	actual := s.RenderTemplates()
 	expected := s.ReadGoldenFile()
 
-    if diff := cmp.Diff(strings.Split(string(expected), "\n"), strings.Split(actual, "\n")); diff != "" {
-        s.T().Errorf("%s: mismatch (-want +got):\n%s", s.GoldenFilePath(), diff)
-    }
+	if diff := cmp.Diff(strings.Split(string(expected), "\n"), strings.Split(actual, "\n")); diff != "" {
+		s.T().Errorf("%s: mismatch (-want +got):\n%s", s.GoldenFilePath(), diff)
+	}
 
-// 	regex := regexp.MustCompile(`\s+helm.sh/chart:\s+.*`)
-// 	bytes := regex.ReplaceAll([]byte(actual), []byte(""))
-// 	actual = string(bytes)
+	// regex := regexp.MustCompile(`\s+helm.sh/chart:\s+.*`)
+	// bytes := regex.ReplaceAll([]byte(actual), []byte(""))
+	// actual = string(bytes)
 }
 
 func (s *GoldenTestSuite) RenderTemplates() string {
-    namespace := s.Release + strings.ToLower(random.UniqueId())
-    options := &helm.Options{
-        KubectlOptions: k8s.NewKubectlOptions("test", "", namespace),
-        ValuesFiles:    s.ValuesFiles,
-    }
-    template := helm.RenderTemplate(s.T(), options, s.ChartPath, s.Release, s.Templates)
-    template = stripRandomData(template)
+	namespace := s.Release + strings.ToLower(random.UniqueId())
+	options := &helm.Options{
+		KubectlOptions: k8s.NewKubectlOptions("test", "", namespace),
+		ValuesFiles:    s.ValuesFiles,
+	}
+	template := helm.RenderTemplate(s.T(), options, s.ChartPath, s.Release, s.Templates)
+	template = stripRandomData(template)
 
-    if *update {
-        err := ioutil.WriteFile(s.GoldenFilePath(), []byte(template), 0644)
-        s.Require().NoError(err, "Golden file was not writable")
-    }
+	if *update {
+		err := ioutil.WriteFile(s.GoldenFilePath(), []byte(template), 0644)
+		s.Require().NoError(err, "Golden file was not writable")
+	}
 
-    return template
+	return template
 }
 
 func (s *GoldenTestSuite) GoldenFilePath() string {
@@ -142,15 +147,15 @@ func (s *GoldenTestSuite) ReadGoldenFile() string {
 
 	s.Require().NoError(err, "Golden file doesn't exist or was not readable")
 
-    return string(expected)
+	return string(expected)
 }
 
 func stripRandomData(template string) string {
-    template = stripRegexp(template, `\s+helm.sh/chart:\s+.*`, "")
-    template = stripRegexp(template, `rollme:\s+.*`, "rollme: \"123abc\"")
-    template = stripRegexp(template, `app-component-test[a-z0-9]{6}`, "app-component-test00000")
+	template = stripRegexp(template, `\s+helm.sh/chart:\s+.*`, "")
+	template = stripRegexp(template, `rollme:\s+.*`, "rollme: \"123abc\"")
+	template = stripRegexp(template, `app-component-test[a-z0-9]{6}`, "app-component-test00000")
 
-    return template
+	return template
 }
 
 func stripRegexp(template, pattern, replacement string) string {

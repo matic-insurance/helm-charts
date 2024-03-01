@@ -1,0 +1,90 @@
+---
+# Source: application-mesh/templates/certificate.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: leads-broker-st1-matic-com
+  namespace: istio-ingress
+spec:
+  dnsNames:
+    - "leads-broker-st1.matic.com"
+  issuerRef:
+    name: cert-manager-webhook-dnsimple-production
+    kind: ClusterIssuer
+  secretName: leads-broker-st1-matic-com-tls
+---
+# Source: application-mesh/templates/certificate.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: leads-broker-st1-matic-link
+  namespace: istio-ingress
+spec:
+  dnsNames:
+    - "leads-broker-st1.matic.link"
+  issuerRef:
+    name: cert-manager-webhook-dnsimple-production
+    kind: ClusterIssuer
+  secretName: leads-broker-st1-matic-link-tls
+---
+# Source: application-mesh/templates/gateway.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: leads-broker-st1-matic-com
+  namespace: istio-ingress
+  annotations:
+    # Do not create dns records for this resource
+    external-dns.alpha.kubernetes.io/controller: "ignored-resource"
+spec:
+  selector:
+    istio: ingress-public-gateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "leads-broker-st1.matic.com"
+      tls:
+        httpsRedirect: true
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - "leads-broker-st1.matic.com"
+      tls:
+        mode: SIMPLE
+        credentialName: leads-broker-st1-matic-com-tls
+---
+# Source: application-mesh/templates/gateway.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: leads-broker-st1-matic-link
+  namespace: istio-ingress
+  annotations:
+    # Do not create dns records for this resource
+    external-dns.alpha.kubernetes.io/controller: "ignored-resource"
+spec:
+  selector:
+    istio: ingress-private-gateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "leads-broker-st1.matic.link"
+      tls:
+        httpsRedirect: true
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - "leads-broker-st1.matic.link"
+      tls:
+        mode: SIMPLE
+        credentialName: leads-broker-st1-matic-link-tls
