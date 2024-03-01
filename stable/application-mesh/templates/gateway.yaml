@@ -40,7 +40,7 @@ spec:
         {{- end }}
       tls:
         mode: SIMPLE
-        credentialName: {{ $host | replace "." "-" }}-tls
+        credentialName: istio-ingress/{{ $host | replace "." "-" }}-tls
 {{- end }}
 {{- end }}
 {{- end }}
