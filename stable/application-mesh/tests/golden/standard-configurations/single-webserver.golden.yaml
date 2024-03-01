@@ -48,27 +48,6 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
-# Source: application-mesh/templates/virtual-service.mesh.yaml
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: leads-broker-webserver
-spec:
-  hosts:
-    - "leads-broker-webserver.app-component-test00000.svc.cluster.local"
-  gateways:
-    - mesh
-  http:
-    - name: allow-all-locations
-      route:
-        - destination:
-            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
-            subset: all-versions
-          headers:
-            request:
-              add:
-                "x-request-start": "t=%START_TIME(%s.%3f)%"
----
 # Source: application-mesh/templates/virtual-service.gateway.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -114,6 +93,27 @@ spec:
     - "leads-broker-st2.matic.link"
   gateways:
     - istio-ingress/wildcard-matic-link
+  http:
+    - name: allow-all-locations
+      route:
+        - destination:
+            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
+            subset: all-versions
+          headers:
+            request:
+              add:
+                "x-request-start": "t=%START_TIME(%s.%3f)%"
+---
+# Source: application-mesh/templates/virtual-service.mesh.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: leads-broker-webserver
+spec:
+  hosts:
+    - "leads-broker-webserver.app-component-test00000.svc.cluster.local"
+  gateways:
+    - mesh
   http:
     - name: allow-all-locations
       route:
