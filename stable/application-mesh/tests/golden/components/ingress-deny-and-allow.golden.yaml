@@ -1,5 +1,5 @@
 ---
-# Source: application-mesh/templates/virtual-service.yaml
+# Source: application-mesh/templates/virtual-service.mesh.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
@@ -16,7 +16,7 @@ spec:
             host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
             subset: all-versions
 ---
-# Source: application-mesh/templates/virtual-service.yaml
+# Source: application-mesh/templates/virtual-service.gateway.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
