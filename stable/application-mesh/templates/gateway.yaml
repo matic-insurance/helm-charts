@@ -12,6 +12,9 @@ metadata:
   annotations:
     # Do not create dns records for this resource
     external-dns.alpha.kubernetes.io/controller: "ignored-resource"
+  labels:
+    app.kubernetes.io/part-of: {{ $.Values.global.application.product }}
+    app.kubernetes.io/version: {{ (required "$.Values.global.application.version is required for applicaiton deployment" $.Values.global.application.version) | quote }}
 spec:
   selector:
 {{- if eq $ingress.gateway "internal" }}
