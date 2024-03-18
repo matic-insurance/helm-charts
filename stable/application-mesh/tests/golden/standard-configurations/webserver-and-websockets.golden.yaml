@@ -4,6 +4,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: leads-broker-webserver
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   host: leads-broker-webserver.app-component-test00000.svc.cluster.local
   trafficPolicy:
@@ -23,6 +26,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: leads-broker-websockets
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   host: leads-broker-websockets.app-component-test00000.svc.cluster.local
   trafficPolicy:
@@ -42,6 +48,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
   name: leads-broker-db
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   hosts:
     - amp-staging.aws.db
@@ -57,6 +66,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
   name: leads-broker-redis
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   hosts:
     - amp-staging.aws.redis
@@ -72,6 +84,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
   name: ams-360
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   hosts:
     - ams-360.vertafore.com
@@ -91,6 +106,9 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "admin-st1.matic.com, broker-st1.matic.com, api-amp-st1.matic.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   hosts:
     - "admin-st1.matic.com"
@@ -125,6 +143,9 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "ams360-st1.matic.com, scim-st1.matic.com, mailgun-st1.matic.com, amp-twilio-st1.matic.com, amp-hooks-st1.matic.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   hosts:
     - "ams360-st1.matic.com"
@@ -169,6 +190,9 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "ws-broker-st1.maticinsurance.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   hosts:
     - "ws-broker-st1.maticinsurance.com"
@@ -190,6 +214,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: leads-broker-webserver
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   hosts:
     - "leads-broker-webserver.app-component-test00000.svc.cluster.local"
@@ -211,6 +238,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: leads-broker-websockets
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   hosts:
     - "leads-broker-websockets.app-component-test00000.svc.cluster.local"

@@ -4,6 +4,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
   name: leads-broker-db
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   hosts:
     - lead-broker-staging.aws.db
@@ -19,6 +22,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
   name: leads-broker-redis
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   hosts:
     - lead-broker-staging.aws.redis
@@ -34,6 +40,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
   name: leads-broker-some-external-website
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   hosts:
     - api.lob.com
@@ -50,6 +59,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
   name: kafka
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   hosts:
     - kafka.server.com

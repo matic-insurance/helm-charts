@@ -4,6 +4,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: leads-broker-webserver
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   hosts:
     - "leads-broker-webserver.app-component-test00000.svc.cluster.local"
@@ -24,6 +27,9 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "leads-broker-st1.matic.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   hosts:
     - "leads-broker-st1.matic.com"
