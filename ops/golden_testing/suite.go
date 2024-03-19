@@ -4,6 +4,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/gruntwork-io/terratest/modules/helm"
 	"github.com/gruntwork-io/terratest/modules/k8s"
+	"github.com/gruntwork-io/terratest/modules/logger"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/stretchr/testify/suite"
 	"io/ioutil"
@@ -49,6 +50,7 @@ func (s *Suite) RenderTemplates() string {
 		BuildDependencies: fetchDependencies,
 		KubectlOptions:    k8s.NewKubectlOptions("test", "", namespace),
 		ValuesFiles:       s.ValuesFiles,
+		Logger:            logger.Discard,
 	}
 	template := helm.RenderTemplate(s.T(), options, s.ChartPath, s.Release, s.Templates)
 	template = stripRandomData(template)
