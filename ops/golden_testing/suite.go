@@ -23,6 +23,7 @@ type Suite struct {
 }
 
 var update = flag.Bool("update-golden", false, "update golden test output files")
+var builtDependencies = map[string]bool{}
 
 func (s *Suite) TestTemplateMatchesGoldenFile() {
 	actual := s.RenderTemplates()
@@ -39,10 +40,17 @@ func (s *Suite) TestTemplateMatchesGoldenFile() {
 
 func (s *Suite) RenderTemplates() string {
 	namespace := s.Release + strings.ToLower(random.UniqueId())
+	fetchDependencies := false
+
+	if !builtDependencies[s.ChartPath] {
+		fetchDependencies = true
+		builtDependencies[s.ChartPath] = true
+	}
 
 	options := &helm.Options{
-		KubectlOptions: k8s.NewKubectlOptions("test", "", namespace),
-		ValuesFiles:    s.ValuesFiles,
+		BuildDependencies: fetchDependencies,
+		KubectlOptions:    k8s.NewKubectlOptions("test", "", namespace),
+		ValuesFiles:       s.ValuesFiles,
 	}
 	template := helm.RenderTemplate(s.T(), options, s.ChartPath, s.Release, s.Templates)
 	template = stripRandomData(template)
