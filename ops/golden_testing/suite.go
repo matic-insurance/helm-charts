@@ -1,7 +1,6 @@
 package golden_testing
 
 import (
-	"flag"
 	"github.com/google/go-cmp/cmp"
 	"github.com/gruntwork-io/terratest/modules/helm"
 	"github.com/gruntwork-io/terratest/modules/k8s"
@@ -22,7 +21,6 @@ type Suite struct {
 	ValuesFiles    []string
 }
 
-var update = flag.Bool("update-golden", false, "update golden test output files")
 var builtDependencies = map[string]bool{}
 
 func (s *Suite) TestTemplateMatchesGoldenFile() {
@@ -55,7 +53,7 @@ func (s *Suite) RenderTemplates() string {
 	template := helm.RenderTemplate(s.T(), options, s.ChartPath, s.Release, s.Templates)
 	template = stripRandomData(template)
 
-	if *update {
+	if ReadFlags().UpdateGolden {
 		err := ioutil.WriteFile(s.GoldenFilePath(), []byte(template), 0644)
 		s.Require().NoError(err, "Golden file was not writable")
 	}
