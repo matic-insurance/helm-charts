@@ -40,6 +40,10 @@ destinations:
     # loadBalancer - what load balance algorithm to use (LEAST_REQUEST, ROUND_ROBIN, RANDOM)
     # https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-SimpleLB
     loadBalancer: LEAST_REQUEST
+    # Additional destination settings
+    settings:
+      # The proxy-body-size nginx annotation analogue, default "1048576" - equivalent of 1mb in bytes
+      max_request_bytes: "1048576"
 
 
 # Inbound endpoints for application
@@ -57,9 +61,6 @@ ingress:
     gateway: external
     # Destination that should receive ingress traffic
     destination: webserver
-    settings:
-      # The proxy-body-size nginx annotation analogue, default "1048576" - equivalent of 1mb in bytes
-      max_request_bytes: "67108864"
     # List of allowed locations. Default "/"
     allow_locations:
       - /api
