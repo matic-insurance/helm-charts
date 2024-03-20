@@ -5,6 +5,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: {{ include "application-helpers.name" $ }}-{{ $destination.component }}
+  labels:
+    app.kubernetes.io/part-of: {{ $.Values.global.application.product }}
+    app.kubernetes.io/version: {{ (required "$.Values.global.application.version is required for applicaiton deployment" $.Values.global.application.version) | quote }}
 spec:
   host: {{ include "application-mesh.service-host" (merge (dict "component" $destination.component) $) }}
   trafficPolicy:

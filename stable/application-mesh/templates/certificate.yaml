@@ -10,6 +10,9 @@ kind: Certificate
 metadata:
   name: {{ $host | replace "." "-" }}
   namespace: istio-ingress
+  labels:
+    app.kubernetes.io/part-of: {{ $.Values.global.application.product }}
+    app.kubernetes.io/version: {{ (required "$.Values.global.application.version is required for applicaiton deployment" $.Values.global.application.version) | quote }}
 spec:
   dnsNames:
     {{- range $host := $hosts }}
