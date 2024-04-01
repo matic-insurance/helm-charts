@@ -23,6 +23,7 @@ type Suite struct {
 }
 
 var builtDependencies = map[string]bool{}
+var testFlags = ReadFlags()
 
 func (s *Suite) TestTemplateMatchesGoldenFile() {
 	actual := s.RenderTemplates()
@@ -55,7 +56,7 @@ func (s *Suite) RenderTemplates() string {
 	template := helm.RenderTemplate(s.T(), options, s.ChartPath, s.Release, s.Templates)
 	template = stripRandomData(template)
 
-	if ReadFlags().UpdateGolden {
+	if testFlags.UpdateGolden {
 		err := ioutil.WriteFile(s.GoldenFilePath(), []byte(template), 0644)
 		s.Require().NoError(err, "Golden file was not writable")
 	}
