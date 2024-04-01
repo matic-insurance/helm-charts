@@ -4,6 +4,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: leads-broker-backend
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   hosts:
     - "leads-broker-backend.app-component-test00000.svc.cluster.local"

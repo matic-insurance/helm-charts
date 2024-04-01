@@ -16,6 +16,9 @@ metadata:
     {{- range $key, $value := $ingress.annotations }}
     {{ $key }}: {{ $value | quote}}
     {{- end }}
+  labels:
+    app.kubernetes.io/part-of: {{ $.Values.global.application.product }}
+    app.kubernetes.io/version: {{ (required "$.Values.global.application.version is required for applicaiton deployment" $.Values.global.application.version) | quote }}
 spec:
   hosts:
     {{- range $host := $hosts }}

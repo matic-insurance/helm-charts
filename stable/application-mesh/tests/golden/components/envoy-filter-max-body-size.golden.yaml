@@ -4,6 +4,9 @@ apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
   name: leads-broker-webserver-request-size
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   workloadSelector:
     labels:
@@ -25,6 +28,9 @@ apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
   name: leads-broker-websocket-request-size
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   workloadSelector:
     labels:

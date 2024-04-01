@@ -6,6 +6,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
   name: {{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
+  labels:
+    app.kubernetes.io/part-of: {{ $.Values.global.application.product }}
+    app.kubernetes.io/version: {{ (required "$.Values.global.application.version is required for applicaiton deployment" $.Values.global.application.version) | quote }}
 spec:
   hosts:
     {{- $_ := required "Mesh Egress host or hosts attribute is required" ($egress.hosts | default $egress.host) }}
