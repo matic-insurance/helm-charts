@@ -1,5 +1,5 @@
 ---
-# Source: application-mesh/templates/service-entry.yaml
+# Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
@@ -14,7 +14,7 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
-# Source: application-mesh/templates/service-entry.yaml
+# Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
@@ -29,7 +29,7 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
-# Source: application-mesh/templates/service-entry.yaml
+# Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
@@ -45,7 +45,7 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
-# Source: application-mesh/templates/service-entry.yaml
+# Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:

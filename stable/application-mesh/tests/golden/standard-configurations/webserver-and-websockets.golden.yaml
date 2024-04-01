@@ -37,7 +37,7 @@ spec:
         app.kubernetes.io/instance: leads-broker-websockets
         app.kubernetes.io/version: "release-2023-08-30-01"
 ---
-# Source: application-mesh/templates/service-entry.yaml
+# Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
@@ -52,7 +52,7 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
-# Source: application-mesh/templates/service-entry.yaml
+# Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
@@ -67,7 +67,7 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
-# Source: application-mesh/templates/service-entry.yaml
+# Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
