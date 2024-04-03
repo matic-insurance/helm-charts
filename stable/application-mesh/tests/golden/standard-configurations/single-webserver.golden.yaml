@@ -48,7 +48,7 @@ spec:
     istio: egress-gateway
   servers:
     - port:
-        number: 443
+        number: 5432
         name: tls
         protocol: TLS
       hosts:
@@ -121,14 +121,14 @@ spec:
     - match:
         - gateways:
             - mesh
-          port: 443
+          port: 5432
           sniHosts:
             - leads-broker-staging.aws.db
       route:
         - destination:
             host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
-              number: 443
+              number: 5432
           weight: 100
     - match:
         - gateways:
@@ -140,7 +140,7 @@ spec:
         - destination:
             host: leads-broker-staging.aws.db
             port:
-              number: 443
+              number: 5432
           weight: 100
 ---
 # Source: application-mesh/templates/egress.yaml

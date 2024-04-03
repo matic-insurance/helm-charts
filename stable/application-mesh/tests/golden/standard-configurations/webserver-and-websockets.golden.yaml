@@ -77,7 +77,7 @@ spec:
     istio: egress-gateway
   servers:
     - port:
-        number: 443
+        number: 5432
         name: tls
         protocol: TLS
       hosts:
@@ -95,7 +95,7 @@ spec:
     istio: egress-gateway
   servers:
     - port:
-        number: 443
+        number: 6379
         name: tls
         protocol: TLS
       hosts:
@@ -185,14 +185,14 @@ spec:
     - match:
         - gateways:
             - mesh
-          port: 443
+          port: 5432
           sniHosts:
             - amp-staging.aws.db
       route:
         - destination:
             host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
-              number: 443
+              number: 5432
           weight: 100
     - match:
         - gateways:
@@ -204,7 +204,7 @@ spec:
         - destination:
             host: amp-staging.aws.db
             port:
-              number: 443
+              number: 5432
           weight: 100
 ---
 # Source: application-mesh/templates/egress.yaml
@@ -224,14 +224,14 @@ spec:
     - match:
         - gateways:
             - mesh
-          port: 443
+          port: 6379
           sniHosts:
             - amp-staging.aws.redis
       route:
         - destination:
             host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
-              number: 443
+              number: 6379
           weight: 100
     - match:
         - gateways:
@@ -243,7 +243,7 @@ spec:
         - destination:
             host: amp-staging.aws.redis
             port:
-              number: 443
+              number: 6379
           weight: 100
 ---
 # Source: application-mesh/templates/egress.yaml
