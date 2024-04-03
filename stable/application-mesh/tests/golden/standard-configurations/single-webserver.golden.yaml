@@ -18,11 +18,67 @@ spec:
         app.kubernetes.io/instance: leads-broker-webserver
         app.kubernetes.io/version: "release-2023-08-30-02"
 ---
-# Source: application-mesh/templates/service-entry.yaml
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: egress-leads-broker-db
+spec:
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
+  subsets:
+  - name: default
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: egress-datalot
+spec:
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
+  subsets:
+  - name: default
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: egress-leads-broker-db
+spec:
+  selector:
+    istio: egress-gateway
+  servers:
+    - port:
+        number: 5432
+        name: tls
+        protocol: TLS
+      hosts:
+      - leads-broker-staging.aws.db
+      tls:
+        mode: PASSTHROUGH
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: egress-datalot
+spec:
+  selector:
+    istio: egress-gateway
+  servers:
+    - port:
+        number: 443
+        name: tls
+        protocol: TLS
+      hosts:
+      - datalot.com
+      tls:
+        mode: PASSTHROUGH
+---
+# Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: leads-broker-db
+  name: egress-leads-broker-db
 spec:
   hosts:
     - leads-broker-staging.aws.db
@@ -33,11 +89,11 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
-# Source: application-mesh/templates/service-entry.yaml
+# Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: datalot
+  name: egress-datalot
 spec:
   hosts:
     - datalot.com
@@ -47,6 +103,84 @@ spec:
       protocol: TLS
   location: MESH_EXTERNAL
   resolution: DNS
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: egress-leads-broker-db
+spec:
+  exportTo:
+    - "*"
+  hosts:
+    - leads-broker-staging.aws.db
+  gateways:
+    - mesh
+    - egress-leads-broker-db
+  tls:
+    - match:
+        - gateways:
+            - mesh
+          port: 5432
+          sniHosts:
+            - leads-broker-staging.aws.db
+      route:
+        - destination:
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            port:
+              number: 5432
+          weight: 100
+    - match:
+        - gateways:
+            - egress-leads-broker-db
+          port: 443
+          sniHosts:
+            - leads-broker-staging.aws.db
+      route:
+        - destination:
+            host: leads-broker-staging.aws.db
+            port:
+              number: 5432
+          weight: 100
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: egress-datalot
+spec:
+  exportTo:
+    - "*"
+  hosts:
+    - datalot.com
+  gateways:
+    - mesh
+    - egress-datalot
+  tls:
+    - match:
+        - gateways:
+            - mesh
+          port: 443
+          sniHosts:
+            - datalot.com
+      route:
+        - destination:
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            port:
+              number: 443
+          weight: 100
+    - match:
+        - gateways:
+            - egress-datalot
+          port: 443
+          sniHosts:
+            - datalot.com
+      route:
+        - destination:
+            host: datalot.com
+            port:
+              number: 443
+          weight: 100
 ---
 # Source: application-mesh/templates/virtual-service.gateway.yaml
 apiVersion: networking.istio.io/v1beta1
