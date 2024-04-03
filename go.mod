@@ -2,8 +2,6 @@ module github.com/matic-insurance/helm-charts
 
 go 1.21
 
-toolchain go1.21.6
-
 require (
 	github.com/google/go-cmp v0.5.9
 	github.com/gruntwork-io/terratest v0.46.12
