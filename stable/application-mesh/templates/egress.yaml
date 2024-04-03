@@ -28,7 +28,7 @@ spec:
     istio: egress-gateway
   servers:
     - port:
-        number: 443
+        number: {{ $egress.port | default 443 }}
         name: tls
         protocol: TLS
       hosts:
@@ -46,7 +46,7 @@ metadata:
 spec:
   host: istio-egress-gateway.istio-ingress.svc.cluster.local
   subsets:
-  - name: {{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
+  - name: default
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -67,7 +67,7 @@ spec:
     - match:
         - gateways:
             - mesh
-          port: 443
+          port: {{ $egress.port | default 443 }}
           sniHosts:
             {{- $_ := required "Mesh Egress host or hosts attribute is required" ($egress.hosts | default $egress.host) }}
             {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
@@ -77,12 +77,12 @@ spec:
         - destination:
             host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
-              number: 443
+              number: {{ $egress.port | default 443 }}
           weight: 100
     - match:
         - gateways:
             - egress-{{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
-          port: 443
+          port: {{ $egress.port | default 443 }}
           sniHosts:
             {{- $_ := required "Mesh Egress host or hosts attribute is required" ($egress.hosts | default $egress.host) }}
             {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
@@ -94,7 +94,7 @@ spec:
         - destination:
             host: {{ $host }}
             port:
-              number: 443
+              number: {{ $egress.port | default 443 }}
         {{- end }}
           weight: 100
 {{- end }}
