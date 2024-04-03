@@ -45,7 +45,7 @@ metadata:
 spec:
   host: istio-egress-gateway.istio-ingress.svc.cluster.local
   subsets:
-  - name: leads-broker-db
+  - name: default
 ---
 # Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -55,7 +55,7 @@ metadata:
 spec:
   host: istio-egress-gateway.istio-ingress.svc.cluster.local
   subsets:
-  - name: leads-broker-redis
+  - name: default
 ---
 # Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -65,7 +65,7 @@ metadata:
 spec:
   host: istio-egress-gateway.istio-ingress.svc.cluster.local
   subsets:
-  - name: ams-360
+  - name: default
 ---
 # Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1alpha3
