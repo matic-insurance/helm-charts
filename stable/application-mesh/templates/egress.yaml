@@ -1,0 +1,102 @@
+{{- if .Values.global.mesh.enabled }}
+{{- range $_, $egress := .Values.egress }}
+{{- if ne $egress.name "example-service" }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: egress-{{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
+spec:
+  hosts:
+    {{- $_ := required "Mesh Egress host or hosts attribute is required" ($egress.hosts | default $egress.host) }}
+    {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
+    - {{ $host }}
+    {{- end }}
+  ports:
+    - name: {{ required "Mesh Egress type is required" $egress.type }}
+      number: {{ required "Mesh Egress port is required for non standard type" ($egress.port | default (get $.Values.defaults.egress.ports_map $egress.type)) }}
+      protocol: {{ get $.Values.defaults.egress.protocols_map $egress.type | default $.Values.defaults.egress.protocol }}
+  location: MESH_EXTERNAL
+  resolution: DNS
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: egress-{{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
+spec:
+  selector:
+    istio: egress-gateway
+  servers:
+    - port:
+        number: {{ required "Mesh Egress port is required for non standard type" ($egress.port | default (get $.Values.defaults.egress.ports_map $egress.type)) }}
+        name: tls
+        protocol: TLS
+      hosts:
+      {{- $_ := required "Mesh Egress host or hosts attribute is required" ($egress.hosts | default $egress.host) }}
+      {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
+      - {{ $host }}
+      {{- end }}
+      tls:
+        mode: PASSTHROUGH
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: egress-{{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
+spec:
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
+  subsets:
+  - name: default
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: egress-{{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
+spec:
+  exportTo:
+    - "*"
+  hosts:
+    {{- $_ := required "Mesh Egress host or hosts attribute is required" ($egress.hosts | default $egress.host) }}
+    {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
+    - {{ $host }}
+    {{- end }}
+  gateways:
+    - mesh
+    - egress-{{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
+  tls:
+    - match:
+        - gateways:
+            - mesh
+          port: {{ required "Mesh Egress port is required for non standard type" ($egress.port | default (get $.Values.defaults.egress.ports_map $egress.type)) }}
+          sniHosts:
+            {{- $_ := required "Mesh Egress host or hosts attribute is required" ($egress.hosts | default $egress.host) }}
+            {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
+            - {{ $host }}
+            {{- end }}
+      route:
+        - destination:
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            port:
+              number: {{ required "Mesh Egress port is required for non standard type" ($egress.port | default (get $.Values.defaults.egress.ports_map $egress.type)) }}
+          weight: 100
+    - match:
+        - gateways:
+            - egress-{{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
+          port: {{ $egress.port | default 443 }}
+          sniHosts:
+            {{- $_ := required "Mesh Egress host or hosts attribute is required" ($egress.hosts | default $egress.host) }}
+            {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
+            - {{ $host }}
+            {{- end }}
+      route:
+        {{- $_ := required "Mesh Egress host or hosts attribute is required" ($egress.hosts | default $egress.host) }}
+        {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
+        - destination:
+            host: {{ $host }}
+            port:
+              number: {{ required "Mesh Egress port is required for non standard type" ($egress.port | default (get $.Values.defaults.egress.ports_map $egress.type)) }}
+        {{- end }}
+          weight: 100
+{{- end }}
+{{- end }}
+{{- end }}

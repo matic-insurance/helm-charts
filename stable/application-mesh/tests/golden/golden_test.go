@@ -45,9 +45,9 @@ func TestMeshGoldenTemplates(t *testing.T) {
 			Templates:      []string{"templates/virtual-service.mesh.yaml", "templates/virtual-service.gateway.yaml"},
 		},
 		{
-			GoldenFileName: "components/service-entry.golden.yaml",
-			ValuesFiles:    []string{"components/service-entry.values.yaml"},
-			Templates:      []string{"templates/service-entry.yaml"},
+			GoldenFileName: "components/egress.golden.yaml",
+			ValuesFiles:    []string{"components/egress.values.yaml"},
+			Templates:      []string{"templates/egress.yaml"},
 		},
 		{
 			GoldenFileName: "components/envoy-filter-max-body-size.golden.yaml",

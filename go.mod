@@ -1,6 +1,6 @@
 module github.com/matic-insurance/helm-charts
 
-go 1.19
+go 1.21
 
 require (
 	github.com/google/go-cmp v0.5.9
@@ -9,13 +9,11 @@ require (
 )
 
 require (
-	cloud.google.com/go v0.110.0 // indirect
 	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/aws/aws-sdk-go v1.44.122 // indirect
 	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/docker/spdystream v0.0.0-20181023171402-6480d4af844c // indirect
 	github.com/emicklei/go-restful/v3 v3.9.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-errors/errors v1.0.2-0.20180813162953-d98b870cc4e0 // indirect
@@ -35,7 +33,6 @@ require (
 	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/googleapis/gnostic v0.4.1 // indirect
 	github.com/gruntwork-io/go-commons v0.8.0 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.0 // indirect

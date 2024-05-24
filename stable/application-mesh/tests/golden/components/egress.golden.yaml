@@ -1,0 +1,337 @@
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: egress-leads-broker-db
+spec:
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
+  subsets:
+  - name: default
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: egress-leads-broker-redis
+spec:
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
+  subsets:
+  - name: default
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: egress-leads-broker-some-external-website
+spec:
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
+  subsets:
+  - name: default
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: egress-kafka
+spec:
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
+  subsets:
+  - name: default
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: egress-leads-broker-db
+spec:
+  selector:
+    istio: egress-gateway
+  servers:
+    - port:
+        number: 5432
+        name: tls
+        protocol: TLS
+      hosts:
+      - lead-broker-staging.aws.db
+      tls:
+        mode: PASSTHROUGH
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: egress-leads-broker-redis
+spec:
+  selector:
+    istio: egress-gateway
+  servers:
+    - port:
+        number: 6379
+        name: tls
+        protocol: TLS
+      hosts:
+      - lead-broker-staging.aws.redis
+      tls:
+        mode: PASSTHROUGH
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: egress-leads-broker-some-external-website
+spec:
+  selector:
+    istio: egress-gateway
+  servers:
+    - port:
+        number: 443
+        name: tls
+        protocol: TLS
+      hosts:
+      - api.lob.com
+      - auth.lob.com
+      tls:
+        mode: PASSTHROUGH
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: egress-kafka
+spec:
+  selector:
+    istio: egress-gateway
+  servers:
+    - port:
+        number: 9001
+        name: tls
+        protocol: TLS
+      hosts:
+      - kafka.server.com
+      tls:
+        mode: PASSTHROUGH
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: egress-leads-broker-db
+spec:
+  hosts:
+    - lead-broker-staging.aws.db
+  ports:
+    - name: postgres
+      number: 5432
+      protocol: TCP
+  location: MESH_EXTERNAL
+  resolution: DNS
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: egress-leads-broker-redis
+spec:
+  hosts:
+    - lead-broker-staging.aws.redis
+  ports:
+    - name: redis
+      number: 6379
+      protocol: TCP
+  location: MESH_EXTERNAL
+  resolution: DNS
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: egress-leads-broker-some-external-website
+spec:
+  hosts:
+    - api.lob.com
+    - auth.lob.com
+  ports:
+    - name: https
+      number: 443
+      protocol: TLS
+  location: MESH_EXTERNAL
+  resolution: DNS
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: egress-kafka
+spec:
+  hosts:
+    - kafka.server.com
+  ports:
+    - name: kafka
+      number: 9001
+      protocol: TCP
+  location: MESH_EXTERNAL
+  resolution: DNS
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: egress-leads-broker-db
+spec:
+  exportTo:
+    - "*"
+  hosts:
+    - lead-broker-staging.aws.db
+  gateways:
+    - mesh
+    - egress-leads-broker-db
+  tls:
+    - match:
+        - gateways:
+            - mesh
+          port: 5432
+          sniHosts:
+            - lead-broker-staging.aws.db
+      route:
+        - destination:
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            port:
+              number: 5432
+          weight: 100
+    - match:
+        - gateways:
+            - egress-leads-broker-db
+          port: 443
+          sniHosts:
+            - lead-broker-staging.aws.db
+      route:
+        - destination:
+            host: lead-broker-staging.aws.db
+            port:
+              number: 5432
+          weight: 100
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: egress-leads-broker-redis
+spec:
+  exportTo:
+    - "*"
+  hosts:
+    - lead-broker-staging.aws.redis
+  gateways:
+    - mesh
+    - egress-leads-broker-redis
+  tls:
+    - match:
+        - gateways:
+            - mesh
+          port: 6379
+          sniHosts:
+            - lead-broker-staging.aws.redis
+      route:
+        - destination:
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            port:
+              number: 6379
+          weight: 100
+    - match:
+        - gateways:
+            - egress-leads-broker-redis
+          port: 443
+          sniHosts:
+            - lead-broker-staging.aws.redis
+      route:
+        - destination:
+            host: lead-broker-staging.aws.redis
+            port:
+              number: 6379
+          weight: 100
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: egress-leads-broker-some-external-website
+spec:
+  exportTo:
+    - "*"
+  hosts:
+    - api.lob.com
+    - auth.lob.com
+  gateways:
+    - mesh
+    - egress-leads-broker-some-external-website
+  tls:
+    - match:
+        - gateways:
+            - mesh
+          port: 443
+          sniHosts:
+            - api.lob.com
+            - auth.lob.com
+      route:
+        - destination:
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            port:
+              number: 443
+          weight: 100
+    - match:
+        - gateways:
+            - egress-leads-broker-some-external-website
+          port: 443
+          sniHosts:
+            - api.lob.com
+            - auth.lob.com
+      route:
+        - destination:
+            host: api.lob.com
+            port:
+              number: 443
+        - destination:
+            host: auth.lob.com
+            port:
+              number: 443
+          weight: 100
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: egress-kafka
+spec:
+  exportTo:
+    - "*"
+  hosts:
+    - kafka.server.com
+  gateways:
+    - mesh
+    - egress-kafka
+  tls:
+    - match:
+        - gateways:
+            - mesh
+          port: 9001
+          sniHosts:
+            - kafka.server.com
+      route:
+        - destination:
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            port:
+              number: 9001
+          weight: 100
+    - match:
+        - gateways:
+            - egress-kafka
+          port: 9001
+          sniHosts:
+            - kafka.server.com
+      route:
+        - destination:
+            host: kafka.server.com
+            port:
+              number: 9001
+          weight: 100
