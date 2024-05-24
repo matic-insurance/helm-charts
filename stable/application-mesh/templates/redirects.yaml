@@ -9,7 +9,7 @@ spec:
   hosts:
     - {{ $redirect.source }}
   gateways:
-    - {{ $.Release.Namespace }}/{{ $redirect.source | replace "." "-" }}
+    - {{ $.Release.Namespace }}/{{ $redirect.source | replace "." "-" }}-redirects
   http:
     - match:
         - uri:
@@ -19,7 +19,7 @@ spec:
         {{- with $redirect.destination_uri }}
         uri: {{ . }}
         {{- end }}
-        redirectCode: {{ $redirect.status_code | default "301" }}
+        redirectCode: {{ $redirect.redirectCode | default "301" }}
 {{ end }}
 
 {{/* We need Certificate and Gateway for each unique domain
