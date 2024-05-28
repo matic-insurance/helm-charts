@@ -1,11 +1,12 @@
 package golden
 
 import (
+	"path/filepath"
+	"testing"
+
 	"github.com/matic-insurance/helm-charts/ops/golden_testing"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"path/filepath"
-	"testing"
 )
 
 func TestMeshGoldenTemplates(t *testing.T) {
@@ -58,6 +59,11 @@ func TestMeshGoldenTemplates(t *testing.T) {
 			GoldenFileName: "components/external-gateway.golden.yaml",
 			ValuesFiles:    []string{"components/external-gateway.values.yaml"},
 			Templates:      []string{"templates/certificate.yaml", "templates/gateway.yaml"},
+		},
+		{
+			GoldenFileName: "components/redirects.golden.yaml",
+			ValuesFiles:    []string{"components/redirects.values.yaml"},
+			Templates:      []string{"templates/redirects.yaml"},
 		},
 		{
 			GoldenFileName: "features/no-trace-proxy.golden.yaml",

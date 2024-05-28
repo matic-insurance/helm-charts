@@ -45,6 +45,7 @@ destinations:
       # The proxy-body-size nginx annotation analogue, default "1048576" - equivalent of 1mb in bytes
       max_request_bytes: "1048576"
 
+redirects: []
 
 # Inbound endpoints for application
 ingress:
