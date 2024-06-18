@@ -87,17 +87,18 @@ spec:
         - name: {{ include "application-helpers.fullname" . }}
           image: {{ include "application-helpers.docker-image" . | quote }}
           {{- if .Values.command }}
+          {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled }}
+          command:
+            - "sh"
+            - "/app/scripts/start-stop.sh"
+          args:
+            - {{ .Values.command | quote }}
+          {{- else }}
           command:
             - "sh"
             - "-c"
-            {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled }}
-            - |
-              until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done;
-              echo 'Istio ready. Running the command...';
-              {{ .Values.command }}
-            {{- else }}
             - {{ .Values.command | quote }}
-            {{- end }}
+          {{- end }}
           {{- end }}
           {{- if .Values.service.enabled }}
           ports:
