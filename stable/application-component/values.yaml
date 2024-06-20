@@ -74,6 +74,9 @@ applicationImage:
   # Overrides the image tag whose default is the Values.version.
   tag: ""
 
+# Wait for Istio service to be available, then run the specified command
+waitForIstio: "until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done; echo 'Istio ready. Running the command...';"
+
 # Deployment configurations
 deployment:
   # Number of pods to run. Ignored when autoscaling enabled
