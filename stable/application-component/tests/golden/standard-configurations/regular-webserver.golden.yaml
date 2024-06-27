@@ -93,10 +93,7 @@ spec:
           command:
             - "sh"
             - "-c"
-            - |
-              until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done;
-              echo 'Istio ready. Running the command...';
-              bundle exec puma -t 8:8
+            - "until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done; echo 'Istio ready. Running the command...';bundle exec puma -t 8:8"
           ports:
             - containerPort: 9292
           imagePullPolicy: IfNotPresent
