@@ -45,7 +45,7 @@ spec:
               "init_config": {},
               "instances": [{
                   "openmetrics_endpoint": "http://%%host%%:15090/stats/prometheus",
-                  "collect_server_info": "false"
+                  "collect_server_info": false
               }]
             }
           }
