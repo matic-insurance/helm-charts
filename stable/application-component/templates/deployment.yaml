@@ -151,7 +151,7 @@ spec:
                 command:
                   - "sh"
                   - "-c"
-                  - {{ print .Values.mesh.lifecycle.shutdownWaitCommand | quote }}
+                  - {{ .Values.mesh.lifecycle.shutdownWaitCommand | quote }}
           {{ else if or (eq .Values.availability "critical") (eq .Values.availability "high") }}
           {{- /* When availability important - wait 15 seconds before sending TERM signal. This allow upstream services to account for pod changes */}}
           lifecycle:

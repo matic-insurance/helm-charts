@@ -326,7 +326,7 @@ mesh:
     # Wait for Istio service to be available, before running container command
     startupWaitCommand: "until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done; echo 'Istio ready. Running the command...';"
     # preStopHook to execute on shutdown
-    shutdownWaitCommand: "echo 'Waiting for Application exit'; kill 1; wait 1; echo 'Application finished. Telling Istio to exit'; wget -quiet --post-data 'exit' -o /dev/null http://localhost:15020/quitquitquit"
+    shutdownWaitCommand: "echo 'Waiting for Application exit'; kill 1; wait 1; echo 'Application finished. Telling Istio to exit'; wget -quiet --post-data 'exit' -o /dev/null http://localhost:15020/quitquitquit;"
 
 
 # default contain default values for various resources
