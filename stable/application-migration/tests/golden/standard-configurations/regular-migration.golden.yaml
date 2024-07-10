@@ -63,11 +63,11 @@ spec:
             - "sh"
             - "-c"
             - |
-              until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done;
-              echo 'Istio ready. Running the command...';
+              until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done; echo 'Istio ready. Running the command...';
               rails db:setup db:migrate;
               x=$(echo $?);
-              wget --quiet --post-data="Please exit" -o /dev/null http://localhost:15020/quitquitquit && exit $x
+              echo 'Application finished. Telling Istio to exit'; wget -quiet --post-data 'exit' -o /dev/null http://localhost:15020/quitquitquit;
+              exit $x
           imagePullPolicy: IfNotPresent
           env:
             - name: DD_AGENT_HOST

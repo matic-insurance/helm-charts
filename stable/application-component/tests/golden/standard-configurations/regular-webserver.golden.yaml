@@ -146,7 +146,11 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/bin/sh", "-c", "sleep 15"]
+                command:
+                  - "sh"
+                  - "-c"
+                  - "echo 'Waiting for Application exit'; kill 1; wait 1; echo 'Application finished. Telling Istio to exit'; wget -quiet --post-data 'exit' -o /dev/null http://localhost:15020/quitquitquit;"
+          
           startupProbe:
             httpGet:
               path: /healthz/webserver

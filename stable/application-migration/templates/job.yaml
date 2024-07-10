@@ -80,13 +80,13 @@ spec:
           command:
             - "sh"
             - "-c"
-            {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled }}
+            {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled .Values.mesh.lifecycle.enabled }}
             - |
-              until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done;
-              echo 'Istio ready. Running the command...';
+              {{ .Values.mesh.lifecycle.startupWaitCommand }}
               {{ .Values.command }};
               x=$(echo $?);
-              wget --quiet --post-data="Please exit" -o /dev/null http://localhost:15020/quitquitquit && exit $x
+              {{ .Values.mesh.lifecycle.shutdownWaitCommand }}
+              exit $x
             {{- else }}
             - {{ .Values.command | quote }}
             {{- end }}

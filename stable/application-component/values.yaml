@@ -74,9 +74,6 @@ applicationImage:
   # Overrides the image tag whose default is the Values.version.
   tag: ""
 
-# Wait for Istio service to be available, then run the specified command
-waitForIstio: "until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done; echo 'Istio ready. Running the command...';"
-
 # Deployment configurations
 deployment:
   # Number of pods to run. Ignored when autoscaling enabled
@@ -321,6 +318,16 @@ serviceAccount:
   name: ""
   # Additional Annotations to add to the service account when creating
   annotations: {}
+
+mesh:
+  # Configuration to orchestrate correct start/stop of components in a mesh
+  lifecycle:
+    enabled: true
+    # Wait for Istio service to be available, before running container command
+    startupWaitCommand: "until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done; echo 'Istio ready. Running the command...';"
+    # preStopHook to execute on shutdown
+    shutdownWaitCommand: "echo 'Waiting for Application exit'; kill 1; wait 1; echo 'Application finished. Telling Istio to exit'; wget -quiet --post-data 'exit' -o /dev/null http://localhost:15020/quitquitquit;"
+
 
 # default contain default values for various resources
 defaults:
