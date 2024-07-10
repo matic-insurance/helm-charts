@@ -3,7 +3,23 @@ entries:
   application-component:
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.09024604Z"
+    created: "2024-07-10T10:29:56.641297032Z"
+    dependencies:
+    - name: application-helpers
+      repository: file://../application-helpers
+      version: 0.1.12
+    description: Deployment of single application component
+    digest: 60307e1c3d67c307957742856130ede1bb4659fd640a313919dfea8b4c6ae49e
+    home: https://matic-insurance.github.io/helm-charts
+    icon: https://maticinsurance.sirv.com/engineering/helm/component.png
+    name: application-component
+    type: application
+    urls:
+    - https://matic-insurance.github.io/helm-charts/application-component-1.2.11.tgz
+    version: 1.2.11
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2024-07-10T10:29:56.639940443Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -19,7 +35,7 @@ entries:
     version: 1.2.10
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.101664242Z"
+    created: "2024-07-10T10:29:56.653946434Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -35,7 +51,7 @@ entries:
     version: 1.2.9
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.100333017Z"
+    created: "2024-07-10T10:29:56.652599794Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -51,7 +67,7 @@ entries:
     version: 1.2.8
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.0990383Z"
+    created: "2024-07-10T10:29:56.650508956Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -67,7 +83,7 @@ entries:
     version: 1.2.7
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.097719919Z"
+    created: "2024-07-10T10:29:56.649107504Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -83,7 +99,7 @@ entries:
     version: 1.2.6
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.0954647Z"
+    created: "2024-07-10T10:29:56.647781553Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -99,7 +115,7 @@ entries:
     version: 1.2.5
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.094181425Z"
+    created: "2024-07-10T10:29:56.646442468Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -115,7 +131,7 @@ entries:
     version: 1.2.4
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.092848648Z"
+    created: "2024-07-10T10:29:56.64512332Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -131,7 +147,7 @@ entries:
     version: 1.2.3
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.091564932Z"
+    created: "2024-07-10T10:29:56.64358513Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -147,7 +163,7 @@ entries:
     version: 1.2.2
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.088887324Z"
+    created: "2024-07-10T10:29:56.638647304Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -163,7 +179,7 @@ entries:
     version: 1.2.1
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.086609525Z"
+    created: "2024-07-10T10:29:56.637355327Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -179,7 +195,7 @@ entries:
     version: 1.2.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.085323816Z"
+    created: "2024-07-10T10:29:56.635974964Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -195,7 +211,7 @@ entries:
     version: 1.1.2
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.083990096Z"
+    created: "2024-07-10T10:29:56.634650085Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -211,7 +227,7 @@ entries:
     version: 1.1.1
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.08269557Z"
+    created: "2024-07-10T10:29:56.632880913Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -227,7 +243,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.081390293Z"
+    created: "2024-07-10T10:29:56.631138068Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -243,7 +259,7 @@ entries:
     version: 1.0.5
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.080055181Z"
+    created: "2024-07-10T10:29:56.629858936Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -259,7 +275,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.078640681Z"
+    created: "2024-07-10T10:29:56.628518938Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -275,7 +291,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.076251241Z"
+    created: "2024-07-10T10:29:56.627235036Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -291,7 +307,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.074964509Z"
+    created: "2024-07-10T10:29:56.625924104Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -307,7 +323,7 @@ entries:
     version: 1.0.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.073647682Z"
+    created: "2024-07-10T10:29:56.62362862Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -323,7 +339,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.072581361Z"
+    created: "2024-07-10T10:29:56.622581302Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -338,7 +354,7 @@ entries:
     version: 0.2.3
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.071533957Z"
+    created: "2024-07-10T10:29:56.621551598Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -353,7 +369,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.070455814Z"
+    created: "2024-07-10T10:29:56.620471669Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -368,7 +384,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.069378393Z"
+    created: "2024-07-10T10:29:56.619427398Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -383,7 +399,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.067245202Z"
+    created: "2024-07-10T10:29:56.618392544Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -398,7 +414,7 @@ entries:
     version: 0.1.9
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.066254853Z"
+    created: "2024-07-10T10:29:56.616359016Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -413,7 +429,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.065246541Z"
+    created: "2024-07-10T10:29:56.615325064Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -428,7 +444,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.064200318Z"
+    created: "2024-07-10T10:29:56.614326107Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -443,7 +459,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.063196675Z"
+    created: "2024-07-10T10:29:56.613308766Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -458,7 +474,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.062087475Z"
+    created: "2024-07-10T10:29:56.61222468Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -474,14 +490,14 @@ entries:
   application-config:
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.106967183Z"
+    created: "2024-07-10T10:29:56.658321422Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
       version: 0.1.12
     description: 'Deployment of application configs: environment variables and custom
       files'
-    digest: 416b05694787a1ccf16c88a4a6e135f41972abd7ed79053b7ad335fb4b64e880
+    digest: 5d2765c7cf767582834c43714e712f594bbff16e37dad9cdf3a137b86842bf02
     home: https://matic-insurance.github.io/helm-charts
     icon: https://maticinsurance.sirv.com/engineering/helm/config.png
     name: application-config
@@ -491,7 +507,7 @@ entries:
     version: 1.2.5
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.10660628Z"
+    created: "2024-07-10T10:29:56.657954753Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -508,7 +524,7 @@ entries:
     version: 1.2.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.106250836Z"
+    created: "2024-07-10T10:29:56.657599506Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -525,7 +541,7 @@ entries:
     version: 1.0.5
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.105889271Z"
+    created: "2024-07-10T10:29:56.657239139Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -542,7 +558,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.105528939Z"
+    created: "2024-07-10T10:29:56.656849387Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -559,7 +575,7 @@ entries:
     version: 1.0.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.105158598Z"
+    created: "2024-07-10T10:29:56.656457381Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -576,7 +592,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.104742401Z"
+    created: "2024-07-10T10:29:56.656097655Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -592,7 +608,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.104041429Z"
+    created: "2024-07-10T10:29:56.655746245Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -608,7 +624,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.103092618Z"
+    created: "2024-07-10T10:29:56.655393562Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -624,7 +640,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.102744999Z"
+    created: "2024-07-10T10:29:56.655040399Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -640,7 +656,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.102390166Z"
+    created: "2024-07-10T10:29:56.654677317Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -656,7 +672,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.102035234Z"
+    created: "2024-07-10T10:29:56.654317701Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -673,9 +689,9 @@ entries:
   application-helpers:
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.107538249Z"
+    created: "2024-07-10T10:29:56.658892515Z"
     description: Library with helper functions for application development
-    digest: f5c615d1d6afd328ba9f71f7453fb774c7e8b3f1c07da651e41ee09764726bb8
+    digest: 68c1f22e28eaf28ff50e26ca1460ceacf4539fc4f524cace99a2d2a43037f742
     home: https://matic-insurance.github.io/helm-charts
     name: application-helpers
     type: library
@@ -684,7 +700,7 @@ entries:
     version: 0.1.12
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.107349877Z"
+    created: "2024-07-10T10:29:56.658704582Z"
     description: Library with helper functions for application development
     digest: 686d9a626c6ec1a920e5d990b62d4a230ccca2e3a3681eb23c7ca92e26531405
     home: https://matic-insurance.github.io/helm-charts
@@ -695,7 +711,7 @@ entries:
     version: 0.1.11
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.107159743Z"
+    created: "2024-07-10T10:29:56.658515036Z"
     description: Library with helper functions for application development
     digest: 6f4d0df9fbf760e6cc846575de5d0185eda3f460ff6570ddcd4ae1d6b179e185
     home: https://matic-insurance.github.io/helm-charts
@@ -706,7 +722,7 @@ entries:
     version: 0.1.10
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.108102553Z"
+    created: "2024-07-10T10:29:56.660303889Z"
     description: Library with helper functions for application development
     digest: fae20004bce801f86b19b301676f0470d3b9401b955b84afb31ec7ba2aae2d9a
     home: https://matic-insurance.github.io/helm-charts
@@ -717,7 +733,7 @@ entries:
     version: 0.1.9
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.107910123Z"
+    created: "2024-07-10T10:29:56.659826419Z"
     description: Library with helper functions for application development
     digest: a1a915987bc51b46bbbdc7c9995f27cf1d438b2f92ff08efe92433847b2bde7c
     home: https://matic-insurance.github.io/helm-charts
@@ -728,7 +744,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.107725348Z"
+    created: "2024-07-10T10:29:56.659440394Z"
     description: Library with helper functions for application development
     digest: b60ba6a68e4e10fe95ba6fad0dc70d67fca18642034185c777e84bbe2db17b19
     home: https://matic-insurance.github.io/helm-charts
@@ -740,13 +756,13 @@ entries:
   application-mesh:
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.1265042Z"
+    created: "2024-07-10T10:29:56.67496654Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
       version: 0.1.12
     description: Deployment of Istio mesh configuration for your application
-    digest: c111047ef76261e513aaefdc767771bd9f5de628d73e355896e2caec78a79d49
+    digest: 942af20b307d41784cceaf370fed20405c09f5538ad82d1efe609226565a5678
     name: application-mesh
     type: application
     urls:
@@ -754,7 +770,7 @@ entries:
     version: 0.4.3
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.125635579Z"
+    created: "2024-07-10T10:29:56.674153824Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -768,7 +784,7 @@ entries:
     version: 0.4.2
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.123806671Z"
+    created: "2024-07-10T10:29:56.673372265Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -782,7 +798,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.115877511Z"
+    created: "2024-07-10T10:29:56.667431436Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -796,7 +812,7 @@ entries:
     version: 0.3.14
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.115132801Z"
+    created: "2024-07-10T10:29:56.665847353Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -810,7 +826,7 @@ entries:
     version: 0.3.13
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.114369497Z"
+    created: "2024-07-10T10:29:56.665114887Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -824,7 +840,7 @@ entries:
     version: 0.3.12
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.113597987Z"
+    created: "2024-07-10T10:29:56.664357334Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -838,7 +854,7 @@ entries:
     version: 0.3.11
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.112250495Z"
+    created: "2024-07-10T10:29:56.663621592Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -852,7 +868,7 @@ entries:
     version: 0.3.10
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.121980463Z"
+    created: "2024-07-10T10:29:56.672554168Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -866,7 +882,7 @@ entries:
     version: 0.3.9
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.120250554Z"
+    created: "2024-07-10T10:29:56.671851058Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -880,7 +896,7 @@ entries:
     version: 0.3.8
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.119522224Z"
+    created: "2024-07-10T10:29:56.671148077Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -894,7 +910,7 @@ entries:
     version: 0.3.6
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.118815305Z"
+    created: "2024-07-10T10:29:56.67044683Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -908,7 +924,7 @@ entries:
     version: 0.3.5
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.118079732Z"
+    created: "2024-07-10T10:29:56.669741896Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -922,7 +938,7 @@ entries:
     version: 0.3.4
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.117359357Z"
+    created: "2024-07-10T10:29:56.669032713Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -936,7 +952,7 @@ entries:
     version: 0.3.3
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.116590863Z"
+    created: "2024-07-10T10:29:56.668272926Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -950,7 +966,7 @@ entries:
     version: 0.3.2
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.110778778Z"
+    created: "2024-07-10T10:29:56.662895588Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -964,7 +980,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.110100151Z"
+    created: "2024-07-10T10:29:56.662210451Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -978,7 +994,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.109484301Z"
+    created: "2024-07-10T10:29:56.66159746Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -992,7 +1008,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.108829229Z"
+    created: "2024-07-10T10:29:56.660973537Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1007,7 +1023,24 @@ entries:
   application-migration:
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.137386187Z"
+    created: "2024-07-10T10:29:56.685521507Z"
+    dependencies:
+    - name: application-helpers
+      repository: file://../application-helpers
+      version: 0.1.12
+    description: Job to run db migration for application before installing/upgrading
+      new version
+    digest: 38e9576fe894f1ba44ccbbfcb51543b2dfd9ffbee82b28d137aec26d407fca75
+    home: https://matic-insurance.github.io/helm-charts
+    icon: https://maticinsurance.sirv.com/engineering/helm/migration.png
+    name: application-migration
+    type: application
+    urls:
+    - https://matic-insurance.github.io/helm-charts/application-migration-1.2.11.tgz
+    version: 1.2.11
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2024-07-10T10:29:56.687804416Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1024,7 +1057,7 @@ entries:
     version: 1.2.6
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.136836401Z"
+    created: "2024-07-10T10:29:56.687277406Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1041,7 +1074,7 @@ entries:
     version: 1.2.5
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.136315208Z"
+    created: "2024-07-10T10:29:56.686573824Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1058,7 +1091,7 @@ entries:
     version: 1.2.4
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.135790439Z"
+    created: "2024-07-10T10:29:56.686053617Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1075,7 +1108,7 @@ entries:
     version: 1.2.3
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.135260119Z"
+    created: "2024-07-10T10:29:56.684906702Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1092,7 +1125,7 @@ entries:
     version: 1.2.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.13471401Z"
+    created: "2024-07-10T10:29:56.684270948Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1109,7 +1142,7 @@ entries:
     version: 1.1.2
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.133486713Z"
+    created: "2024-07-10T10:29:56.682725173Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1126,7 +1159,7 @@ entries:
     version: 1.1.1
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.132433347Z"
+    created: "2024-07-10T10:29:56.682210726Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1143,7 +1176,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.131911974Z"
+    created: "2024-07-10T10:29:56.681702942Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1160,7 +1193,7 @@ entries:
     version: 1.0.5
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.131416449Z"
+    created: "2024-07-10T10:29:56.681203895Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1177,7 +1210,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.130900726Z"
+    created: "2024-07-10T10:29:56.680657539Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1194,7 +1227,7 @@ entries:
     version: 1.0.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.130403909Z"
+    created: "2024-07-10T10:29:56.680153291Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1211,7 +1244,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.12989Z"
+    created: "2024-07-10T10:29:56.67964161Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1227,7 +1260,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.129408571Z"
+    created: "2024-07-10T10:29:56.679161999Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1243,7 +1276,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.128911994Z"
+    created: "2024-07-10T10:29:56.678685724Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1259,7 +1292,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.128387485Z"
+    created: "2024-07-10T10:29:56.678175837Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1275,7 +1308,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.127921996Z"
+    created: "2024-07-10T10:29:56.677657272Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1291,7 +1324,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.127466666Z"
+    created: "2024-07-10T10:29:56.677083895Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1307,7 +1340,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.127003051Z"
+    created: "2024-07-10T10:29:56.675704577Z"
     dependencies:
     - name: application-helpers
       repository: file://../application-helpers
@@ -1324,9 +1357,9 @@ entries:
   cert-manager-webhook-dnsimple:
   - apiVersion: v1
     appVersion: 0.1.2
-    created: "2024-06-27T06:28:50.13770902Z"
+    created: "2024-07-10T10:29:56.688138052Z"
     description: cert-manager webhook solver for ACME DNS01 challenge via DNSimple
-    digest: 547abea054f8e80535197c26b937b614e2d2316dbea505e30ef9e75965744595
+    digest: 6c4012c32d51bc6f8755a6a61c257199fc49d9a28f97128990725034ff07bc88
     home: https://github.com/neoskop/cert-manager-webhook-dnsimple
     maintainers:
     - email: diekmann@neoskop.de
@@ -1341,9 +1374,9 @@ entries:
   circleci-runner:
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2024-06-27T06:28:50.138421229Z"
+    created: "2024-07-10T10:29:56.688851352Z"
     description: A Helm chart for Kubernetes
-    digest: f62efdf5200137302873ff9b0f8d178baad646acac13d23f544f70cecbc45e77
+    digest: 6d29a5a198c305ca55593d7128d2a7f8f4c793baee881b0c0a046df8b0df9396
     home: https://matic-insurance.github.io/helm-charts
     name: circleci-runner
     type: application
@@ -1352,7 +1385,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-06-27T06:28:50.138068771Z"
+    created: "2024-07-10T10:29:56.688497838Z"
     description: A Helm chart for Kubernetes
     digest: e55553a8a8f67877a22c2e15d98c5e432ef223636d17cadf694570d4e8befddb
     home: https://matic-insurance.github.io/helm-charts
@@ -1364,9 +1397,9 @@ entries:
   namespaces:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-06-27T06:28:50.138536073Z"
+    created: "2024-07-10T10:29:56.688997627Z"
     description: A Helm chart for creation Kubernetes Namespaces
-    digest: 0d906d19294c2f4d4a7557b0ef7be1ef8a1fe55497f07ed53f944401ca4d6886
+    digest: 9c80a60cd240225856920634ae883f07c7fc5ade71796815918d97f840f760f0
     name: namespaces
     type: application
     urls:
@@ -1375,9 +1408,9 @@ entries:
   nginx:
   - apiVersion: v2
     appVersion: 1.1.1
-    created: "2024-06-27T06:28:50.13886651Z"
+    created: "2024-07-10T10:29:56.68928683Z"
     description: A Nginx Helm chart for Kubernetes
-    digest: 0f1640af33dda6cb1b3491ad866daaac6f5c89748d75cefd64b05cf54ddf5110
+    digest: ed92c733b4f54a828a0454ee524cc8134728b53f4c9faf6d6193918d7909b51c
     home: https://matic-insurance.github.io/helm-charts
     name: nginx
     type: application
@@ -1387,9 +1420,9 @@ entries:
   rails:
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.157700749Z"
+    created: "2024-07-10T10:29:56.707884967Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
-    digest: 936636d5f01afec25159f0cd80866c58ededdce1404c28634928fbd4302d571a
+    digest: 43f4807d00cc227298d9d119958cd7f79a0991f7aae48afb908fa51d161efcb9
     home: https://matic-insurance.github.io/helm-charts
     name: rails
     type: application
@@ -1398,7 +1431,7 @@ entries:
     version: 2.4.1
   - apiVersion: v2
     appVersion: 0.0.0
-    created: "2024-06-27T06:28:50.156722112Z"
+    created: "2024-07-10T10:29:56.706888585Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 63fa608ae0780dcec630bfe5601deedb3481742d0cf71478a1005d011e66c323
     home: https://matic-insurance.github.io/helm-charts
@@ -1409,7 +1442,7 @@ entries:
     version: 2.4.0
   - apiVersion: v2
     appVersion: 2.3.11
-    created: "2024-06-27T06:28:50.149791242Z"
+    created: "2024-07-10T10:29:56.701220758Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 882170563648c873e32f35d8d18f3a0baea124e67d6293c6ee7a29adf5dbf137
     home: https://matic-insurance.github.io/helm-charts
@@ -1420,7 +1453,7 @@ entries:
     version: 2.3.11
   - apiVersion: v2
     appVersion: 2.3.10
-    created: "2024-06-27T06:28:50.149014853Z"
+    created: "2024-07-10T10:29:56.699906509Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 48dbf4dce0f45893fa8f288d40e41280f5b541d441053926c3d15660d92938ad
     home: https://matic-insurance.github.io/helm-charts
@@ -1431,7 +1464,7 @@ entries:
     version: 2.3.10
   - apiVersion: v2
     appVersion: 2.3.9
-    created: "2024-06-27T06:28:50.155763413Z"
+    created: "2024-07-10T10:29:56.705917441Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: ca34ae54532f3a91fd8fba6ef5a8662028648eb70539069c2c3704578a534a51
     home: https://matic-insurance.github.io/helm-charts
@@ -1442,7 +1475,7 @@ entries:
     version: 2.3.9
   - apiVersion: v2
     appVersion: 2.3.8
-    created: "2024-06-27T06:28:50.155009596Z"
+    created: "2024-07-10T10:29:56.705154878Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 77e0aaa0e4b1837ab49a3d23bb4602f0689aed74a8a1084369137664550c11f8
     home: https://matic-insurance.github.io/helm-charts
@@ -1453,7 +1486,7 @@ entries:
     version: 2.3.8
   - apiVersion: v2
     appVersion: 2.3.7
-    created: "2024-06-27T06:28:50.154264355Z"
+    created: "2024-07-10T10:29:56.704386014Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 7e0fa5e6acfb0477264540bc72fefac16624513b91e85b827af3ec65e905ad78
     home: https://matic-insurance.github.io/helm-charts
@@ -1464,7 +1497,7 @@ entries:
     version: 2.3.7
   - apiVersion: v2
     appVersion: 2.3.6
-    created: "2024-06-27T06:28:50.153623899Z"
+    created: "2024-07-10T10:29:56.703753095Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: e7c9fe961f096d40bd81d6de89ffbe52ed9d8a570eb7b2dde8e419e5bbc1ffdc
     home: https://matic-insurance.github.io/helm-charts
@@ -1475,7 +1508,7 @@ entries:
     version: 2.3.6
   - apiVersion: v2
     appVersion: 2.3.5
-    created: "2024-06-27T06:28:50.152956895Z"
+    created: "2024-07-10T10:29:56.703125536Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: bd8fdac1829b067bad5b78ef5c5b0310562757fe86a356eb198f114658f8400a
     home: https://matic-insurance.github.io/helm-charts
@@ -1486,7 +1519,7 @@ entries:
     version: 2.3.5
   - apiVersion: v2
     appVersion: 2.3.4
-    created: "2024-06-27T06:28:50.152262408Z"
+    created: "2024-07-10T10:29:56.7025048Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 7d274c6906bf59fc72c4108e63335c3a6685c7771cdc55118ea03de7f0e3c424
     home: https://matic-insurance.github.io/helm-charts
@@ -1497,7 +1530,7 @@ entries:
     version: 2.3.4
   - apiVersion: v2
     appVersion: 2.3.2
-    created: "2024-06-27T06:28:50.150831253Z"
+    created: "2024-07-10T10:29:56.701856312Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: d48d6f7054c76ab413c0b296d8948731e229fa78ce07e21aad74d35bbcab0dee
     home: https://matic-insurance.github.io/helm-charts
@@ -1508,7 +1541,7 @@ entries:
     version: 2.3.2
   - apiVersion: v2
     appVersion: 2.3.1
-    created: "2024-06-27T06:28:50.148211283Z"
+    created: "2024-07-10T10:29:56.698349004Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 0e7979aa6ddf7362a4fea24bb557a03a35760ba159b773077fd075321c288b78
     home: https://matic-insurance.github.io/helm-charts
@@ -1519,7 +1552,7 @@ entries:
     version: 2.3.1
   - apiVersion: v2
     appVersion: 2.3.0
-    created: "2024-06-27T06:28:50.147616743Z"
+    created: "2024-07-10T10:29:56.697744558Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 76ac8f03fe3d7243c263d7f451a32ffc150caf2ff8a0269256a985b57825fe12
     home: https://matic-insurance.github.io/helm-charts
@@ -1530,7 +1563,7 @@ entries:
     version: 2.3.0
   - apiVersion: v2
     appVersion: 2.2.0
-    created: "2024-06-27T06:28:50.147022243Z"
+    created: "2024-07-10T10:29:56.697135083Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 60c9076e1ea85ec1a9d294fa9058a8126540bad7c7dd589ff52f431e0e0b774c
     home: https://matic-insurance.github.io/helm-charts
@@ -1541,7 +1574,7 @@ entries:
     version: 2.2.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2024-06-27T06:28:50.146426171Z"
+    created: "2024-07-10T10:29:56.696485272Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: af2a8ffdd71bcb6e5b7c0dc6707a624a059546f918719de764d78ac8b0399b59
     home: https://matic-insurance.github.io/helm-charts
@@ -1552,7 +1585,7 @@ entries:
     version: 2.1.3
   - apiVersion: v2
     appVersion: 2.1.1
-    created: "2024-06-27T06:28:50.145835528Z"
+    created: "2024-07-10T10:29:56.695888331Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 1cf97fe3314b917202bcf8b3ab513f80bff205713b367d41961e349bdb67104f
     home: https://matic-insurance.github.io/helm-charts
@@ -1563,7 +1596,7 @@ entries:
     version: 2.1.1
   - apiVersion: v2
     appVersion: 2.0.1
-    created: "2024-06-27T06:28:50.145234817Z"
+    created: "2024-07-10T10:29:56.695294446Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 47806f46ba2cea336bea367bc9670dc60294d7b4e02b4f733f7623c8c9d4059c
     home: https://matic-insurance.github.io/helm-charts
@@ -1574,7 +1607,7 @@ entries:
     version: 2.1.0
   - apiVersion: v2
     appVersion: 2.0.1
-    created: "2024-06-27T06:28:50.144603418Z"
+    created: "2024-07-10T10:29:56.694698656Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 703f18ec1e0fc356154a6081d0dcc2102837d62c57d9d5b08200ecec7a3f1553
     home: https://matic-insurance.github.io/helm-charts
@@ -1585,7 +1618,7 @@ entries:
     version: 2.0.1
   - apiVersion: v2
     appVersion: 2.0.0
-    created: "2024-06-27T06:28:50.143998279Z"
+    created: "2024-07-10T10:29:56.694098389Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 63402b2277571bc562ab6fc62e758d4c2321d8ad46b212cb537ddd28e821dd4b
     home: https://matic-insurance.github.io/helm-charts
@@ -1596,7 +1629,7 @@ entries:
     version: 2.0.0
   - apiVersion: v2
     appVersion: 1.9.4
-    created: "2024-06-27T06:28:50.143181424Z"
+    created: "2024-07-10T10:29:56.693473455Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 67da79ae6a1b9a6d46ede263993a0cde0618998c7789125465a95441cbfb68ad
     home: https://matic-insurance.github.io/helm-charts
@@ -1607,7 +1640,7 @@ entries:
     version: 1.9.4
   - apiVersion: v2
     appVersion: 1.9.3
-    created: "2024-06-27T06:28:50.141606585Z"
+    created: "2024-07-10T10:29:56.692114181Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 69c74090f0201dab9982d6b80e22ba5ee7bb82190b0c850683e6d6143300c998
     home: https://matic-insurance.github.io/helm-charts
@@ -1618,7 +1651,7 @@ entries:
     version: 1.9.3
   - apiVersion: v2
     appVersion: 1.9.2
-    created: "2024-06-27T06:28:50.141035539Z"
+    created: "2024-07-10T10:29:56.691356909Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 67561dbc2bb49bee2bab1aa275ce95144468efad3f56245a4fd81b9a6be5c0f0
     home: https://matic-insurance.github.io/helm-charts
@@ -1629,7 +1662,7 @@ entries:
     version: 1.9.2
   - apiVersion: v2
     appVersion: 1.9.1
-    created: "2024-06-27T06:28:50.140445908Z"
+    created: "2024-07-10T10:29:56.690791447Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 8b2f1abb01a4ccd1f0c618f7bb5936201abfe9bdcbaa5e452bd7b62c5f0b056c
     home: https://matic-insurance.github.io/helm-charts
@@ -1640,7 +1673,7 @@ entries:
     version: 1.9.1
   - apiVersion: v2
     appVersion: 1.9.0
-    created: "2024-06-27T06:28:50.139883459Z"
+    created: "2024-07-10T10:29:56.690231515Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: 584fcca2e520467806f79793e9d6ca25e1f464a98a6e6f8d23558c2437123dda
     home: https://matic-insurance.github.io/helm-charts
@@ -1651,7 +1684,7 @@ entries:
     version: 1.9.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2024-06-27T06:28:50.139307624Z"
+    created: "2024-07-10T10:29:56.689668037Z"
     description: A Helm chart deploying Ruby on Rails app to Kubernetes
     digest: a22b49ab6eb61e7c8c238f091c73e796643002a84f6b21bcf44f27d5f476daa4
     home: https://matic-insurance.github.io/helm-charts
@@ -1662,9 +1695,9 @@ entries:
   secrets:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-06-27T06:28:50.158110574Z"
+    created: "2024-07-10T10:29:56.708933868Z"
     description: A Helm chart for Kubernetes
-    digest: 08b771c10109c73d456db60bd53a27220d89ea7e60e086fbc95dbe310f3f3c64
+    digest: 2da9bf6a7a4139afe532910334a4ccef9f3696b41ca46d7c7afcd01960c0ac62
     name: secrets
     type: application
     urls:
@@ -1672,7 +1705,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-06-27T06:28:50.157979309Z"
+    created: "2024-07-10T10:29:56.708591915Z"
     description: A Helm chart for Kubernetes
     digest: 0a70ad4ca334eba70176e29b013a8301e35e7ecc238bbcc85e8d68bc95e3f9d3
     name: secrets
@@ -1682,7 +1715,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-06-27T06:28:50.157847302Z"
+    created: "2024-07-10T10:29:56.708247318Z"
     description: A Helm chart for Kubernetes
     digest: 0f2b7412a2a68514528328330222a8de583be9da45bd7bdeabc0a9cc5826b995
     name: secrets
@@ -1690,4 +1723,4 @@ entries:
     urls:
     - https://matic-insurance.github.io/helm-charts/secrets-0.1.0.tgz
     version: 0.1.0
-generated: "2024-06-27T06:28:50.061012879Z"
+generated: "2024-07-10T10:29:56.611123962Z"
