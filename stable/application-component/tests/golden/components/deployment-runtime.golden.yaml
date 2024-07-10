@@ -71,6 +71,14 @@ spec:
               readOnly: true
             - mountPath: /cache
               name: cache-vol
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - "echo 'Waiting for Application exit'; kill 1; wait 1; echo 'Application finished. Telling Istio to exit'; wget -quiet --post-data 'exit' -o /dev/null http://localhost:15020/quitquitquit"
+          
           startupProbe:
             exec:
               command: [/app/ops/scripts/check_sidekiq.sh]
