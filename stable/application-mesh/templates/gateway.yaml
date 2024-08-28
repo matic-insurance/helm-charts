@@ -41,6 +41,15 @@ spec:
       tls:
         mode: SIMPLE
         credentialName: istio-ingress/{{ $host | replace "." "-" }}-tls
+      {{- if $ingress.min_protocol_version }}
+        minProtocolVersion: {{ $ingress.min_protocol_version }}
+      {{- end }}
+      {{- if $ingress.cipher_list }}
+        cipherSuites:
+        {{- range $ingress.cipher_list }}
+          - {{ . }}
+        {{- end }}
+      {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
