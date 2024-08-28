@@ -17,6 +17,20 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  name: leads-broker-st1-tls-matic-com
+  namespace: istio-ingress
+spec:
+  dnsNames:
+    - "leads-broker-st1-tls.matic.com"
+  issuerRef:
+    name: cert-manager-webhook-dnsimple-production
+    kind: ClusterIssuer
+  secretName: leads-broker-st1-tls-matic-com-tls
+---
+# Source: application-mesh/templates/certificate.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
   name: leads-broker-st1-matic-link
   namespace: istio-ingress
 spec:
@@ -56,6 +70,42 @@ spec:
       tls:
         mode: SIMPLE
         credentialName: istio-ingress/leads-broker-st1-matic-com-tls
+---
+# Source: application-mesh/templates/gateway.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: leads-broker-st1-tls-matic-com
+  annotations:
+    # Do not create dns records for this resource
+    external-dns.alpha.kubernetes.io/controller: "ignored-resource"
+spec:
+  selector:
+    istio: ingress-public-gateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "leads-broker-st1-tls.matic.com"
+      tls:
+        httpsRedirect: true
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - "leads-broker-st1-tls.matic.com"
+      tls:
+        mode: SIMPLE
+        credentialName: istio-ingress/leads-broker-st1-tls-matic-com-tls
+        minProtocolVersion: TLSV1_1
+        cipherSuites:
+          - ECDHE-RSA-AES128-SHA
+          - ECDHE-RSA-AES256-SHA
+          - AES128-SHA
+          - AES256-SHA
 ---
 # Source: application-mesh/templates/gateway.yaml
 apiVersion: networking.istio.io/v1beta1
