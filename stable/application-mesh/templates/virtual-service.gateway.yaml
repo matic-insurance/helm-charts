@@ -46,6 +46,9 @@ spec:
     {{- if gt (len $allow_locations) 0 }}
     {{- /* Has Allow locations specified */}}
     - name: allow-ingress-spec
+      {{- if $ingress.timeout }}
+      timeout: {{ $ingress.timeout }}
+      {{- end }}
       match:
         {{- range $path := $allow_locations }}
         - uri:
@@ -64,6 +67,9 @@ spec:
     {{ else }}
     {{- /* Route everything to service */}}
     - name: allow-all-locations
+      {{- if $ingress.timeout }}
+      timeout: {{ $ingress.timeout }}
+      {{- end }}
       route:
         - destination:
             host: {{ $service_host | quote }}
