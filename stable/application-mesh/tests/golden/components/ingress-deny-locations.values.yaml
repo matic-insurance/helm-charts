@@ -11,6 +11,7 @@ ingress:
   - host: ws-amp-st1.matic.link
     gateway: private-matic-link
     destination: websockets
+    timeout: 300s
     deny_locations:
       - /api
       - /upload
