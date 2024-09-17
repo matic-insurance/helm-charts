@@ -35,6 +35,21 @@ workers:
       enabled: false
     lifecycle:
       enabled: false
+    additionalContainers:
+      - name: sidecar
+        image: some_image
+        env:
+          - name: SOME_ENV
+            value: some_value
+        ports:
+          - containerPort: 8080
+        resources:
+          requests:
+            memory: 200Mi
+            cpu: 100m
+          limits:
+            memory: 700Mi
+            cpu: 300m
 
   - name: karafka
     enabled: true

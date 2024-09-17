@@ -129,6 +129,45 @@ spec:
         {{- end }}
         resources:
 {{ toYaml $worker.resources | indent 10 }}
+
+      {{- if $worker.additionalContainers }}
+      {{- range $index, $container := $worker.additionalContainers }}
+      - name: {{ $container.name }}
+        image: {{ $container.image }}
+        {{- if $container.ports }}
+        ports:
+          {{- range $port := $container.ports }}
+          - containerPort: {{ $port.containerPort }}
+          {{- end }}
+        {{- end }}
+        {{- if $container.resources }}
+        resources:
+          requests:
+            memory: "{{ $container.resources.requests.memory }}"
+            cpu: "{{ $container.resources.requests.cpu }}"
+          limits:
+            memory: "{{ $container.resources.limits.memory }}"
+            cpu: "{{ $container.resources.limits.cpu }}"
+        {{- end }}
+        {{- if $container.env }}
+        env:
+          {{- range $env := $container.env }}
+          - name: {{ $env.name }}
+            value: {{ $env.value }}
+          {{- end }}
+        {{- end }}
+        {{- if $container.volumeMounts }}
+        volumeMounts:
+          {{- range $volumeMount := $container.volumeMounts }}
+          - name: {{ $volumeMount.name }}
+            mountPath: {{ $volumeMount.mountPath }}
+            subPath: {{ $volumeMount.subPath }}
+            readOnly: {{ $volumeMount.readOnly | default true }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- end }}
+
 {{- if $.Values.vault.enabled }}
       initContainers:
       - name: get-vault-token
