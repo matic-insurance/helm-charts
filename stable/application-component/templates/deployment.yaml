@@ -216,6 +216,43 @@ spec:
             {{- else }}
             {{- toYaml (get .Values.defaults.resources .Values.resources) | nindent 12 }}
             {{- end }}
+        {{- if .Values.additionalContainers }}
+        {{- range $index, $container := .Values.additionalContainers }}
+        - name: {{ $container.name }}
+          image: {{ $container.image }}
+          {{- if $container.ports }}
+          ports:
+            {{- range $port := $container.ports }}
+            - containerPort: {{ $port.containerPort }}
+            {{- end }}
+          {{- end }}
+          {{- if $container.resources }}
+          resources:
+            requests:
+              memory: "{{ $container.resources.requests.memory }}"
+              cpu: "{{ $container.resources.requests.cpu }}"
+            limits:
+              memory: "{{ $container.resources.limits.memory }}"
+              cpu: "{{ $container.resources.limits.cpu }}"
+          {{- end }}
+          {{- if $container.env }}
+          env:
+            {{- range $env := $container.env }}
+            - name: {{ $env.name }}
+              value: {{ $env.value }}
+            {{- end }}
+          {{- end }}
+          {{- if $container.volumeMounts }}
+          volumeMounts:
+            {{- range $volumeMount := $container.volumeMounts }}
+            - name: {{ $volumeMount.name }}
+              mountPath: {{ $volumeMount.mountPath }}
+              subPath: {{ $volumeMount.subPath }}
+              readOnly: {{ $volumeMount.readOnly | default true }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
+        {{- end }}
       volumes:
           {{- /* Mount service account token to hardcoded path for backward compatibility with settings_reader-vault_resolver <= 0.4.9*/}}
           {{- /* should be removed once we make settings_reader-vault_resolver read token from default location or support custom token location*/}}
