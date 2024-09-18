@@ -94,6 +94,20 @@ spec:
             requests:
               cpu: 400m
               memory: 500Mi
+        - name: sidecar
+          image: some_image
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "200Mi"
+              cpu: "100m"
+            limits:
+              memory: "700Mi"
+              cpu: "300m"
+          env:
+            - name: SOME_ENV
+              value: some_value
       volumes:
         - name: dynamic-sa-token
           projected:
