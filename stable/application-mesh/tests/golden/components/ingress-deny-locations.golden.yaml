@@ -41,6 +41,7 @@ spec:
         body:
           string: Access Denied
     - name: allow-all-locations
+      timeout: 300s
       route:
         - destination:
             host: "leads-broker-websockets.app-component-test00000.svc.cluster.local"
