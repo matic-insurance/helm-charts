@@ -123,7 +123,7 @@ mesh:
     # Wait for Istio service to be available, before running container command
     startupWaitCommand: "until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done; echo 'Istio ready. Running the command...';"
     # preStopHook to execute on shutdown
-    shutdownWaitCommand: "echo 'Application finished. Telling Istio to exit'; wget -quiet --post-data 'exit' -o /dev/null http://localhost:15020/quitquitquit;"
+    shutdownWaitCommand: "echo 'Application finished. Telling Istio to exit'; wget --quiet --post-data 'exit' -o /dev/null http://localhost:15020/quitquitquit;"
 
 defaults:
   # Default DNS configuration for application deployment. Set ndots option to 1
