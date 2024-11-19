@@ -322,7 +322,7 @@ serviceAccount:
 mesh:
   # Configuration to orchestrate correct start/stop of components in a mesh
   lifecycle:
-    enabled: true
+    enabled: false
     # Wait for Istio service to be available, before running container command
     startupWaitCommand: "until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done; echo 'Istio ready. Running the command...';"
     # preStopHook to execute on shutdown
