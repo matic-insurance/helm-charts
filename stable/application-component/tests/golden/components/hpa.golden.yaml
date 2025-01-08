@@ -151,14 +151,6 @@ spec:
             - name: dynamic-sa-token
               mountPath: /var/run/secrets/tokens
               readOnly: true
-          lifecycle:
-            preStop:
-              exec:
-                command:
-                  - "sh"
-                  - "-c"
-                  - "echo 'Waiting for Application exit'; kill 1; wait 1; echo 'Application finished. Telling Istio to exit'; wget --quiet --post-data 'exit' -o /dev/null http://localhost:15020/quitquitquit;"
-          
           resources:
             limits:
               cpu: 1200m
