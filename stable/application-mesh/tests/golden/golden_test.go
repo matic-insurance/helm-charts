@@ -1,32 +1,13 @@
 package golden
 
 import (
-	"flag"
-	"io/ioutil"
 	"path/filepath"
-	"regexp"
-	"strings"
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
-	"github.com/gruntwork-io/terratest/modules/helm"
-	"github.com/gruntwork-io/terratest/modules/k8s"
-	"github.com/gruntwork-io/terratest/modules/random"
+	"github.com/matic-insurance/helm-charts/ops/golden_testing"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
-
-var update = flag.Bool("update-golden", false, "update golden test output files")
-
-type GoldenTestSuite struct {
-	suite.Suite
-	ChartPath      string
-	Release        string
-	Namespace      string
-	GoldenFileName string
-	Templates      []string
-	ValuesFiles    []string
-}
 
 func TestMeshGoldenTemplates(t *testing.T) {
 	t.Parallel()
@@ -34,7 +15,7 @@ func TestMeshGoldenTemplates(t *testing.T) {
 	chartPath, err := filepath.Abs("../../")
 	require.NoError(t, err)
 
-	testCases := []GoldenTestSuite{
+	testCases := []golden_testing.Suite{
 		{
 			GoldenFileName: "defaults/defaults.golden.yaml",
 			ValuesFiles:    []string{"defaults/defaults.values.yaml"},
@@ -65,9 +46,9 @@ func TestMeshGoldenTemplates(t *testing.T) {
 			Templates:      []string{"templates/virtual-service.mesh.yaml", "templates/virtual-service.gateway.yaml"},
 		},
 		{
-			GoldenFileName: "components/service-entry.golden.yaml",
-			ValuesFiles:    []string{"components/service-entry.values.yaml"},
-			Templates:      []string{"templates/service-entry.yaml"},
+			GoldenFileName: "components/egress.golden.yaml",
+			ValuesFiles:    []string{"components/egress.values.yaml"},
+			Templates:      []string{"templates/egress.yaml"},
 		},
 		{
 			GoldenFileName: "components/envoy-filter-max-body-size.golden.yaml",
@@ -78,6 +59,11 @@ func TestMeshGoldenTemplates(t *testing.T) {
 			GoldenFileName: "components/external-gateway.golden.yaml",
 			ValuesFiles:    []string{"components/external-gateway.values.yaml"},
 			Templates:      []string{"templates/certificate.yaml", "templates/gateway.yaml"},
+		},
+		{
+			GoldenFileName: "components/redirects.golden.yaml",
+			ValuesFiles:    []string{"components/redirects.values.yaml"},
+			Templates:      []string{"templates/redirects.yaml"},
 		},
 		{
 			GoldenFileName: "features/no-trace-proxy.golden.yaml",
@@ -98,7 +84,7 @@ func TestMeshGoldenTemplates(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		suite.Run(t, &GoldenTestSuite{
+		suite.Run(t, &golden_testing.Suite{
 			ChartPath:      chartPath,
 			Release:        "app-component-test",
 			GoldenFileName: testCase.GoldenFileName,
@@ -106,61 +92,4 @@ func TestMeshGoldenTemplates(t *testing.T) {
 			ValuesFiles:    testCase.ValuesFiles,
 		})
 	}
-}
-
-func (s *GoldenTestSuite) TestTemplateMatchesGoldenFile() {
-	actual := s.RenderTemplates()
-	expected := s.ReadGoldenFile()
-
-	if diff := cmp.Diff(strings.Split(string(expected), "\n"), strings.Split(actual, "\n")); diff != "" {
-		s.T().Errorf("%s: mismatch (-want +got):\n%s", s.GoldenFilePath(), diff)
-	}
-
-	// regex := regexp.MustCompile(`\s+helm.sh/chart:\s+.*`)
-	// bytes := regex.ReplaceAll([]byte(actual), []byte(""))
-	// actual = string(bytes)
-}
-
-func (s *GoldenTestSuite) RenderTemplates() string {
-	namespace := s.Release + strings.ToLower(random.UniqueId())
-	options := &helm.Options{
-		KubectlOptions: k8s.NewKubectlOptions("test", "", namespace),
-		ValuesFiles:    s.ValuesFiles,
-	}
-	template := helm.RenderTemplate(s.T(), options, s.ChartPath, s.Release, s.Templates)
-	template = stripRandomData(template)
-
-	if *update {
-		err := ioutil.WriteFile(s.GoldenFilePath(), []byte(template), 0644)
-		s.Require().NoError(err, "Golden file was not writable")
-	}
-
-	return template
-}
-
-func (s *GoldenTestSuite) GoldenFilePath() string {
-	return s.GoldenFileName
-}
-
-func (s *GoldenTestSuite) ReadGoldenFile() string {
-	expected, err := ioutil.ReadFile(s.GoldenFilePath())
-
-	s.Require().NoError(err, "Golden file doesn't exist or was not readable")
-
-	return string(expected)
-}
-
-func stripRandomData(template string) string {
-	template = stripRegexp(template, `\s+helm.sh/chart:\s+.*`, "")
-	template = stripRegexp(template, `rollme:\s+.*`, "rollme: \"123abc\"")
-	template = stripRegexp(template, `app-component-test[a-z0-9]{6}`, "app-component-test00000")
-
-	return template
-}
-
-func stripRegexp(template, pattern, replacement string) string {
-	regex := regexp.MustCompile(pattern)
-	bytes := regex.ReplaceAll([]byte(template), []byte(replacement))
-
-	return string(bytes)
 }

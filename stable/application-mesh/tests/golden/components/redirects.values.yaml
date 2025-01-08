@@ -1,0 +1,46 @@
+global:
+  application:
+    product: leads-broker
+    environment: test
+    version: "0.0.0"
+
+destinations:
+  - component: webserver
+
+redirects:
+
+  # redirect all URIs with default code 301
+  - source: leads-broker-st1-src.matic.com
+    destination: leads-broker-st1-dsc.matic.com
+
+  # redirect all URIs with code 302
+  - source: leads-broker-st1-src-2.matic.com
+    destination: leads-broker-st1-dsc-2.matic.com
+    redirectCode: 302
+
+  # custom URI test 1
+  - source: leads-broker-st1-src.matic.com
+    source_uri: /uri-on-src
+    destination: leads-broker-st1-dsc.matic.com
+    destination_uri: /uri-on-dst
+
+  # custom URI test 2
+  - source: leads-broker-st1-src.matic.com
+    source_uri: /2nd-uri-on-src
+    destination: leads-broker-st1-dsc.matic.com
+    destination_uri: /2nd-uri-on-dst
+
+  # custom URI test 3
+  - source: leads-broker-st1-src-3.matic.com
+    source_uri: /uri-on-src
+    destination: leads-broker-st1-dsc-3.matic.com
+    destination_uri: /uri-on-dst
+
+ingress:
+  - host: leads-broker-st1.matic.com
+    gateway: external
+    destination: webserver
+
+  - host: leads-broker-st1.matic.link
+    gateway: internal
+    destination: webserver

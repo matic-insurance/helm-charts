@@ -62,7 +62,8 @@ spec:
             "envoy": {
               "init_config": {},
               "instances": [{
-                  "openmetrics_endpoint": "http://%%host%%:15090/stats/prometheus"
+                  "openmetrics_endpoint": "http://%%host%%:15090/stats/prometheus",
+                  "collect_server_info": false
               }]
             }
           }
@@ -92,10 +93,7 @@ spec:
           command:
             - "sh"
             - "-c"
-            - |
-              until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done;
-              echo 'Istio ready. Running the command...';
-              bundle exec puma -t 8:8
+            - "until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done; echo 'Istio ready. Running the command...';bundle exec puma -t 8:8"
           ports:
             - containerPort: 9292
           imagePullPolicy: IfNotPresent
@@ -148,7 +146,11 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/bin/sh", "-c", "sleep 15"]
+                command:
+                  - "sh"
+                  - "-c"
+                  - "echo 'Waiting for Application exit'; kill 1; wait 1; echo 'Application finished. Telling Istio to exit'; wget --quiet --post-data 'exit' -o /dev/null http://localhost:15020/quitquitquit;"
+          
           startupProbe:
             httpGet:
               path: /healthz/webserver
@@ -353,7 +355,7 @@ metadata:
     app.kubernetes.io/part-of: olb
     app.kubernetes.io/version: "release-1.2.3"
   annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook": pre-install
     "helm.sh/hook-weight": "-10"
     "helm.sh/resource-policy": keep
 ---

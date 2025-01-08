@@ -43,14 +43,96 @@ spec:
         app.kubernetes.io/instance: leads-broker-websockets
         app.kubernetes.io/version: "release-2023-08-30-01"
 ---
-# Source: application-mesh/templates/service-entry.yaml
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: egress-leads-broker-db
+spec:
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
+  subsets:
+  - name: default
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: egress-leads-broker-redis
+spec:
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
+  subsets:
+  - name: default
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: egress-ams-360
+spec:
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
+  subsets:
+  - name: default
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: egress-leads-broker-db
+spec:
+  selector:
+    istio: egress-gateway
+  servers:
+    - port:
+        number: 5432
+        name: tls
+        protocol: TLS
+      hosts:
+      - amp-staging.aws.db
+      tls:
+        mode: PASSTHROUGH
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: egress-leads-broker-redis
+spec:
+  selector:
+    istio: egress-gateway
+  servers:
+    - port:
+        number: 6379
+        name: tls
+        protocol: TLS
+      hosts:
+      - amp-staging.aws.redis
+      tls:
+        mode: PASSTHROUGH
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: egress-ams-360
+spec:
+  selector:
+    istio: egress-gateway
+  servers:
+    - port:
+        number: 443
+        name: tls
+        protocol: TLS
+      hosts:
+      - ams-360.vertafore.com
+      - policies.vertafore.com
+      tls:
+        mode: PASSTHROUGH
+---
+# Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: leads-broker-db
-  labels:
-    app.kubernetes.io/part-of: leads-broker
-    app.kubernetes.io/version: "release-2023-08-30-01"
+  name: egress-leads-broker-db
 spec:
   hosts:
     - amp-staging.aws.db
@@ -61,14 +143,11 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
-# Source: application-mesh/templates/service-entry.yaml
+# Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: leads-broker-redis
-  labels:
-    app.kubernetes.io/part-of: leads-broker
-    app.kubernetes.io/version: "release-2023-08-30-01"
+  name: egress-leads-broker-redis
 spec:
   hosts:
     - amp-staging.aws.redis
@@ -79,14 +158,11 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
-# Source: application-mesh/templates/service-entry.yaml
+# Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: ams-360
-  labels:
-    app.kubernetes.io/part-of: leads-broker
-    app.kubernetes.io/version: "release-2023-08-30-01"
+  name: egress-ams-360
 spec:
   hosts:
     - ams-360.vertafore.com
@@ -97,6 +173,130 @@ spec:
       protocol: TLS
   location: MESH_EXTERNAL
   resolution: DNS
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: egress-leads-broker-db
+spec:
+  exportTo:
+    - "*"
+  hosts:
+    - amp-staging.aws.db
+  gateways:
+    - mesh
+    - egress-leads-broker-db
+  tls:
+    - match:
+        - gateways:
+            - mesh
+          port: 5432
+          sniHosts:
+            - amp-staging.aws.db
+      route:
+        - destination:
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            port:
+              number: 5432
+          weight: 100
+    - match:
+        - gateways:
+            - egress-leads-broker-db
+          port: 443
+          sniHosts:
+            - amp-staging.aws.db
+      route:
+        - destination:
+            host: amp-staging.aws.db
+            port:
+              number: 5432
+          weight: 100
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: egress-leads-broker-redis
+spec:
+  exportTo:
+    - "*"
+  hosts:
+    - amp-staging.aws.redis
+  gateways:
+    - mesh
+    - egress-leads-broker-redis
+  tls:
+    - match:
+        - gateways:
+            - mesh
+          port: 6379
+          sniHosts:
+            - amp-staging.aws.redis
+      route:
+        - destination:
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            port:
+              number: 6379
+          weight: 100
+    - match:
+        - gateways:
+            - egress-leads-broker-redis
+          port: 443
+          sniHosts:
+            - amp-staging.aws.redis
+      route:
+        - destination:
+            host: amp-staging.aws.redis
+            port:
+              number: 6379
+          weight: 100
+---
+# Source: application-mesh/templates/egress.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: egress-ams-360
+spec:
+  exportTo:
+    - "*"
+  hosts:
+    - ams-360.vertafore.com
+    - policies.vertafore.com
+  gateways:
+    - mesh
+    - egress-ams-360
+  tls:
+    - match:
+        - gateways:
+            - mesh
+          port: 443
+          sniHosts:
+            - ams-360.vertafore.com
+            - policies.vertafore.com
+      route:
+        - destination:
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            port:
+              number: 443
+          weight: 100
+    - match:
+        - gateways:
+            - egress-ams-360
+          port: 443
+          sniHosts:
+            - ams-360.vertafore.com
+            - policies.vertafore.com
+      route:
+        - destination:
+            host: ams-360.vertafore.com
+            port:
+              number: 443
+        - destination:
+            host: policies.vertafore.com
+            port:
+              number: 443
+          weight: 100
 ---
 # Source: application-mesh/templates/virtual-service.gateway.yaml
 apiVersion: networking.istio.io/v1beta1

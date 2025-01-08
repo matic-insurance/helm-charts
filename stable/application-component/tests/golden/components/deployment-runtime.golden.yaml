@@ -53,10 +53,7 @@ spec:
           command:
             - "sh"
             - "-c"
-            - |
-              until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done;
-              echo 'Istio ready. Running the command...';
-              puma -p 9292
+            - "until wget --quiet --spider -o /dev/null http://localhost:15020/healthz/ready; do echo 'Waiting for Istio...'; sleep 1; done; echo 'Istio ready. Running the command...';puma -p 9292"
           imagePullPolicy: IfNotPresent
           env:
             - name: MY_APP
@@ -74,6 +71,14 @@ spec:
               readOnly: true
             - mountPath: /cache
               name: cache-vol
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - "echo 'Waiting for Application exit'; kill 1; wait 1; echo 'Application finished. Telling Istio to exit'; wget --quiet --post-data 'exit' -o /dev/null http://localhost:15020/quitquitquit;"
+          
           startupProbe:
             exec:
               command: [/app/ops/scripts/check_sidekiq.sh]
@@ -89,6 +94,20 @@ spec:
             requests:
               cpu: 400m
               memory: 500Mi
+        - name: sidecar
+          image: some_image
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "200Mi"
+              cpu: "100m"
+            limits:
+              memory: "700Mi"
+              cpu: "300m"
+          env:
+            - name: SOME_ENV
+              value: some_value
       volumes:
         - name: dynamic-sa-token
           projected:

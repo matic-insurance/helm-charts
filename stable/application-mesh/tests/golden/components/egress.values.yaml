@@ -5,17 +5,21 @@ global:
     version: "0.0.0"
 
 egress:
+
   - name: db
     type: postgres
     host: lead-broker-staging.aws.db
+
   - name: redis
     type: redis
     host: lead-broker-staging.aws.redis
+
   - name: some-external-website
     type: https
     hosts:
       - api.lob.com
       - auth.lob.com
+
   - full_name: kafka
     type: kafka
     host: kafka.server.com

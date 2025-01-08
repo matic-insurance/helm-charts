@@ -1,6 +1,6 @@
 {{- if .Values.global.mesh.enabled }}
 {{- range $_, $destination := .Values.destinations }}
-{{- if and $destination.settings $destination.settings.max_request_bytes }}
+{{- if ne (dig "settings" "max_request_bytes" "1048576" $destination) "1048576" }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter

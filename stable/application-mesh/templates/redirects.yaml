@@ -1,0 +1,79 @@
+{{- range $_, $redirect := .Values.redirects }}
+{{- $full_url := cat $redirect.source "" $redirect.source_uri -}}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ include "application-helpers.name" $ }}-{{ include "application-helpers.uniq-id" $full_url }}-redirects
+spec:
+  hosts:
+    - {{ $redirect.source }}
+  gateways:
+    - {{ $.Release.Namespace }}/{{ $redirect.source | replace "." "-" }}-redirects
+  http:
+    - match:
+        - uri:
+            prefix: {{ $redirect.source_uri | default "/" }}
+      redirect:
+        authority: {{ $redirect.destination }}
+        {{- with $redirect.destination_uri }}
+        uri: {{ . }}
+        {{- end }}
+        redirectCode: {{ $redirect.redirectCode | default "301" }}
+{{ end }}
+
+{{/* We need Certificate and Gateway for each unique domain
+in the redirects list */}}
+
+{{- $uniqueSources := dict }}
+{{- range .Values.redirects }}
+  {{- $source := .source }}
+  {{- if not (hasKey $uniqueSources $source) }}
+    {{- $_ := set $uniqueSources $source (list) }}
+  {{- end }}
+{{- end }}
+
+{{- range $source, $redirects := $uniqueSources }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ $source | replace "." "-" }}-redirects
+  namespace: istio-ingress
+spec:
+  dnsNames:
+    - {{ $source }}
+  issuerRef:
+    name: cert-manager-webhook-dnsimple-production
+    kind: ClusterIssuer
+  secretName: {{ $source | replace "." "-" }}-tls
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ $source | replace "." "-" }}-redirects
+  annotations:
+    # Do not create dns records for this resource
+    external-dns.alpha.kubernetes.io/controller: "ignored-resource"
+spec:
+  selector:
+    istio: ingress-public-gateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - {{ $source }}
+      tls:
+        httpsRedirect: true
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - {{ $source }}
+      tls:
+        mode: SIMPLE
+        credentialName: istio-ingress/{{ $source | replace "." "-" }}-tls
+{{- end }}
