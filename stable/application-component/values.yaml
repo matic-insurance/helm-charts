@@ -324,7 +324,7 @@ mesh:
   lifecycle:
     enabled: true
     # preStopHook to execute on shutdown
-    shutdownCommand: "curl -X POST http://localhost:15000/drain_listeners?graceful;sleep 10"
+    shutdownCommand: "sleep 10"
 
 # default contain default values for various resources
 defaults:
