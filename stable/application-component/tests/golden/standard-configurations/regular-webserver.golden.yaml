@@ -147,6 +147,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "sleep 15"]
+          
           startupProbe:
             httpGet:
               path: /healthz/webserver
