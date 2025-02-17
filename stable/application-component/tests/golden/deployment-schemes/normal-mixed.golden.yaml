@@ -54,10 +54,6 @@ spec:
             - name: dynamic-sa-token
               mountPath: /var/run/secrets/tokens
               readOnly: true
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 5"]
           startupProbe:
             httpGet:
               path: /healthz/webserver

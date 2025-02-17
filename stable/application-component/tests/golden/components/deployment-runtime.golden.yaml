@@ -71,10 +71,6 @@ spec:
               readOnly: true
             - mountPath: /cache
               name: cache-vol
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 5"]
           startupProbe:
             exec:
               command: [/app/ops/scripts/check_sidekiq.sh]
