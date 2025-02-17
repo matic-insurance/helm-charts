@@ -90,11 +90,7 @@ spec:
           command:
             - "sh"
             - "-c"
-            {{- if and .Values.global.mesh.enabled .Values.global.mesh.injectionEnabled .Values.mesh.lifecycle.enabled }}
-            - {{ print .Values.mesh.lifecycle.startupWaitCommand .Values.command | quote }}
-            {{- else }}
             - {{ .Values.command | quote }}
-            {{- end }}
           {{- end }}
           {{- if .Values.service.enabled }}
           ports:
@@ -151,13 +147,7 @@ spec:
                 command:
                   - "sh"
                   - "-c"
-                  - {{ .Values.mesh.lifecycle.shutdownWaitCommand | quote }}
-          {{ else if or (eq .Values.availability "critical") (eq .Values.availability "high") }}
-          {{- /* When availability important - wait 15 seconds before sending TERM signal. This allow upstream services to account for pod changes */}}
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 15"]
+                  - {{ .Values.mesh.lifecycle.shutdownCommand | quote }}
           {{- end}}
           {{- if .Values.probes.enabled }}
           {{- $probesType := .Values.probes.type }}
