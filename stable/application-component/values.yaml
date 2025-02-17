@@ -322,7 +322,7 @@ serviceAccount:
 mesh:
   # Configuration to orchestrate correct start/stop of components in a mesh
   lifecycle:
-    enabled: true
+    enabled: false
 
 # default contain default values for various resources
 defaults:
