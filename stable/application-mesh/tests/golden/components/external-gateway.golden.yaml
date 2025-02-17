@@ -5,6 +5,9 @@ kind: Certificate
 metadata:
   name: leads-broker-st1-matic-com
   namespace: istio-ingress
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   dnsNames:
     - "leads-broker-st1.matic.com"
@@ -19,6 +22,9 @@ kind: Certificate
 metadata:
   name: leads-broker-st1-tls-matic-com
   namespace: istio-ingress
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   dnsNames:
     - "leads-broker-st1-tls.matic.com"
@@ -33,6 +39,9 @@ kind: Certificate
 metadata:
   name: leads-broker-st1-matic-link
   namespace: istio-ingress
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   dnsNames:
     - "leads-broker-st1.matic.link"
@@ -49,6 +58,9 @@ metadata:
   annotations:
     # Do not create dns records for this resource
     external-dns.alpha.kubernetes.io/controller: "ignored-resource"
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   selector:
     istio: ingress-public-gateway
@@ -79,6 +91,9 @@ metadata:
   annotations:
     # Do not create dns records for this resource
     external-dns.alpha.kubernetes.io/controller: "ignored-resource"
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   selector:
     istio: ingress-public-gateway
@@ -115,6 +130,9 @@ metadata:
   annotations:
     # Do not create dns records for this resource
     external-dns.alpha.kubernetes.io/controller: "ignored-resource"
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
 spec:
   selector:
     istio: ingress-private-gateway

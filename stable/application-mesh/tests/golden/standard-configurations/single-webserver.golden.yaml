@@ -4,6 +4,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: leads-broker-webserver
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-02"
 spec:
   host: leads-broker-webserver.app-component-test00000.svc.cluster.local
   trafficPolicy:
@@ -190,6 +193,9 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "leads-broker-st2.matic.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-02"
 spec:
   hosts:
     - "leads-broker-st2.matic.com"
@@ -222,6 +228,9 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "leads-broker-st2.matic.link"
     external-dns.alpha.kubernetes.io/ttl: "60"
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-02"
 spec:
   hosts:
     - "leads-broker-st2.matic.link"
@@ -243,6 +252,9 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: leads-broker-webserver
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "release-2023-08-30-02"
 spec:
   hosts:
     - "leads-broker-webserver.app-component-test00000.svc.cluster.local"
