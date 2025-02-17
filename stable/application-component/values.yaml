@@ -323,8 +323,6 @@ mesh:
   # Configuration to orchestrate correct start/stop of components in a mesh
   lifecycle:
     enabled: true
-    # preStopHook to execute on shutdown
-    shutdownCommand: "sleep 10"
 
 # default contain default values for various resources
 defaults:
