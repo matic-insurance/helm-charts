@@ -130,10 +130,6 @@ spec:
               mountPath: "/app/config/app_settings.local.yml"
               subPath: "app_settings"
               readOnly: true
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh", "-c", "sleep 15"]
           startupProbe:
             httpGet:
               path: /healthz/webserver
