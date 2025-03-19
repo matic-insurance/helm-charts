@@ -45,6 +45,29 @@ additionalContainers:
       limits:
         memory: 700Mi
         cpu: 300m
+initContainers:
+  - name: init-container
+    image: init_image
+    restartPolicy: Always
+    ports:
+      - containerPort: 8080
+      - containerPort: 8081
+    probes:
+      enabled: true
+      readinessProbe:
+        enabled: true
+        path: "/healthz"
+        port: 3000
+        scheme: "HTTP"
+        initialDelaySeconds: 5
+        periodSeconds: 7
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "500m"
 
 probes:
   enabled: true
