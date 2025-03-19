@@ -246,6 +246,111 @@ spec:
           {{- end }}
         {{- end }}
         {{- end }}
+      {{- if .Values.initContainers }}
+      initContainers:
+      {{- range $index, $container := .Values.initContainers }}
+        - name: {{ $container.name }}
+          image: {{ $container.image }}
+          {{- if $container.restartPolicy }}
+          restartPolicy: {{ $container.restartPolicy }}
+          {{- end }}
+          {{- if $container.command }}
+          command:
+            {{- range $cmd := $container.command }}
+            - "{{ $cmd }}"
+            {{- end }}
+          {{- end }}
+          {{- if $container.args }}
+          args:
+            {{- range $arg := $container.args }}
+            - "{{ $arg }}"
+            {{- end }}
+          {{- end }}
+          {{- if $container.ports }}
+          ports:
+            {{- range $port := $container.ports }}
+            - containerPort: {{ $port.containerPort }}
+            {{- end }}
+          {{- end }}
+          {{- if $container.resources }}
+          resources:
+            requests:
+              memory: "{{ $container.resources.requests.memory }}"
+              cpu: "{{ $container.resources.requests.cpu }}"
+            limits:
+              memory: "{{ $container.resources.limits.memory }}"
+              cpu: "{{ $container.resources.limits.cpu }}"
+          {{- end }}
+          {{- if $container.env }}
+          env:
+            {{- range $env := $container.env }}
+            - name: {{ $env.name }}
+              value: "{{ $env.value }}"
+            {{- end }}
+          {{- end }}
+          {{- if $container.volumeMounts }}
+          volumeMounts:
+            {{- range $volumeMount := $container.volumeMounts }}
+            - name: {{ $volumeMount.name }}
+              mountPath: {{ $volumeMount.mountPath }}
+              {{- if $volumeMount.subPath }}
+              subPath: {{ $volumeMount.subPath }}
+              {{- end }}
+              readOnly: {{ $volumeMount.readOnly | default true }}
+            {{- end }}
+          {{- end }}
+          {{- if $container.probes.enabled }}
+          {{- if and $container.probes.startupProbe (eq $container.probes.startupProbe.enabled true) }}
+          startupProbe:
+            {{- if $container.probes.startupProbe.command }}
+            exec:
+              command: {{ $container.probes.startupProbe.command }}
+            {{- else }}
+            httpGet:
+              path: {{ $container.probes.startupProbe.path }}
+              port: {{ $container.probes.readinessProbe.port }}
+            {{- end}}
+            initialDelaySeconds: {{ default 5 $container.probes.startupProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ default 3 $container.probes.startupProbe.timeoutSeconds }}
+            periodSeconds: {{ default 10 $container.probes.startupProbe.periodSeconds }}
+            successThreshold: {{ default 1 $container.probes.startupProbe.successThreshold }}
+            failureThreshold: {{ default 3 $container.probes.startupProbe.failureThreshold }}
+          {{- end }}
+          {{- if and $container.probes.readinessProbe (eq $container.probes.readinessProbe.enabled true) }}
+          readinessProbe:
+            {{- if $container.probes.readinessProbe.command }}
+            exec:
+              command: {{ $container.probes.readinessProbe.command }}
+            {{- else }}
+            httpGet:
+              path: {{ $container.probes.readinessProbe.path }}
+              port: {{ $container.probes.readinessProbe.port }}
+            {{- end}}
+            initialDelaySeconds: {{ default 5 $container.probes.readinessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ default 3 $container.probes.readinessProbe.timeoutSeconds }}
+            periodSeconds: {{ default 10 $container.probes.readinessProbe.periodSeconds }}
+            successThreshold: {{ default 1 $container.probes.readinessProbe.successThreshold }}
+            failureThreshold: {{ default 3 $container.probes.readinessProbe.failureThreshold }}
+          {{- end }}
+          {{- if and $container.probes.livenessProbe (eq $container.probes.livenessProbe.enabled true) }}
+          livenessProbe:
+            {{- if $container.probes.livenessProbe.command }}
+            exec:
+              command: {{ $container.probes.livenessProbe.command }}
+            {{- else }}
+            httpGet:
+              path: {{ $container.probes.livenessProbe.path }}
+              port: {{ $container.probes.readinessProbe.port }}
+            {{- end}}
+            initialDelaySeconds: {{ default 5 $container.probes.livenessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ default 3 $container.probes.livenessProbe.timeoutSeconds }}
+            periodSeconds: {{ default 10 $container.probes.livenessProbe.periodSeconds }}
+            successThreshold: {{ default 1 $container.probes.livenessProbe.successThreshold }}
+            failureThreshold: {{ default 3 $container.probes.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
       volumes:
           {{- /* Mount service account token to hardcoded path for backward compatibility with settings_reader-vault_resolver <= 0.4.9*/}}
           {{- /* should be removed once we make settings_reader-vault_resolver read token from default location or support custom token location*/}}

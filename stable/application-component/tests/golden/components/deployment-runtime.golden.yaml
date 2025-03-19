@@ -100,6 +100,29 @@ spec:
           env:
             - name: SOME_ENV
               value: some_value
+      initContainers:
+        - name: init-container
+          image: init_image
+          restartPolicy: Always
+          ports:
+            - containerPort: 8080
+            - containerPort: 8081
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 5
+            timeoutSeconds: 3
+            periodSeconds: 7
+            successThreshold: 1
+            failureThreshold: 3
       volumes:
         - name: dynamic-sa-token
           projected:
