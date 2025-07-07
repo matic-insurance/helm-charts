@@ -91,6 +91,14 @@ Sentry environment variables to be used by libraries
 {{- end }}
 
 {{/*
+Vault environment variables to be used by libraries
+*/}}
+{{- define "application-helpers.vault.env" -}}
+- name: VAULT_AUTH_BACKEND
+  value: {{ .Values.global.eksClusterName }}
+{{- end }}
+
+{{/*
 Common Selector labels
 */}}
 {{- define "application-helpers.selectorLabels" -}}
