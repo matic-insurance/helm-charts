@@ -95,7 +95,7 @@ Vault environment variables to be used by libraries
 */}}
 {{- define "application-helpers.vault.env" -}}
 - name: VAULT_AUTH_BACKEND
-  value: {{ .Values.global.eksClusterName }}
+  value: {{ .Values.global.eksClusterName | quote }}
 {{- end }}
 
 {{/*
