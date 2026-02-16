@@ -437,7 +437,7 @@ defaults:
       # requires uneven distribution across hosts
       # asks pods to be distributed across zones
       spot:
-        - maxSkew: 1
+        - maxSkew: 2
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: DoNotSchedule
         - maxSkew: 1
