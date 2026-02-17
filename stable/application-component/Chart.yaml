@@ -18,6 +18,7 @@ type: application
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 1.2.21
+
 # This field should not be changed/fiddled. For Application version we use Values.version field
 appVersion: "0.0.0"
 
