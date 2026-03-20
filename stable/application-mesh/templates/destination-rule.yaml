@@ -11,8 +11,24 @@ metadata:
 spec:
   host: {{ include "application-mesh.service-host" (merge (dict "component" $destination.component) $) }}
   trafficPolicy:
+    {{- if (dig "stickySession" "enabled" false $destination) }}
     loadBalancer:
-      simple: LEAST_REQUEST
+      consistentHash:
+        {{- $stickyType := dig "stickySession" "type" (dig "stickySession" "type" "sourceIp" $.Values.defaults.destination) $destination }}
+        {{- if eq $stickyType "sourceIp" }}
+        useSourceIp: true
+        {{- else if eq $stickyType "httpCookie" }}
+        httpCookie:
+          name: {{ dig "stickySession" "httpCookie" "name" (dig "stickySession" "httpCookie" "name" "istio-session" $.Values.defaults.destination) $destination | quote }}
+          ttl: {{ dig "stickySession" "httpCookie" "ttl" (dig "stickySession" "httpCookie" "ttl" "3600s" $.Values.defaults.destination) $destination }}
+        {{- else if eq $stickyType "httpHeaderName" }}
+        httpHeaderName: {{ dig "stickySession" "httpHeaderName" (dig "stickySession" "httpHeaderName" "x-session-id" $.Values.defaults.destination) $destination | quote }}
+        {{- end }}
+    {{- else }}
+    {{- $defaultLB := dig "loadBalancer" "LEAST_REQUEST" $.Values.defaults.destination }}
+    loadBalancer:
+      simple: {{ dig "loadBalancer" $defaultLB $destination }}
+    {{- end }}
   subsets:
     - name: all-versions # Route traffic to all pods regardless of the deployed version. Current deployment model.
       labels:
