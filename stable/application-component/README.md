@@ -60,7 +60,7 @@ webserver:
       - host: olb.matic.com
         type: external
         tls: matic.com-tls
-    
+
   # Create service account in one of the components
   serviceAccount:
     create: true
@@ -88,7 +88,7 @@ Additional documentation can be found in Confluence:
 
 ## Full application example
 
-Below is example configuration for regular app at matic 
+Below is example configuration for regular app at matic
 ```yaml
 global:
   application:
@@ -98,7 +98,7 @@ global:
 
   applicationImage:
     repository: matic/olb
-    
+
   applicationMonitoring:
     datadog: true
     sentry: true
@@ -133,7 +133,7 @@ webserver:
       - host: olb.matic.link
         type: internal
         tls: matic.link-tls
-  
+
       - host: olb.matic.com
         type: external
         deny_locations:
@@ -176,7 +176,7 @@ sidekiq:
     readinessProbe:
       enabled: true
       command: /app/ops/scripts/check_sidekiq.sh
-  
+
   autoscaling:
     enabled: true
     minReplicas: 1
