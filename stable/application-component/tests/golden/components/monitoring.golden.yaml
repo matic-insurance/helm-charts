@@ -67,7 +67,7 @@ spec:
         runAsUser: 1000
       containers:
         - name: myproduct-webserver
-          image: "bitnami/ruby"
+          image: "bitnami/ruby:0.0.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: DD_AGENT_HOST

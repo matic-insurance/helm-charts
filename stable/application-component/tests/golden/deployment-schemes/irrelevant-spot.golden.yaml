@@ -48,7 +48,7 @@ spec:
         runAsUser: 1000
       containers:
         - name: myproduct-webserver
-          image: "bitnami/ruby"
+          image: "bitnami/ruby:"
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: dynamic-sa-token

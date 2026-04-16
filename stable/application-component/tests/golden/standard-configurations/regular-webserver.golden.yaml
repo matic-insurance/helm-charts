@@ -181,7 +181,7 @@ spec:
               memory: 2100Mi
             requests:
               cpu: 600m
-              memory: 700Mi
+              memory: 1500Mi
       volumes:
         - name: dynamic-sa-token
           projected:
