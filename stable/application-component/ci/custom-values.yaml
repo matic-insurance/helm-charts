@@ -2,7 +2,7 @@ global:
   application:
     product: myproduct
     environment: test
-    version: 3.1.2
+    version: latest
 
   applicationImage:
     repository: "bitnami/ruby"
