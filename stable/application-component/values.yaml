@@ -365,7 +365,7 @@ defaults:
     high:
       # Minimal requirements for pod
       requests:
-        memory: 700Mi
+        memory: 1500Mi
         cpu: 600m
       # Maximum resources for pod
       limits:
