@@ -39,7 +39,7 @@ metadata:
     tags.datadoghq.com/version: "release-1.2.3"
 spec:
   minReadySeconds: 1
-  progressDeadlineSeconds: 120
+  progressDeadlineSeconds: 600
   revisionHistoryLimit: 5
   strategy:
     rollingUpdate:
