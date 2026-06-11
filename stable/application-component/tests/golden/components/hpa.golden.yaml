@@ -111,7 +111,7 @@ metadata:
     app.kubernetes.io/version: "0.0.0"
 spec:
   minReadySeconds: 1
-  progressDeadlineSeconds: 120
+  progressDeadlineSeconds: 600
   revisionHistoryLimit: 5
   strategy:
     rollingUpdate:

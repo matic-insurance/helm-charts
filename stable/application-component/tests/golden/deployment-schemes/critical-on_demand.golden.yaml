@@ -14,7 +14,7 @@ metadata:
 spec:
   replicas: 3
   minReadySeconds: 1
-  progressDeadlineSeconds: 120
+  progressDeadlineSeconds: 600
   revisionHistoryLimit: 5
   strategy:
     rollingUpdate:

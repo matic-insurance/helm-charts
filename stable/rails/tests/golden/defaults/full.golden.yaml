@@ -50,7 +50,7 @@ spec:
       environment: staging
       product: myproduct
   minReadySeconds: 1
-  progressDeadlineSeconds: 120
+  progressDeadlineSeconds: 600
   revisionHistoryLimit: 5
   strategy:
     type: RollingUpdate
