@@ -253,7 +253,7 @@ spec:
       initContainers:
       {{- range $index, $container := .Values.initContainers }}
         - name: {{ $container.name }}
-          image: {{ $container.image }}
+          image: {{ $container.image | default (include "application-helpers.docker-image" $) }}
           {{- if $container.restartPolicy }}
           restartPolicy: {{ $container.restartPolicy }}
           {{- end }}
