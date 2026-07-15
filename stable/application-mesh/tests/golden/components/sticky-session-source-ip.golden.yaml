@@ -1,0 +1,23 @@
+---
+# Source: application-mesh/templates/destination-rule.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: leads-broker-webserver
+  labels:
+    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/version: "0.0.0"
+spec:
+  host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        useSourceIp: true
+  subsets:
+    - name: all-versions # Route traffic to all pods regardless of the deployed version. Current deployment model.
+      labels:
+        app.kubernetes.io/instance: leads-broker-webserver
+    - name: current-version # Should be used for proper blue-green deployment procedures
+      labels:
+        app.kubernetes.io/instance: leads-broker-webserver
+        app.kubernetes.io/version: "0.0.0"

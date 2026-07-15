@@ -56,6 +56,21 @@ func TestMeshGoldenTemplates(t *testing.T) {
 			Templates:      []string{"templates/envoy-filter.yaml"},
 		},
 		{
+			GoldenFileName: "components/sticky-session-source-ip.golden.yaml",
+			ValuesFiles:    []string{"components/sticky-session-source-ip.values.yaml"},
+			Templates:      []string{"templates/destination-rule.yaml"},
+		},
+		{
+			GoldenFileName: "components/sticky-session-cookie.golden.yaml",
+			ValuesFiles:    []string{"components/sticky-session-cookie.values.yaml"},
+			Templates:      []string{"templates/destination-rule.yaml"},
+		},
+		{
+			GoldenFileName: "components/sticky-session-header.golden.yaml",
+			ValuesFiles:    []string{"components/sticky-session-header.values.yaml"},
+			Templates:      []string{"templates/destination-rule.yaml"},
+		},
+		{
 			GoldenFileName: "components/external-gateway.golden.yaml",
 			ValuesFiles:    []string{"components/external-gateway.values.yaml"},
 			Templates:      []string{"templates/certificate.yaml", "templates/gateway.yaml"},

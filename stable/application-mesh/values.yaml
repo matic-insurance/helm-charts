@@ -40,6 +40,21 @@ destinations:
     # loadBalancer - what load balance algorithm to use (LEAST_REQUEST, ROUND_ROBIN, RANDOM)
     # https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-SimpleLB
     loadBalancer: LEAST_REQUEST
+    # Sticky session (consistent hash) configuration for routing requests from same client to same pod
+    # https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-ConsistentHashLB
+    stickySession:
+      # Enable sticky sessions. When enabled, loadBalancer simple setting is replaced with consistentHash
+      enabled: false
+      # Type of consistent hash to use: sourceIp, httpCookie, or httpHeaderName
+      type: sourceIp
+      # Configuration for httpCookie type - Istio generates and manages the cookie automatically
+      httpCookie:
+        # Name of the cookie to use for hashing
+        name: istio-session
+        # Lifetime of the cookie. Specify as duration string (e.g. 3600s, 1h)
+        ttl: 3600s
+      # Header name used for hashing when type is httpHeaderName
+      httpHeaderName: x-session-id
     # Additional destination settings
     settings:
       # The proxy-body-size nginx annotation analogue, default "1048576" - equivalent of 1mb in bytes
@@ -109,6 +124,15 @@ defaults:
     # loadBalancer - what load balance algorithm to use (LEAST_REQUEST, ROUND_ROBIN, RANDOM)
     # https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-SimpleLB
     loadBalancer: LEAST_REQUEST
+    # Default sticky session configuration
+    # https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-ConsistentHashLB
+    stickySession:
+      enabled: false
+      type: sourceIp
+      httpCookie:
+        name: istio-session
+        ttl: 3600s
+      httpHeaderName: x-session-id
 
   # Default egress entry parameters
   egress:
