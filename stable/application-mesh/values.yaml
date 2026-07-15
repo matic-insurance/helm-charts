@@ -97,15 +97,29 @@ defaults:
     deny_locations: []
   # Default destination configurations
   destination:
-    # Configurations for tcp connection pool
-    # https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings
+    # TCP connection pool settings
+    # https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings-TCPSettings
     connectionPool:
-      # maxConnections - Maximum number of connections that can be open from source pod to this destination
-      # https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings-TCPSettings
+      # Maximum number of connections that can be open from source pod to this destination
       maxConnections: 200
-      # connectionTimeout - How long should we wait to establish connection
-      # https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings-TCPSettings
+      # How long Envoy waits to establish a TCP connection
       connectionTimeout: 5s
+    # HTTP connection pool settings
+    # https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings-HTTPSettings
+    # idleTimeout caps keep-alive lifetime on the upstream side; keep below the longest
+    # callee pod lifetime so caller pools rotate connections naturally and don't accumulate
+    # entries pointing at terminated pods.
+    http:
+      http1MaxPendingRequests: 1024
+      maxRequestsPerConnection: 1000
+      idleTimeout: 60s
+    # Outlier ejection: temporarily remove an upstream endpoint after consecutive 5xx
+    # https://istio.io/latest/docs/reference/config/networking/destination-rule/#OutlierDetection
+    outlierDetection:
+      consecutive5xxErrors: 5
+      interval: 10s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 50
     # loadBalancer - what load balance algorithm to use (LEAST_REQUEST, ROUND_ROBIN, RANDOM)
     # https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-SimpleLB
     loadBalancer: LEAST_REQUEST

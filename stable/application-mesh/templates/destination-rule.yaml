@@ -1,5 +1,10 @@
 {{- if .Values.global.mesh.enabled }}
+{{- $destDefaults := $.Values.defaults.destination }}
 {{- range $_, $destination := .Values.destinations }}
+{{- $tcp := merge (dict) ($destination.connectionPool | default dict) ($destDefaults.connectionPool | default dict) }}
+{{- $http := merge (dict) ($destination.http | default dict) ($destDefaults.http | default dict) }}
+{{- $outlier := merge (dict) ($destination.outlierDetection | default dict) ($destDefaults.outlierDetection | default dict) }}
+{{- $lb := default (default "LEAST_REQUEST" $destDefaults.loadBalancer) $destination.loadBalancer }}
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
@@ -11,8 +16,21 @@ metadata:
 spec:
   host: {{ include "application-mesh.service-host" (merge (dict "component" $destination.component) $) }}
   trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: {{ $tcp.maxConnections }}
+        connectTimeout: {{ $tcp.connectionTimeout }}
+      http:
+        http1MaxPendingRequests: {{ $http.http1MaxPendingRequests }}
+        maxRequestsPerConnection: {{ $http.maxRequestsPerConnection }}
+        idleTimeout: {{ $http.idleTimeout }}
+    outlierDetection:
+      consecutive5xxErrors: {{ $outlier.consecutive5xxErrors }}
+      interval: {{ $outlier.interval }}
+      baseEjectionTime: {{ $outlier.baseEjectionTime }}
+      maxEjectionPercent: {{ $outlier.maxEjectionPercent }}
     loadBalancer:
-      simple: LEAST_REQUEST
+      simple: {{ $lb }}
   subsets:
     - name: all-versions # Route traffic to all pods regardless of the deployed version. Current deployment model.
       labels:
