@@ -9,7 +9,7 @@ spec:
   dnsNames:
     - leads-broker-st1-src-2.matic.com
   issuerRef:
-    name: cert-manager-webhook-dnsimple-production
+    name: letsencrypt-production
     kind: ClusterIssuer
   secretName: leads-broker-st1-src-2-matic-com-tls
 ---
@@ -23,7 +23,7 @@ spec:
   dnsNames:
     - leads-broker-st1-src-3.matic.com
   issuerRef:
-    name: cert-manager-webhook-dnsimple-production
+    name: letsencrypt-production
     kind: ClusterIssuer
   secretName: leads-broker-st1-src-3-matic-com-tls
 ---
@@ -37,7 +37,7 @@ spec:
   dnsNames:
     - leads-broker-st1-src.matic.com
   issuerRef:
-    name: cert-manager-webhook-dnsimple-production
+    name: letsencrypt-production
     kind: ClusterIssuer
   secretName: leads-broker-st1-src-matic-com-tls
 ---
