@@ -44,7 +44,7 @@ spec:
   dnsNames:
     - {{ $source }}
   issuerRef:
-    name: cert-manager-webhook-dnsimple-production
+    name: letsencrypt-production
     kind: ClusterIssuer
   secretName: {{ $source | replace "." "-" }}-tls
 ---

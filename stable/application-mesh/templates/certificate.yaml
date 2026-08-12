@@ -19,7 +19,7 @@ spec:
     - {{ $host | quote }}
     {{- end }}
   issuerRef:
-    name: cert-manager-webhook-dnsimple-production
+    name: letsencrypt-production
     kind: ClusterIssuer
   secretName: {{ $host | replace "." "-" }}-tls
 {{- end }}
