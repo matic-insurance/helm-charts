@@ -3,38 +3,38 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-webserver
+  name: best-product-webserver
   labels:
-    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/part-of: best-product
     app.kubernetes.io/version: "0.0.0"
 spec:
   hosts:
-    - "leads-broker-webserver.app-component-test00000.svc.cluster.local"
+    - "best-product-webserver.app-component-test00000.svc.cluster.local"
   gateways:
     - mesh
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
+            host: "best-product-webserver.app-component-test00000.svc.cluster.local"
             subset: all-versions
 ---
 # Source: application-mesh/templates/virtual-service.gateway.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-83d909aa
+  name: best-product-9bf40aa9
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "leads-broker-st1.matic.com"
+    external-dns.alpha.kubernetes.io/hostname: "best-product-st1.example.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
   labels:
-    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/part-of: best-product
     app.kubernetes.io/version: "0.0.0"
 spec:
   hosts:
-    - "leads-broker-st1.matic.com"
+    - "best-product-st1.example.com"
   gateways:
-    - istio-ingress/external-matic-com
+    - istio-ingress/external-example-com
   http:
     - name: deny-ingress-spec
       match:
@@ -52,7 +52,7 @@ spec:
             prefix: /public
       route:
         - destination:
-            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
+            host: "best-product-webserver.app-component-test00000.svc.cluster.local"
             subset: all-versions
           
     - name: deny-everything-except-allowed

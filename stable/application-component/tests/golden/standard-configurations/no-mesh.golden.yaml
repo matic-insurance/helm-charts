@@ -218,7 +218,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
     nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"
     nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
-    external-dns.alpha.kubernetes.io/hostname: "olb.matic.link"
+    external-dns.alpha.kubernetes.io/hostname: "olb.example.link"
     nginx.ingress.kubernetes.io/configuration-snippet: |
         opentracing_tag "service.name" "olb-nginx";
         proxy_set_header X-Request-Start "t=${msec}";
@@ -231,7 +231,7 @@ metadata:
     app.kubernetes.io/version: "release-1.2.3"
 spec:
   rules:
-    - host: olb.matic.link
+    - host: olb.example.link
       http:
         paths:
           - backend:
@@ -243,8 +243,8 @@ spec:
             pathType: Prefix
   tls:
     - hosts:
-        - olb.matic.link
-      secretName: matic.link-tls
+        - olb.example.link
+      secretName: example.link-tls
 ---
 # Source: application-component/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
@@ -259,7 +259,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-next-upstream: "error timeout non_idempotent"
     nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"
     nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
-    external-dns.alpha.kubernetes.io/hostname: "olb.matic.com"
+    external-dns.alpha.kubernetes.io/hostname: "olb.example.com"
     nginx.ingress.kubernetes.io/server-snippet: |
       location /admin { deny all; }
     nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -274,7 +274,7 @@ metadata:
     app.kubernetes.io/version: "release-1.2.3"
 spec:
   rules:
-    - host: olb.matic.com
+    - host: olb.example.com
       http:
         paths:
           - backend:
@@ -286,8 +286,8 @@ spec:
             pathType: Prefix
   tls:
     - hosts:
-        - olb.matic.com
-      secretName: matic.com-tls
+        - olb.example.com
+      secretName: example.com-tls
 ---
 # Source: application-component/templates/datadog-metric.yaml
 apiVersion: datadoghq.com/v1alpha1

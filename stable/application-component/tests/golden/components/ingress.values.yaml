@@ -19,7 +19,7 @@ service:
 ingress:
   enabled: true
   list:
-    - host: abc.matic.com
+    - host: abc.example.com
       additional_hosts:
         - admin.example.com
         - abc-live.example.com

@@ -1,6 +1,6 @@
 global:
   application:
-    product: leads-broker
+    product: best-product
     environment: test
     version: "release-2023-08-30-02"
 
@@ -11,12 +11,12 @@ destinations:
   - component: webserver
 
 ingress:
-  - host: leads-broker-st2.matic.com
-    gateway: wildcard-matic-com
+  - host: best-product-st2.example.com
+    gateway: wildcard-example-com
     destination: webserver
     deny_locations:
       - /admin
-  - host: leads-broker-st2.matic.link
+  - host: best-product-st2.example.link
     gateway: wildcard-matic-link
     destination: webserver
 
@@ -25,7 +25,7 @@ egress:
   allowlist:
     - name: db
       type: postgres
-      host: leads-broker-staging.aws.db
-    - full_name: datalot
+      host: best-product-staging.aws.db
+    - full_name: datagotix
       type: https
-      host: datalot.com
+      host: datagotix.com

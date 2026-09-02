@@ -1,6 +1,6 @@
 global:
   application:
-    product: leads-broker
+    product: best-product
     environment: test
     version: "0.0.0"
 
@@ -8,8 +8,8 @@ destinations:
   - component: webserver
 
 ingress:
-  - host: leads-broker-st1.matic.com
-    gateway: external-matic-com
+  - host: best-product-st1.example.com
+    gateway: external-example-com
     destination: webserver
     deny_locations:
       - /admin

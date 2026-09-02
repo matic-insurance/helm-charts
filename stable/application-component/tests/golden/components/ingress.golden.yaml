@@ -13,7 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-next-upstream-tries: "8"
     nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
     nginx.ingress.kubernetes.io/server-alias: "admin.example.com, abc-live.example.com"
-    external-dns.alpha.kubernetes.io/hostname: "admin.example.com, abc-live.example.com, abc.matic.com"
+    external-dns.alpha.kubernetes.io/hostname: "admin.example.com, abc-live.example.com, abc.example.com"
     nginx.ingress.kubernetes.io/server-snippet: |
       location /uploads/document { deny all; }
     
@@ -27,7 +27,7 @@ metadata:
     app.kubernetes.io/version: "0.0.0"
 spec:
   rules:
-    - host: abc.matic.com
+    - host: abc.example.com
       http:
         paths:
           - backend:
@@ -39,7 +39,7 @@ spec:
             pathType: Prefix
   tls:
     - hosts:
-        - abc.matic.com
+        - abc.example.com
       secretName: example.com-tls
 ---
 # Source: application-component/templates/ingress.yaml

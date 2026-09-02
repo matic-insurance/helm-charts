@@ -50,7 +50,7 @@ redirects: []
 # Inbound endpoints for application
 ingress:
   # Domain for ingress
-  - host: example.matic.com
+  - host: example.com
     # List of additional domains to support by this ingress
     additional_hosts: []
     # Gateway to attach for this ingress. Supported list:
