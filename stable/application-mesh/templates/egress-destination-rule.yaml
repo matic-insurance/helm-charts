@@ -4,7 +4,7 @@ kind: DestinationRule
 metadata:
   name: istio-egress-gateway-disable-mtls
 spec:
-  host: istio-egressgateway.istio-egress.svc.cluster.local
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
   exportTo:
   - "."
   trafficPolicy:

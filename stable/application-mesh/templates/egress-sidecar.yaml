@@ -13,7 +13,7 @@ spec:
     mode: REGISTRY_ONLY
   egress:
   - hosts:
-    - istio-egress/*
+    - istio-ingress/*
     - istio-system/*
 {{- range $_, $egress := $.Values.egress.allowlist }}
 {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}

@@ -27,7 +27,7 @@ kind: DestinationRule
 metadata:
   name: istio-egress-gateway-disable-mtls
 spec:
-  host: istio-egressgateway.istio-egress.svc.cluster.local
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
   exportTo:
   - "."
   trafficPolicy:
@@ -41,7 +41,7 @@ metadata:
   name: egress-leads-broker-db
 spec:
   selector:
-    istio: egressgateway
+    istio: egress-gateway
   servers:
     - port:
         number: 5432
@@ -59,7 +59,7 @@ metadata:
   name: egress-datalot
 spec:
   selector:
-    istio: egressgateway
+    istio: egress-gateway
   servers:
     - port:
         number: 443
@@ -113,7 +113,7 @@ spec:
     mode: REGISTRY_ONLY
   egress:
   - hosts:
-    - istio-egress/*
+    - istio-ingress/*
     - istio-system/*
     - "./leads-broker-staging.aws.db"
     - "./datalot.com"
@@ -142,7 +142,7 @@ spec:
             - leads-broker-staging.aws.db
       route:
         - destination:
-            host: istio-egressgateway.istio-egress.svc.cluster.local
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
               number: 5432
           weight: 100
@@ -183,7 +183,7 @@ spec:
             - datalot.com
       route:
         - destination:
-            host: istio-egressgateway.istio-egress.svc.cluster.local
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
               number: 443
           weight: 100

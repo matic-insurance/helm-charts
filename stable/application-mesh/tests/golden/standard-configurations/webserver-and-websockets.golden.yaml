@@ -49,7 +49,7 @@ kind: DestinationRule
 metadata:
   name: istio-egress-gateway-disable-mtls
 spec:
-  host: istio-egressgateway.istio-egress.svc.cluster.local
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
   exportTo:
   - "."
   trafficPolicy:
@@ -63,14 +63,14 @@ metadata:
   name: egress-leads-broker-db
 spec:
   selector:
-    istio: egressgateway
+    istio: egress-gateway
   servers:
     - port:
         number: 5432
         name: tls
         protocol: TLS
       hosts:
-      - amp-staging.aws.db
+      - abc-staging.aws.db
       tls:
         mode: PASSTHROUGH
 ---
@@ -81,14 +81,14 @@ metadata:
   name: egress-leads-broker-redis
 spec:
   selector:
-    istio: egressgateway
+    istio: egress-gateway
   servers:
     - port:
         number: 6379
         name: tls
         protocol: TLS
       hosts:
-      - amp-staging.aws.redis
+      - abc-staging.aws.redis
       tls:
         mode: PASSTHROUGH
 ---
@@ -99,15 +99,15 @@ metadata:
   name: egress-ams-360
 spec:
   selector:
-    istio: egressgateway
+    istio: egress-gateway
   servers:
     - port:
         number: 443
         name: tls
         protocol: TLS
       hosts:
-      - ams-360.vertafore.com
-      - policies.vertafore.com
+      - api.openai.com
+      - api.slack.com
       tls:
         mode: PASSTHROUGH
 ---
@@ -118,7 +118,7 @@ metadata:
   name: egress-leads-broker-db
 spec:
   hosts:
-    - amp-staging.aws.db
+    - abc-staging.aws.db
   ports:
     - name: postgres
       number: 5432
@@ -133,7 +133,7 @@ metadata:
   name: egress-leads-broker-redis
 spec:
   hosts:
-    - amp-staging.aws.redis
+    - abc-staging.aws.redis
   ports:
     - name: redis
       number: 6379
@@ -148,8 +148,8 @@ metadata:
   name: egress-ams-360
 spec:
   hosts:
-    - ams-360.vertafore.com
-    - policies.vertafore.com
+    - api.openai.com
+    - api.slack.com
   ports:
     - name: https
       number: 443
@@ -170,12 +170,12 @@ spec:
     mode: REGISTRY_ONLY
   egress:
   - hosts:
-    - istio-egress/*
+    - istio-ingress/*
     - istio-system/*
-    - "./amp-staging.aws.db"
-    - "./amp-staging.aws.redis"
-    - "./ams-360.vertafore.com"
-    - "./policies.vertafore.com"
+    - "./abc-staging.aws.db"
+    - "./abc-staging.aws.redis"
+    - "./api.openai.com"
+    - "./api.slack.com"
 ---
 # Source: application-mesh/templates/egress-sidecar.yaml
 apiVersion: networking.istio.io/v1
@@ -190,12 +190,12 @@ spec:
     mode: REGISTRY_ONLY
   egress:
   - hosts:
-    - istio-egress/*
+    - istio-ingress/*
     - istio-system/*
-    - "./amp-staging.aws.db"
-    - "./amp-staging.aws.redis"
-    - "./ams-360.vertafore.com"
-    - "./policies.vertafore.com"
+    - "./abc-staging.aws.db"
+    - "./abc-staging.aws.redis"
+    - "./api.openai.com"
+    - "./api.slack.com"
 ---
 # Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -206,7 +206,7 @@ spec:
   exportTo:
     - "*"
   hosts:
-    - amp-staging.aws.db
+    - abc-staging.aws.db
   gateways:
     - mesh
     - egress-leads-broker-db
@@ -218,17 +218,17 @@ spec:
             app.kubernetes.io/instance: leads-broker-webserver
           port: 5432
           sniHosts:
-            - amp-staging.aws.db
+            - abc-staging.aws.db
         - gateways:
             - mesh
           sourceLabels:
             app.kubernetes.io/instance: leads-broker-websockets
           port: 5432
           sniHosts:
-            - amp-staging.aws.db
+            - abc-staging.aws.db
       route:
         - destination:
-            host: istio-egressgateway.istio-egress.svc.cluster.local
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
               number: 5432
           weight: 100
@@ -237,10 +237,10 @@ spec:
             - egress-leads-broker-db
           port: 443
           sniHosts:
-            - amp-staging.aws.db
+            - abc-staging.aws.db
       route:
         - destination:
-            host: amp-staging.aws.db
+            host: abc-staging.aws.db
             port:
               number: 5432
           weight: 100
@@ -254,7 +254,7 @@ spec:
   exportTo:
     - "*"
   hosts:
-    - amp-staging.aws.redis
+    - abc-staging.aws.redis
   gateways:
     - mesh
     - egress-leads-broker-redis
@@ -266,17 +266,17 @@ spec:
             app.kubernetes.io/instance: leads-broker-webserver
           port: 6379
           sniHosts:
-            - amp-staging.aws.redis
+            - abc-staging.aws.redis
         - gateways:
             - mesh
           sourceLabels:
             app.kubernetes.io/instance: leads-broker-websockets
           port: 6379
           sniHosts:
-            - amp-staging.aws.redis
+            - abc-staging.aws.redis
       route:
         - destination:
-            host: istio-egressgateway.istio-egress.svc.cluster.local
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
               number: 6379
           weight: 100
@@ -285,10 +285,10 @@ spec:
             - egress-leads-broker-redis
           port: 443
           sniHosts:
-            - amp-staging.aws.redis
+            - abc-staging.aws.redis
       route:
         - destination:
-            host: amp-staging.aws.redis
+            host: abc-staging.aws.redis
             port:
               number: 6379
           weight: 100
@@ -302,8 +302,8 @@ spec:
   exportTo:
     - "*"
   hosts:
-    - ams-360.vertafore.com
-    - policies.vertafore.com
+    - api.openai.com
+    - api.slack.com
   gateways:
     - mesh
     - egress-ams-360
@@ -315,19 +315,19 @@ spec:
             app.kubernetes.io/instance: leads-broker-webserver
           port: 443
           sniHosts:
-            - ams-360.vertafore.com
-            - policies.vertafore.com
+            - api.openai.com
+            - api.slack.com
         - gateways:
             - mesh
           sourceLabels:
             app.kubernetes.io/instance: leads-broker-websockets
           port: 443
           sniHosts:
-            - ams-360.vertafore.com
-            - policies.vertafore.com
+            - api.openai.com
+            - api.slack.com
       route:
         - destination:
-            host: istio-egressgateway.istio-egress.svc.cluster.local
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
               number: 443
           weight: 100
@@ -336,15 +336,15 @@ spec:
             - egress-ams-360
           port: 443
           sniHosts:
-            - ams-360.vertafore.com
-            - policies.vertafore.com
+            - api.openai.com
+            - api.slack.com
       route:
         - destination:
-            host: ams-360.vertafore.com
+            host: api.openai.com
             port:
               number: 443
         - destination:
-            host: policies.vertafore.com
+            host: api.slack.com
             port:
               number: 443
           weight: 100
@@ -353,20 +353,20 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-52ce0794
+  name: leads-broker-45be0715
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "admin-st1.matic.com, broker-st1.matic.com, api-amp-st1.matic.com"
+    external-dns.alpha.kubernetes.io/hostname: "admin.example.com, broker.example.com, api-abc.example.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
   labels:
     app.kubernetes.io/part-of: leads-broker
     app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   hosts:
-    - "admin-st1.matic.com"
-    - "broker-st1.matic.com"
-    - "api-amp-st1.matic.com"
+    - "admin.example.com"
+    - "broker.example.com"
+    - "api-abc.example.com"
   gateways:
-    - istio-ingress/private-matic-com
+    - istio-ingress/private-example-com
   http:
     - name: deny-ingress-spec
       match:
@@ -390,35 +390,29 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-6670087e
+  name: leads-broker-56fc07ff
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "ams360-st1.matic.com, scim-st1.matic.com, mailgun-st1.matic.com, amp-twilio-st1.matic.com, amp-hooks-st1.matic.com"
+    external-dns.alpha.kubernetes.io/hostname: "service1.example.com, service2.example.com, abc-hooks.example.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
   labels:
     app.kubernetes.io/part-of: leads-broker
     app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   hosts:
-    - "ams360-st1.matic.com"
-    - "scim-st1.matic.com"
-    - "mailgun-st1.matic.com"
-    - "amp-twilio-st1.matic.com"
-    - "amp-hooks-st1.matic.com"
+    - "service1.example.com"
+    - "service2.example.com"
+    - "abc-hooks.example.com"
   gateways:
-    - istio-ingress/public-matic-com
+    - istio-ingress/public-example-com
   http:
     - name: allow-ingress-spec
       match:
         - uri:
-            prefix: /api/ams360/notification_events
+            prefix: /api/test1
         - uri:
-            prefix: /scim/v2
+            prefix: /scim/v2/test2
         - uri:
-            prefix: /api/mailgun/docusign_envelope
-        - uri:
-            prefix: /api/twilio
-        - uri:
-            prefix: /api/zendesk
+            prefix: /api/service/envelope
       route:
         - destination:
             host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
@@ -437,18 +431,18 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-ca030c53
+  name: leads-broker-429706fa
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "ws-broker-st1.maticinsurance.com"
+    external-dns.alpha.kubernetes.io/hostname: "ws-srv.example.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
   labels:
     app.kubernetes.io/part-of: leads-broker
     app.kubernetes.io/version: "release-2023-08-30-01"
 spec:
   hosts:
-    - "ws-broker-st1.maticinsurance.com"
+    - "ws-srv.example.com"
   gateways:
-    - istio-ingress/private-matic-com
+    - istio-ingress/private-example-com
   http:
     - name: allow-all-locations
       route:

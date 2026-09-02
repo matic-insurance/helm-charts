@@ -6,7 +6,7 @@ metadata:
   name: egress-leads-broker-db
 spec:
   selector:
-    istio: egressgateway
+    istio: egress-gateway
   servers:
     - port:
         number: 5432
@@ -24,7 +24,7 @@ metadata:
   name: egress-leads-broker-redis
 spec:
   selector:
-    istio: egressgateway
+    istio: egress-gateway
   servers:
     - port:
         number: 6379
@@ -42,7 +42,7 @@ metadata:
   name: egress-leads-broker-some-external-website
 spec:
   selector:
-    istio: egressgateway
+    istio: egress-gateway
   servers:
     - port:
         number: 443
@@ -61,7 +61,7 @@ metadata:
   name: egress-kafka
 spec:
   selector:
-    istio: egressgateway
+    istio: egress-gateway
   servers:
     - port:
         number: 9001
@@ -157,7 +157,7 @@ spec:
             - lead-broker-staging.aws.db
       route:
         - destination:
-            host: istio-egressgateway.istio-egress.svc.cluster.local
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
               number: 5432
           weight: 100
@@ -198,7 +198,7 @@ spec:
             - lead-broker-staging.aws.redis
       route:
         - destination:
-            host: istio-egressgateway.istio-egress.svc.cluster.local
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
               number: 6379
           weight: 100
@@ -241,7 +241,7 @@ spec:
             - auth.lob.com
       route:
         - destination:
-            host: istio-egressgateway.istio-egress.svc.cluster.local
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
               number: 443
           weight: 100
@@ -287,7 +287,7 @@ spec:
             - kafka.server.com
       route:
         - destination:
-            host: istio-egressgateway.istio-egress.svc.cluster.local
+            host: istio-egress-gateway.istio-ingress.svc.cluster.local
             port:
               number: 9001
           weight: 100
