@@ -43,35 +43,18 @@ spec:
         app.kubernetes.io/instance: leads-broker-websockets
         app.kubernetes.io/version: "release-2023-08-30-01"
 ---
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
+# Source: application-mesh/templates/egress-destination-rule.yaml
+apiVersion: networking.istio.io/v1
 kind: DestinationRule
 metadata:
-  name: egress-leads-broker-db
+  name: istio-egress-gateway-disable-mtls
 spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
----
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: egress-leads-broker-redis
-spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
----
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: egress-ams-360
-spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
+  host: istio-egressgateway.istio-egress.svc.cluster.local
+  exportTo:
+  - "."
+  trafficPolicy:
+    tls:
+      mode: DISABLE
 ---
 # Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -80,7 +63,7 @@ metadata:
   name: egress-leads-broker-db
 spec:
   selector:
-    istio: egress-gateway
+    istio: egressgateway
   servers:
     - port:
         number: 5432
@@ -98,7 +81,7 @@ metadata:
   name: egress-leads-broker-redis
 spec:
   selector:
-    istio: egress-gateway
+    istio: egressgateway
   servers:
     - port:
         number: 6379
@@ -116,7 +99,7 @@ metadata:
   name: egress-ams-360
 spec:
   selector:
-    istio: egress-gateway
+    istio: egressgateway
   servers:
     - port:
         number: 443
@@ -174,6 +157,46 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
+# Source: application-mesh/templates/egress-sidecar.yaml
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: leads-broker-webserver
+spec:
+  workloadSelector:
+    labels:
+      app.kubernetes.io/instance: leads-broker-webserver
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY
+  egress:
+  - hosts:
+    - istio-egress/*
+    - istio-system/*
+    - "./amp-staging.aws.db"
+    - "./amp-staging.aws.redis"
+    - "./ams-360.vertafore.com"
+    - "./policies.vertafore.com"
+---
+# Source: application-mesh/templates/egress-sidecar.yaml
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: leads-broker-websockets
+spec:
+  workloadSelector:
+    labels:
+      app.kubernetes.io/instance: leads-broker-websockets
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY
+  egress:
+  - hosts:
+    - istio-egress/*
+    - istio-system/*
+    - "./amp-staging.aws.db"
+    - "./amp-staging.aws.redis"
+    - "./ams-360.vertafore.com"
+    - "./policies.vertafore.com"
+---
 # Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -191,12 +214,21 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/instance: leads-broker-webserver
+          port: 5432
+          sniHosts:
+            - amp-staging.aws.db
+        - gateways:
+            - mesh
+          sourceLabels:
+            app.kubernetes.io/instance: leads-broker-websockets
           port: 5432
           sniHosts:
             - amp-staging.aws.db
       route:
         - destination:
-            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            host: istio-egressgateway.istio-egress.svc.cluster.local
             port:
               number: 5432
           weight: 100
@@ -230,12 +262,21 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/instance: leads-broker-webserver
+          port: 6379
+          sniHosts:
+            - amp-staging.aws.redis
+        - gateways:
+            - mesh
+          sourceLabels:
+            app.kubernetes.io/instance: leads-broker-websockets
           port: 6379
           sniHosts:
             - amp-staging.aws.redis
       route:
         - destination:
-            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            host: istio-egressgateway.istio-egress.svc.cluster.local
             port:
               number: 6379
           weight: 100
@@ -270,13 +311,23 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/instance: leads-broker-webserver
+          port: 443
+          sniHosts:
+            - ams-360.vertafore.com
+            - policies.vertafore.com
+        - gateways:
+            - mesh
+          sourceLabels:
+            app.kubernetes.io/instance: leads-broker-websockets
           port: 443
           sniHosts:
             - ams-360.vertafore.com
             - policies.vertafore.com
       route:
         - destination:
-            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            host: istio-egressgateway.istio-egress.svc.cluster.local
             port:
               number: 443
           weight: 100

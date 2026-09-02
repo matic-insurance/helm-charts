@@ -33,14 +33,16 @@ ingress:
     destination: websockets
 
 egress:
-  - name: db
-    type: postgres
-    host: amp-staging.aws.db
-  - name: redis
-    type: redis
-    host: amp-staging.aws.redis
-  - full_name: ams-360
-    type: https
-    hosts:
-      - ams-360.vertafore.com
-      - policies.vertafore.com
+  enabled: true
+  allowlist:
+    - name: db
+      type: postgres
+      host: amp-staging.aws.db
+    - name: redis
+      type: redis
+      host: amp-staging.aws.redis
+    - full_name: ams-360
+      type: https
+      hosts:
+        - ams-360.vertafore.com
+        - policies.vertafore.com

@@ -1,52 +1,12 @@
 ---
 # Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: egress-leads-broker-db
-spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
----
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: egress-leads-broker-redis
-spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
----
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: egress-leads-broker-some-external-website
-spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
----
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: egress-kafka
-spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
----
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: egress-leads-broker-db
 spec:
   selector:
-    istio: egress-gateway
+    istio: egressgateway
   servers:
     - port:
         number: 5432
@@ -64,7 +24,7 @@ metadata:
   name: egress-leads-broker-redis
 spec:
   selector:
-    istio: egress-gateway
+    istio: egressgateway
   servers:
     - port:
         number: 6379
@@ -82,7 +42,7 @@ metadata:
   name: egress-leads-broker-some-external-website
 spec:
   selector:
-    istio: egress-gateway
+    istio: egressgateway
   servers:
     - port:
         number: 443
@@ -101,7 +61,7 @@ metadata:
   name: egress-kafka
 spec:
   selector:
-    istio: egress-gateway
+    istio: egressgateway
   servers:
     - port:
         number: 9001
@@ -190,12 +150,14 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/instance: leads-broker-webserver
           port: 5432
           sniHosts:
             - lead-broker-staging.aws.db
       route:
         - destination:
-            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            host: istio-egressgateway.istio-egress.svc.cluster.local
             port:
               number: 5432
           weight: 100
@@ -229,12 +191,14 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/instance: leads-broker-webserver
           port: 6379
           sniHosts:
             - lead-broker-staging.aws.redis
       route:
         - destination:
-            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            host: istio-egressgateway.istio-egress.svc.cluster.local
             port:
               number: 6379
           weight: 100
@@ -269,13 +233,15 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/instance: leads-broker-webserver
           port: 443
           sniHosts:
             - api.lob.com
             - auth.lob.com
       route:
         - destination:
-            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            host: istio-egressgateway.istio-egress.svc.cluster.local
             port:
               number: 443
           weight: 100
@@ -314,12 +280,14 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/instance: leads-broker-webserver
           port: 9001
           sniHosts:
             - kafka.server.com
       route:
         - destination:
-            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            host: istio-egressgateway.istio-egress.svc.cluster.local
             port:
               number: 9001
           weight: 100

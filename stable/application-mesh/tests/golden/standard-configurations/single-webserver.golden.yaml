@@ -21,25 +21,18 @@ spec:
         app.kubernetes.io/instance: leads-broker-webserver
         app.kubernetes.io/version: "release-2023-08-30-02"
 ---
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
+# Source: application-mesh/templates/egress-destination-rule.yaml
+apiVersion: networking.istio.io/v1
 kind: DestinationRule
 metadata:
-  name: egress-leads-broker-db
+  name: istio-egress-gateway-disable-mtls
 spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
----
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: egress-datalot
-spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
+  host: istio-egressgateway.istio-egress.svc.cluster.local
+  exportTo:
+  - "."
+  trafficPolicy:
+    tls:
+      mode: DISABLE
 ---
 # Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -48,7 +41,7 @@ metadata:
   name: egress-leads-broker-db
 spec:
   selector:
-    istio: egress-gateway
+    istio: egressgateway
   servers:
     - port:
         number: 5432
@@ -66,7 +59,7 @@ metadata:
   name: egress-datalot
 spec:
   selector:
-    istio: egress-gateway
+    istio: egressgateway
   servers:
     - port:
         number: 443
@@ -107,6 +100,24 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
+# Source: application-mesh/templates/egress-sidecar.yaml
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: leads-broker-webserver
+spec:
+  workloadSelector:
+    labels:
+      app.kubernetes.io/instance: leads-broker-webserver
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY
+  egress:
+  - hosts:
+    - istio-egress/*
+    - istio-system/*
+    - "./leads-broker-staging.aws.db"
+    - "./datalot.com"
+---
 # Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -124,12 +135,14 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/instance: leads-broker-webserver
           port: 5432
           sniHosts:
             - leads-broker-staging.aws.db
       route:
         - destination:
-            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            host: istio-egressgateway.istio-egress.svc.cluster.local
             port:
               number: 5432
           weight: 100
@@ -163,12 +176,14 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/instance: leads-broker-webserver
           port: 443
           sniHosts:
             - datalot.com
       route:
         - destination:
-            host: istio-egress-gateway.istio-ingress.svc.cluster.local
+            host: istio-egressgateway.istio-egress.svc.cluster.local
             port:
               number: 443
           weight: 100
