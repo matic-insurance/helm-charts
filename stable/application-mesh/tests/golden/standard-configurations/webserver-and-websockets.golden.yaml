@@ -96,7 +96,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: egress-ams-360
+  name: egress-abc-120
 spec:
   selector:
     istio: egress-gateway
@@ -145,7 +145,7 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: egress-ams-360
+  name: egress-abc-120
 spec:
   hosts:
     - api.openai.com
@@ -297,7 +297,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: egress-ams-360
+  name: egress-abc-120
 spec:
   exportTo:
     - "*"
@@ -306,7 +306,7 @@ spec:
     - api.slack.com
   gateways:
     - mesh
-    - egress-ams-360
+    - egress-abc-120
   tls:
     - match:
         - gateways:
@@ -333,7 +333,7 @@ spec:
           weight: 100
     - match:
         - gateways:
-            - egress-ams-360
+            - egress-abc-120
           port: 443
           sniHosts:
             - api.openai.com

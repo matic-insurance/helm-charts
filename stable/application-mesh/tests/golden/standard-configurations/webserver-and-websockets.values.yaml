@@ -39,7 +39,7 @@ egress:
     - name: redis
       type: redis
       host: abc-staging.aws.redis
-    - full_name: ams-360
+    - full_name: abc-120
       type: https
       hosts:
         - api.openai.com

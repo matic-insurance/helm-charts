@@ -41,7 +41,7 @@ spec:
         runAsUser: 1000
       containers:
         - name: myproduct-migrations
-          image: "matic/olb:1.2.3"
+          image: "company/olb:1.2.3"
           imagePullPolicy: Always
           volumeMounts:
             - name: dynamic-sa-token

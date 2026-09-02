@@ -76,7 +76,7 @@ spec:
         runAsUser: 1000
       containers:
         - name: olb-webserver
-          image: "matic/olb:release-1.2.3"
+          image: "company/olb:release-1.2.3"
           command:
             - "sh"
             - "-c"
