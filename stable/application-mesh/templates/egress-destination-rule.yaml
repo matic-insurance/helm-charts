@@ -5,8 +5,7 @@ metadata:
   name: istio-egress-gateway-disable-mtls
 spec:
   host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  exportTo:
-  - "."
+  exportTo: [".", "istio-ingress"]
   trafficPolicy:
     tls:
       mode: DISABLE

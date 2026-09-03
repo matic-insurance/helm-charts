@@ -8,7 +8,7 @@ metadata:
 spec:
   workloadSelector:
     labels:
-      app.kubernetes.io/instance: {{ include "application-mesh.component-fullname" (merge (dict "component" $destination.component) $) }}
+      app.kubernetes.io/name: {{ include "application-helpers.name" $ }}
   outboundTrafficPolicy:
     mode: REGISTRY_ONLY
   egress:
