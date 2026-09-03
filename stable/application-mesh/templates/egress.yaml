@@ -57,24 +57,16 @@ spec:
     - egress-{{ $egress.full_name | default (printf "%s-%s" (include "application-helpers.name" $) $egress.name) }}
   tls:
     - match:
-{{- $sourceInstances := list }}
-{{- range $_, $destination := $.Values.destinations }}
-{{- $sourceInstances = append $sourceInstances (include "application-mesh.component-fullname" (merge (dict "component" $destination.component) $)) }}
-{{- end }}
-{{- range $sourceInstance := (default (list "") $sourceInstances) }}
         - gateways:
             - mesh
-          {{- if $sourceInstance }}
           sourceLabels:
-            app.kubernetes.io/instance: {{ $sourceInstance }}
-          {{- end }}
+            app.kubernetes.io/name: {{ include "application-helpers.name" $ }}
           port: {{ required "Mesh Egress port is required for non standard type" ($egress.port | default (get $.Values.defaults.egress.ports_map $egress.type)) }}
           sniHosts:
             {{- $_ := required "Mesh Egress host or hosts attribute is required" ($egress.hosts | default $egress.host) }}
             {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
             - {{ $host }}
             {{- end }}
-{{- end }}
       route:
         - destination:
             host: istio-egress-gateway.istio-ingress.svc.cluster.local
