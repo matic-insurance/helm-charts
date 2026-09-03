@@ -1,0 +1,24 @@
+{{- if .Values.egress.enabled }}
+{{- range $_, $destination := .Values.destinations }}
+---
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: {{ include "application-mesh.component-fullname" (merge (dict "component" $destination.component) $) }}
+spec:
+  workloadSelector:
+    labels:
+      app.kubernetes.io/name: {{ include "application-helpers.name" $ }}
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY
+  egress:
+  - hosts:
+    - istio-ingress/*
+    - istio-system/*
+{{- range $_, $egress := $.Values.egress.allowlist }}
+{{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
+    - "./{{ $host }}"
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

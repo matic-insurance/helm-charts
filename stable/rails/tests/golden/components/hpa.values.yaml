@@ -14,13 +14,13 @@ webserver:
     maxReplicas: 10
     minReplicas: 3
     metrics:
-      - name: amp-p95-latency
-        query: p95:trace.nginx.handle{env:production,resource_name:/,service:amp-nginx,!http.status_code:101}.rollup(avg, 60)
+      - name: abc-p95-latency
+        query: p95:trace.nginx.handle{env:production,resource_name:/,service:abc-nginx,!http.status_code:101}.rollup(avg, 60)
         target:
           type: Value
           value: 1000m
-      - name: amp-sum-requests-last-minute
-        query: sum:trace.nginx.handle.hits{env:production,service:amp-nginx}.as_count().rollup(sum, 60)
+      - name: abc-sum-requests-last-minute
+        query: sum:trace.nginx.handle.hits{env:production,service:abc-nginx}.as_count().rollup(sum, 60)
         target:
           type: AverageValue
           averageValue: 1000
@@ -46,8 +46,8 @@ workers:
       maxReplicas: 16
       type: External
       metrics:
-        - name: amp-sidekiq-queue-size
-          query: avg:sidekiq.queue.size{product:amp,queue_name:default}
+        - name: abc-sidekiq-queue-size
+          query: avg:sidekiq.queue.size{product:abc,queue_name:default}
           target:
             type: AverageValue
             value: 1000
@@ -83,8 +83,8 @@ workers:
       maxReplicas: 3
       type: External
       metrics:
-        - name: amp-kafka-queue-size
-          query: avg:aws.kafka.sum_offset_lag{consumer_group:amp_default}
+        - name: abc-kafka-queue-size
+          query: avg:aws.kafka.sum_offset_lag{consumer_group:abc_default}
           target:
             type: AverageValue
             value: 100

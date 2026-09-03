@@ -9,13 +9,13 @@ global:
       RAILS_SERVE_STATIC_FILES: "true"
       VAULT_NAMESPACE: admin
       VAULT_ROLE: olb
-      VAULT_ADDR: https://vault-st1.matic.link
+      VAULT_ADDR: https://vault.example.link
       VAULT_AUTH_BACKEND: staging-eks-3
     configFiles:
       app_settings: /app/config/app_settings.local.yml
 
   applicationImage:
-    repository: matic/olb
+    repository: company/olb
 
   applicationMonitoring:
     datadog: true
@@ -30,15 +30,15 @@ resources: high
 ingress:
   enabled: true
   list:
-    - host: olb.matic.link
+    - host: olb.example.link
       type: internal
-      tls: matic.link-tls
+      tls: example.link-tls
 
-    - host: olb.matic.com
+    - host: olb.example.com
       type: external
       deny_locations:
         - /admin
-      tls: matic.com-tls
+      tls: example.com-tls
 
 deployment:
   replicas: 2

@@ -13,11 +13,11 @@ destinations:
       max_request_bytes: "67000000"
 
 ingress:
-  - host: leads-broker-st1.matic.com
-    gateway: external-matic-com
+  - host: best-product.example.com
+    gateway: external-example-com
     destination: webserver
 
-  - host: leads-broker-st2.matic.com
-    gateway: external-matic-com
+  - host: best-product-ws.example.com
+    gateway: external-example-com
     destination: websocket
 

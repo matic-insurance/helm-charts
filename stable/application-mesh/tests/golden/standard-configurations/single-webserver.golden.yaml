@@ -3,49 +3,41 @@
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
-  name: leads-broker-webserver
+  name: best-product-webserver
   labels:
-    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/part-of: best-product
     app.kubernetes.io/version: "release-2023-08-30-02"
 spec:
-  host: leads-broker-webserver.app-component-test00000.svc.cluster.local
+  host: best-product-webserver.app-component-test00000.svc.cluster.local
   trafficPolicy:
     loadBalancer:
       simple: LEAST_REQUEST
   subsets:
     - name: all-versions # Route traffic to all pods regardless of the deployed version. Current deployment model.
       labels:
-        app.kubernetes.io/instance: leads-broker-webserver
+        app.kubernetes.io/instance: best-product-webserver
     - name: current-version # Should be used for proper blue-green deployment procedures
       labels:
-        app.kubernetes.io/instance: leads-broker-webserver
+        app.kubernetes.io/instance: best-product-webserver
         app.kubernetes.io/version: "release-2023-08-30-02"
 ---
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
+# Source: application-mesh/templates/egress-destination-rule.yaml
+apiVersion: networking.istio.io/v1
 kind: DestinationRule
 metadata:
-  name: egress-leads-broker-db
+  name: istio-egress-gateway-disable-mtls
 spec:
   host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
----
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: egress-datalot
-spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
+  exportTo: [".", "istio-ingress"]
+  trafficPolicy:
+    tls:
+      mode: DISABLE
 ---
 # Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: egress-leads-broker-db
+  name: egress-best-product-db
 spec:
   selector:
     istio: egress-gateway
@@ -55,7 +47,7 @@ spec:
         name: tls
         protocol: TLS
       hosts:
-      - leads-broker-staging.aws.db
+      - best-product-staging.aws.db
       tls:
         mode: PASSTHROUGH
 ---
@@ -63,7 +55,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: egress-datalot
+  name: egress-datagotix
 spec:
   selector:
     istio: egress-gateway
@@ -73,7 +65,7 @@ spec:
         name: tls
         protocol: TLS
       hosts:
-      - datalot.com
+      - datagotix.com
       tls:
         mode: PASSTHROUGH
 ---
@@ -81,10 +73,11 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: egress-leads-broker-db
+  name: egress-best-product-db
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
-    - leads-broker-staging.aws.db
+    - best-product-staging.aws.db
   ports:
     - name: postgres
       number: 5432
@@ -96,10 +89,11 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
-  name: egress-datalot
+  name: egress-datagotix
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
-    - datalot.com
+    - datagotix.com
   ports:
     - name: https
       number: 443
@@ -107,26 +101,45 @@ spec:
   location: MESH_EXTERNAL
   resolution: DNS
 ---
+# Source: application-mesh/templates/egress-sidecar.yaml
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: best-product-webserver
+spec:
+  workloadSelector:
+    labels:
+      app.kubernetes.io/name: best-product
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY
+  egress:
+  - hosts:
+    - istio-ingress/*
+    - istio-system/*
+    - "./best-product-staging.aws.db"
+    - "./datagotix.com"
+---
 # Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: egress-leads-broker-db
+  name: egress-best-product-db
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
-    - leads-broker-staging.aws.db
+    - best-product-staging.aws.db
   gateways:
     - mesh
-    - egress-leads-broker-db
+    - egress-best-product-db
   tls:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/name: best-product
           port: 5432
           sniHosts:
-            - leads-broker-staging.aws.db
+            - best-product-staging.aws.db
       route:
         - destination:
             host: istio-egress-gateway.istio-ingress.svc.cluster.local
@@ -135,13 +148,13 @@ spec:
           weight: 100
     - match:
         - gateways:
-            - egress-leads-broker-db
+            - egress-best-product-db
           port: 443
           sniHosts:
-            - leads-broker-staging.aws.db
+            - best-product-staging.aws.db
       route:
         - destination:
-            host: leads-broker-staging.aws.db
+            host: best-product-staging.aws.db
             port:
               number: 5432
           weight: 100
@@ -150,22 +163,23 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: egress-datalot
+  name: egress-datagotix
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
-    - datalot.com
+    - datagotix.com
   gateways:
     - mesh
-    - egress-datalot
+    - egress-datagotix
   tls:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/name: best-product
           port: 443
           sniHosts:
-            - datalot.com
+            - datagotix.com
       route:
         - destination:
             host: istio-egress-gateway.istio-ingress.svc.cluster.local
@@ -174,13 +188,13 @@ spec:
           weight: 100
     - match:
         - gateways:
-            - egress-datalot
+            - egress-datagotix
           port: 443
           sniHosts:
-            - datalot.com
+            - datagotix.com
       route:
         - destination:
-            host: datalot.com
+            host: datagotix.com
             port:
               number: 443
           weight: 100
@@ -189,18 +203,18 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-83e409ab
+  name: best-product-9c010aaa
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "leads-broker-st2.matic.com"
+    external-dns.alpha.kubernetes.io/hostname: "best-product-st2.example.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
   labels:
-    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/part-of: best-product
     app.kubernetes.io/version: "release-2023-08-30-02"
 spec:
   hosts:
-    - "leads-broker-st2.matic.com"
+    - "best-product-st2.example.com"
   gateways:
-    - istio-ingress/wildcard-matic-com
+    - istio-ingress/wildcard-example-com
   http:
     - name: deny-ingress-spec
       match:
@@ -213,7 +227,7 @@ spec:
     - name: allow-all-locations
       route:
         - destination:
-            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
+            host: "best-product-webserver.app-component-test00000.svc.cluster.local"
             subset: all-versions
           headers:
             request:
@@ -224,23 +238,23 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-8e0e0a1a
+  name: best-product-a72a0b19
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "leads-broker-st2.matic.link"
+    external-dns.alpha.kubernetes.io/hostname: "best-product-st2.example.link"
     external-dns.alpha.kubernetes.io/ttl: "60"
   labels:
-    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/part-of: best-product
     app.kubernetes.io/version: "release-2023-08-30-02"
 spec:
   hosts:
-    - "leads-broker-st2.matic.link"
+    - "best-product-st2.example.link"
   gateways:
     - istio-ingress/wildcard-matic-link
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
+            host: "best-product-webserver.app-component-test00000.svc.cluster.local"
             subset: all-versions
           headers:
             request:
@@ -251,20 +265,20 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-webserver
+  name: best-product-webserver
   labels:
-    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/part-of: best-product
     app.kubernetes.io/version: "release-2023-08-30-02"
 spec:
   hosts:
-    - "leads-broker-webserver.app-component-test00000.svc.cluster.local"
+    - "best-product-webserver.app-component-test00000.svc.cluster.local"
   gateways:
     - mesh
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: "leads-broker-webserver.app-component-test00000.svc.cluster.local"
+            host: "best-product-webserver.app-component-test00000.svc.cluster.local"
             subset: all-versions
           headers:
             request:

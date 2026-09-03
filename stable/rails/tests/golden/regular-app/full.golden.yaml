@@ -70,7 +70,7 @@ spec:
       serviceAccountName: olb
       containers:
       - name: olb-rails-webserver
-        image: matic/olb:release-01-01-23-25
+        image: company/olb:release-01-01-23-25
         imagePullPolicy: IfNotPresent
         command: ["sh","-c","bundle exec puma -t 8:8"]
         ports:
@@ -192,7 +192,7 @@ spec:
       serviceAccountName: olb
       containers:
       - name: olb-rails-worker
-        image: matic/olb:release-01-01-23-25
+        image: company/olb:release-01-01-23-25
         imagePullPolicy: IfNotPresent
         command: ["sh","-c","bundle exec sidekiq --concurrency 19"]
         env:
@@ -297,7 +297,7 @@ spec:
       serviceAccountName: olb
       containers:
       - name: olb-rails-worker
-        image: matic/olb:release-01-01-23-25
+        image: company/olb:release-01-01-23-25
         imagePullPolicy: IfNotPresent
         command: ["sh","-c","bundle exec karafka server"]
         env:
@@ -460,7 +460,7 @@ spec:
       serviceAccountName: olb
       containers:
       - name: olb-rails-migrations-0
-        image: matic/olb:release-01-01-23-25
+        image: company/olb:release-01-01-23-25
         command: ["sh","-c","bundle exec rake db:migrate db:seed"]
         
         env:

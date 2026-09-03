@@ -3,52 +3,50 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-backend
+  name: best-product-backend
   labels:
-    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/part-of: best-product
     app.kubernetes.io/version: "0.0.0"
 spec:
   hosts:
-    - "leads-broker-backend.app-component-test00000.svc.cluster.local"
+    - "best-product-backend.app-component-test00000.svc.cluster.local"
   gateways:
     - mesh
   http:
     - name: allow-all-locations
       route:
         - destination:
-            host: "leads-broker-backend.app-component-test00000.svc.cluster.local"
+            host: "best-product-backend.app-component-test00000.svc.cluster.local"
             subset: all-versions
 ---
 # Source: application-mesh/templates/virtual-service.gateway.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-6670087e
+  name: best-product-773e0944
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "broker-hooks-st1.matic.com, zendesk-st1.matic.com, amp-hooks-st1.matic.com"
+    external-dns.alpha.kubernetes.io/hostname: "best-hooks-st1.example.com, product-st1.example.com, abc-hooks-st1.example.com"
     external-dns.alpha.kubernetes.io/ttl: "60"
   labels:
-    app.kubernetes.io/part-of: leads-broker
+    app.kubernetes.io/part-of: best-product
     app.kubernetes.io/version: "0.0.0"
 spec:
   hosts:
-    - "broker-hooks-st1.matic.com"
-    - "zendesk-st1.matic.com"
-    - "amp-hooks-st1.matic.com"
+    - "best-hooks-st1.example.com"
+    - "product-st1.example.com"
+    - "abc-hooks-st1.example.com"
   gateways:
-    - istio-ingress/external-matic-com
+    - istio-ingress/external-example-com
   http:
     - name: allow-ingress-spec
       match:
         - uri:
             prefix: /api/hooks
         - uri:
-            prefix: /api/zendesk
-        - uri:
             prefix: /api/status
       route:
         - destination:
-            host: "leads-broker-backend.app-component-test00000.svc.cluster.local"
+            host: "best-product-backend.app-component-test00000.svc.cluster.local"
             subset: all-versions
           
     - name: deny-everything-except-allowed

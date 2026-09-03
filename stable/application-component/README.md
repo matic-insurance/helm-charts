@@ -97,7 +97,7 @@ global:
     version: release-1.2.3
 
   applicationImage:
-    repository: matic/olb
+    repository: company/olb
 
   applicationMonitoring:
     datadog: true

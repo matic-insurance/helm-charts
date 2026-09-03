@@ -50,7 +50,7 @@ redirects: []
 # Inbound endpoints for application
 ingress:
   # Domain for ingress
-  - host: example.matic.com
+  - host: example.com
     # List of additional domains to support by this ingress
     additional_hosts: []
     # Gateway to attach for this ingress. Supported list:
@@ -76,6 +76,9 @@ ingress:
 
 # Outbound endpoints used by the application
 egress:
+  enabled: false
+  allowlist:
+
   # Name of the external service. Product name will be added as prefix
   - name: example-service
     # Type of the communication. This parameter has impact on communication protocol. Recognized values are: http, https, all others will set protocol to TCP

@@ -19,55 +19,52 @@ service:
 ingress:
   enabled: true
   list:
-    - host: amp.matic.com
+    - host: abc.example.com
       additional_hosts:
-        - admin.matic.com
-        - admin-live.matic.com
-        - amp-live.matic.com
-        - broker.matic.com
-        - broker-live.matic.com
+        - admin.example.com
+        - abc-live.example.com
       type: internal
       server_snippet: |
         location /secret/document { deny all; }
       deny_locations:
         - /uploads/document
-      tls: matic.com-tls
+      tls: example.com-tls
 
-    - host: amp.maticinsurance.com
+    - host: abc.someexample.com
       additional_hosts:
-        - admin.maticinsurance.com
-        - broker.maticinsurance.com
+        - admin.someexample.com
+        - broker.someexample.com
       type: internal
       annotations:
         nginx.ingress.kubernetes.io/configuration-snippet: |
           rewrite ^/crm/static/css/main.(.+).chunk.css$ /crm/static/css/main.chunk.css break;
           rewrite ^/crm/static/css/2.(.+).chunk.css$ /crm/static/css/2.chunk.css break;
-          opentracing_tag "service.name" "amp-nginx";
+          opentracing_tag "service.name" "abc-nginx";
       deny_locations:
           - /uploads/document
-      tls: maticinsurance.com-tls
+      tls: someexample.com-tls
 
-    - host: ams360.matic.com
+    - host: abc.example.com
       type: external
       allow_locations:
-        - /api/ams360/notification_events
+        - /api/abc120/notification_events
       annotations:
-        external-dns.alpha.kubernetes.io/hostname: ams360.matic.com
+        external-dns.alpha.kubernetes.io/hostname: abc.example.com
         nginx.ingress.kubernetes.io/ssl-ciphers: ""
-      tls: matic.com-tls
+      tls: example.com-tls
 
-    - host: amp-notifications.matic.com
+    - host: abc-notifications.example.com
       type: external
       allow_locations:
         - /scim/v2
-        - /api/mailgun/docusign_envelope
+        - /api/mail/envelope
       deny_locations:
         - /scim/v2/internal
-      tls: matic.com-tls
+      tls: example.com-tls
 
-    - host: no-tls.matic.com
+    - host: no-tls.example.com
       type: external
       allow_locations:
         - /api/plain
       annotations:
-        external-dns.alpha.kubernetes.io/hostname: notls.matic.com
+        external-dns.alpha.kubernetes.io/hostname: notls.example.com

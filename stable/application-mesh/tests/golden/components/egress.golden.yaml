@@ -1,46 +1,6 @@
 ---
 # Source: application-mesh/templates/egress.yaml
 apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: egress-leads-broker-db
-spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
----
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: egress-leads-broker-redis
-spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
----
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: egress-leads-broker-some-external-website
-spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
----
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: egress-kafka
-spec:
-  host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  subsets:
-  - name: default
----
-# Source: application-mesh/templates/egress.yaml
-apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: egress-leads-broker-db
@@ -118,6 +78,7 @@ kind: ServiceEntry
 metadata:
   name: egress-leads-broker-db
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - lead-broker-staging.aws.db
   ports:
@@ -133,6 +94,7 @@ kind: ServiceEntry
 metadata:
   name: egress-leads-broker-redis
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - lead-broker-staging.aws.redis
   ports:
@@ -148,6 +110,7 @@ kind: ServiceEntry
 metadata:
   name: egress-leads-broker-some-external-website
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - api.lob.com
     - auth.lob.com
@@ -164,6 +127,7 @@ kind: ServiceEntry
 metadata:
   name: egress-kafka
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - kafka.server.com
   ports:
@@ -179,8 +143,7 @@ kind: VirtualService
 metadata:
   name: egress-leads-broker-db
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - lead-broker-staging.aws.db
   gateways:
@@ -190,6 +153,8 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/name: leads-broker
           port: 5432
           sniHosts:
             - lead-broker-staging.aws.db
@@ -218,8 +183,7 @@ kind: VirtualService
 metadata:
   name: egress-leads-broker-redis
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - lead-broker-staging.aws.redis
   gateways:
@@ -229,6 +193,8 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/name: leads-broker
           port: 6379
           sniHosts:
             - lead-broker-staging.aws.redis
@@ -257,8 +223,7 @@ kind: VirtualService
 metadata:
   name: egress-leads-broker-some-external-website
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - api.lob.com
     - auth.lob.com
@@ -269,6 +234,8 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/name: leads-broker
           port: 443
           sniHosts:
             - api.lob.com
@@ -303,8 +270,7 @@ kind: VirtualService
 metadata:
   name: egress-kafka
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - kafka.server.com
   gateways:
@@ -314,6 +280,8 @@ spec:
     - match:
         - gateways:
             - mesh
+          sourceLabels:
+            app.kubernetes.io/name: leads-broker
           port: 9001
           sniHosts:
             - kafka.server.com

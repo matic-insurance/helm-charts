@@ -1,0 +1,12 @@
+{{- if .Values.egress.enabled }}
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: istio-egress-gateway-disable-mtls
+spec:
+  host: istio-egress-gateway.istio-ingress.svc.cluster.local
+  exportTo: [".", "istio-ingress"]
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+{{- end }}

@@ -15,7 +15,7 @@ global:
       app_settings: /app/config/app_settings.local.yml
 
   applicationImage:
-    repository: matic/olb
+    repository: company/olb
 
   applicationMonitoring:
     datadog: true

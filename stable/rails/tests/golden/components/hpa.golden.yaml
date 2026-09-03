@@ -15,7 +15,7 @@ spec:
   - type: External
     external:
       metric:
-        name: datadogmetric@production:amp-sidekiq-queue-size
+        name: datadogmetric@production:abc-sidekiq-queue-size
       target:
         type: AverageValue
         value: 1000
@@ -49,7 +49,7 @@ spec:
   - type: External
     external:
       metric:
-        name: datadogmetric@production:amp-kafka-queue-size
+        name: datadogmetric@production:abc-kafka-queue-size
       target:
         type: AverageValue
         value: 100
@@ -70,14 +70,14 @@ spec:
   - type: External
     external:
       metric:
-        name: datadogmetric@production:amp-p95-latency
+        name: datadogmetric@production:abc-p95-latency
       target:
         type: Value
         value: 1000m
   - type: External
     external:
       metric:
-        name: datadogmetric@production:amp-sum-requests-last-minute
+        name: datadogmetric@production:abc-sum-requests-last-minute
       target:
         averageValue: 1000
         type: AverageValue
@@ -98,33 +98,33 @@ spec:
 apiVersion: datadoghq.com/v1alpha1
 kind: DatadogMetric
 metadata:
-  name: amp-p95-latency
+  name: abc-p95-latency
 spec:
-  query: p95:trace.nginx.handle{env:production,resource_name:/,service:amp-nginx,!http.status_code:101}.rollup(avg, 60)
+  query: p95:trace.nginx.handle{env:production,resource_name:/,service:abc-nginx,!http.status_code:101}.rollup(avg, 60)
 ---
 # Source: rails/templates/datadog-metric.yaml
 # Webserver autoscaling
 apiVersion: datadoghq.com/v1alpha1
 kind: DatadogMetric
 metadata:
-  name: amp-sum-requests-last-minute
+  name: abc-sum-requests-last-minute
 spec:
-  query: sum:trace.nginx.handle.hits{env:production,service:amp-nginx}.as_count().rollup(sum, 60)
+  query: sum:trace.nginx.handle.hits{env:production,service:abc-nginx}.as_count().rollup(sum, 60)
 ---
 # Source: rails/templates/datadog-metric.yaml
 # Worker autoscaling
 apiVersion: datadoghq.com/v1alpha1
 kind: DatadogMetric
 metadata:
-  name: amp-sidekiq-queue-size
+  name: abc-sidekiq-queue-size
 spec:
-  query: avg:sidekiq.queue.size{product:amp,queue_name:default}
+  query: avg:sidekiq.queue.size{product:abc,queue_name:default}
 ---
 # Source: rails/templates/datadog-metric.yaml
 # Worker autoscaling
 apiVersion: datadoghq.com/v1alpha1
 kind: DatadogMetric
 metadata:
-  name: amp-kafka-queue-size
+  name: abc-kafka-queue-size
 spec:
-  query: avg:aws.kafka.sum_offset_lag{consumer_group:amp_default}
+  query: avg:aws.kafka.sum_offset_lag{consumer_group:abc_default}

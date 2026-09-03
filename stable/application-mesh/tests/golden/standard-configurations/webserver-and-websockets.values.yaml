@@ -12,35 +12,35 @@ destinations:
   - component: websockets
 
 ingress:
-  - host: api-amp-st1.matic.com
-    gateway: private-matic-com
+  - host: api-abc.example.com
+    gateway: private-example-com
     destination: webserver
-    additional_hosts: ["admin-st1.matic.com", "broker-st1.matic.com"]
+    additional_hosts: ["admin.example.com", "broker.example.com"]
     deny_locations:
       - /uploads/document
-  - host: amp-hooks-st1.matic.com
-    gateway: public-matic-com
+  - host: abc-hooks.example.com
+    gateway: public-example-com
     destination: webserver
-    additional_hosts: ["ams360-st1.matic.com", "scim-st1.matic.com", "mailgun-st1.matic.com", "amp-twilio-st1.matic.com"]
+    additional_hosts: ["service1.example.com", "service2.example.com"]
     allow_locations:
-      - /api/ams360/notification_events
-      - /scim/v2
-      - /api/mailgun/docusign_envelope
-      - /api/twilio
-      - /api/zendesk
-  - host: ws-broker-st1.maticinsurance.com
-    gateway: private-matic-com
+      - /api/test1
+      - /scim/v2/test2
+      - /api/service/envelope
+  - host: ws-srv.example.com
+    gateway: private-example-com
     destination: websockets
 
 egress:
-  - name: db
-    type: postgres
-    host: amp-staging.aws.db
-  - name: redis
-    type: redis
-    host: amp-staging.aws.redis
-  - full_name: ams-360
-    type: https
-    hosts:
-      - ams-360.vertafore.com
-      - policies.vertafore.com
+  enabled: true
+  allowlist:
+    - name: db
+      type: postgres
+      host: abc-staging.aws.db
+    - name: redis
+      type: redis
+      host: abc-staging.aws.redis
+    - full_name: abc-120
+      type: https
+      hosts:
+        - api.openai.com
+        - api.slack.com

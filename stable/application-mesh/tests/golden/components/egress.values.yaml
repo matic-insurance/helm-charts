@@ -5,6 +5,8 @@ global:
     version: "0.0.0"
 
 egress:
+  enabled: true
+  allowlist:
 
   - name: db
     type: postgres

@@ -1,6 +1,6 @@
 global:
   application:
-    product: leads-broker
+    product: best-product
     environment: test
     version: "0.0.0"
 
@@ -8,13 +8,12 @@ destinations:
   - component: backend
 
 ingress:
-  - host: amp-hooks-st1.matic.com
+  - host: abc-hooks-st1.example.com
     additional_hosts:
-      - broker-hooks-st1.matic.com
-      - zendesk-st1.matic.com
-    gateway: external-matic-com
+      - best-hooks-st1.example.com
+      - product-st1.example.com
+    gateway: external-example-com
     destination: backend
     allow_locations:
       - /api/hooks
-      - /api/zendesk
       - /api/status

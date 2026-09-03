@@ -3,49 +3,49 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: leads-broker-st1-src-2-matic-com-redirects
+  name: best-product-st1-src-2-example-com-redirects
   namespace: istio-ingress
 spec:
   dnsNames:
-    - leads-broker-st1-src-2.matic.com
+    - best-product-st1-src-2.example.com
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  secretName: leads-broker-st1-src-2-matic-com-tls
+  secretName: best-product-st1-src-2-example-com-tls
 ---
 # Source: application-mesh/templates/redirects.yaml
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: leads-broker-st1-src-3-matic-com-redirects
+  name: best-product-st1-src-3-example-com-redirects
   namespace: istio-ingress
 spec:
   dnsNames:
-    - leads-broker-st1-src-3.matic.com
+    - best-product-st1-src-3.example.com
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  secretName: leads-broker-st1-src-3-matic-com-tls
+  secretName: best-product-st1-src-3-example-com-tls
 ---
 # Source: application-mesh/templates/redirects.yaml
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: leads-broker-st1-src-matic-com-redirects
+  name: best-product-st1-src-example-com-redirects
   namespace: istio-ingress
 spec:
   dnsNames:
-    - leads-broker-st1-src.matic.com
+    - best-product-st1-src.example.com
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  secretName: leads-broker-st1-src-matic-com-tls
+  secretName: best-product-st1-src-example-com-tls
 ---
 # Source: application-mesh/templates/redirects.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: leads-broker-st1-src-2-matic-com-redirects
+  name: best-product-st1-src-2-example-com-redirects
   annotations:
     # Do not create dns records for this resource
     external-dns.alpha.kubernetes.io/controller: "ignored-resource"
@@ -58,7 +58,7 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - leads-broker-st1-src-2.matic.com
+        - best-product-st1-src-2.example.com
       tls:
         httpsRedirect: true
     - port:
@@ -66,16 +66,16 @@ spec:
         name: https
         protocol: HTTPS
       hosts:
-        - leads-broker-st1-src-2.matic.com
+        - best-product-st1-src-2.example.com
       tls:
         mode: SIMPLE
-        credentialName: istio-ingress/leads-broker-st1-src-2-matic-com-tls
+        credentialName: istio-ingress/best-product-st1-src-2-example-com-tls
 ---
 # Source: application-mesh/templates/redirects.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: leads-broker-st1-src-3-matic-com-redirects
+  name: best-product-st1-src-3-example-com-redirects
   annotations:
     # Do not create dns records for this resource
     external-dns.alpha.kubernetes.io/controller: "ignored-resource"
@@ -88,7 +88,7 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - leads-broker-st1-src-3.matic.com
+        - best-product-st1-src-3.example.com
       tls:
         httpsRedirect: true
     - port:
@@ -96,16 +96,16 @@ spec:
         name: https
         protocol: HTTPS
       hosts:
-        - leads-broker-st1-src-3.matic.com
+        - best-product-st1-src-3.example.com
       tls:
         mode: SIMPLE
-        credentialName: istio-ingress/leads-broker-st1-src-3-matic-com-tls
+        credentialName: istio-ingress/best-product-st1-src-3-example-com-tls
 ---
 # Source: application-mesh/templates/redirects.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: leads-broker-st1-src-matic-com-redirects
+  name: best-product-st1-src-example-com-redirects
   annotations:
     # Do not create dns records for this resource
     external-dns.alpha.kubernetes.io/controller: "ignored-resource"
@@ -118,7 +118,7 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - leads-broker-st1-src.matic.com
+        - best-product-st1-src.example.com
       tls:
         httpsRedirect: true
     - port:
@@ -126,63 +126,63 @@ spec:
         name: https
         protocol: HTTPS
       hosts:
-        - leads-broker-st1-src.matic.com
+        - best-product-st1-src.example.com
       tls:
         mode: SIMPLE
-        credentialName: istio-ingress/leads-broker-st1-src-matic-com-tls
+        credentialName: istio-ingress/best-product-st1-src-example-com-tls
 ---
 # Source: application-mesh/templates/redirects.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-b9020b3f-redirects
+  name: best-product-d58a0c3e-redirects
 spec:
   hosts:
-    - leads-broker-st1-src.matic.com
+    - best-product-st1-src.example.com
   gateways:
-    - app-component-test00000/leads-broker-st1-src-matic-com-redirects
+    - app-component-test00000/best-product-st1-src-example-com-redirects
   http:
     - match:
         - uri:
             prefix: /
       redirect:
-        authority: leads-broker-st1-dsc.matic.com
+        authority: best-product-st1-dsc.example.com
         redirectCode: 301
 ---
 # Source: application-mesh/templates/redirects.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-cc8f0b9e-redirects
+  name: best-product-ea170c9d-redirects
 spec:
   hosts:
-    - leads-broker-st1-src-2.matic.com
+    - best-product-st1-src-2.example.com
   gateways:
-    - app-component-test00000/leads-broker-st1-src-2-matic-com-redirects
+    - app-component-test00000/best-product-st1-src-2-example-com-redirects
   http:
     - match:
         - uri:
             prefix: /
       redirect:
-        authority: leads-broker-st1-dsc-2.matic.com
+        authority: best-product-st1-dsc-2.example.com
         redirectCode: 302
 ---
 # Source: application-mesh/templates/redirects.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-58b50f5d-redirects
+  name: best-product-8131105c-redirects
 spec:
   hosts:
-    - leads-broker-st1-src.matic.com
+    - best-product-st1-src.example.com
   gateways:
-    - app-component-test00000/leads-broker-st1-src-matic-com-redirects
+    - app-component-test00000/best-product-st1-src-example-com-redirects
   http:
     - match:
         - uri:
             prefix: /uri-on-src
       redirect:
-        authority: leads-broker-st1-dsc.matic.com
+        authority: best-product-st1-dsc.example.com
         uri: /uri-on-dst
         redirectCode: 301
 ---
@@ -190,18 +190,18 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-95de108e-redirects
+  name: best-product-c256118d-redirects
 spec:
   hosts:
-    - leads-broker-st1-src.matic.com
+    - best-product-st1-src.example.com
   gateways:
-    - app-component-test00000/leads-broker-st1-src-matic-com-redirects
+    - app-component-test00000/best-product-st1-src-example-com-redirects
   http:
     - match:
         - uri:
             prefix: /2nd-uri-on-src
       redirect:
-        authority: leads-broker-st1-dsc.matic.com
+        authority: best-product-st1-dsc.example.com
         uri: /2nd-uri-on-dst
         redirectCode: 301
 ---
@@ -209,17 +209,17 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: leads-broker-70ce0fbd-redirects
+  name: best-product-9a4c10bc-redirects
 spec:
   hosts:
-    - leads-broker-st1-src-3.matic.com
+    - best-product-st1-src-3.example.com
   gateways:
-    - app-component-test00000/leads-broker-st1-src-3-matic-com-redirects
+    - app-component-test00000/best-product-st1-src-3-example-com-redirects
   http:
     - match:
         - uri:
             prefix: /uri-on-src
       redirect:
-        authority: leads-broker-st1-dsc-3.matic.com
+        authority: best-product-st1-dsc-3.example.com
         uri: /uri-on-dst
         redirectCode: 301
