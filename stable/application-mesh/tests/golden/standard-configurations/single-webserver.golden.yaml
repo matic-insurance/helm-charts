@@ -28,8 +28,7 @@ metadata:
   name: istio-egress-gateway-disable-mtls
 spec:
   host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  exportTo:
-  - "."
+  exportTo: [".", "istio-ingress"]
   trafficPolicy:
     tls:
       mode: DISABLE
@@ -76,6 +75,7 @@ kind: ServiceEntry
 metadata:
   name: egress-best-product-db
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - best-product-staging.aws.db
   ports:
@@ -91,6 +91,7 @@ kind: ServiceEntry
 metadata:
   name: egress-datagotix
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - datagotix.com
   ports:
@@ -108,7 +109,7 @@ metadata:
 spec:
   workloadSelector:
     labels:
-      app.kubernetes.io/instance: best-product-webserver
+      app.kubernetes.io/name: best-product
   outboundTrafficPolicy:
     mode: REGISTRY_ONLY
   egress:
@@ -124,8 +125,7 @@ kind: VirtualService
 metadata:
   name: egress-best-product-db
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - best-product-staging.aws.db
   gateways:
@@ -136,7 +136,7 @@ spec:
         - gateways:
             - mesh
           sourceLabels:
-            app.kubernetes.io/instance: best-product-webserver
+            app.kubernetes.io/name: best-product
           port: 5432
           sniHosts:
             - best-product-staging.aws.db
@@ -165,8 +165,7 @@ kind: VirtualService
 metadata:
   name: egress-datagotix
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - datagotix.com
   gateways:
@@ -177,7 +176,7 @@ spec:
         - gateways:
             - mesh
           sourceLabels:
-            app.kubernetes.io/instance: best-product-webserver
+            app.kubernetes.io/name: best-product
           port: 443
           sniHosts:
             - datagotix.com

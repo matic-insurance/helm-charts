@@ -78,6 +78,7 @@ kind: ServiceEntry
 metadata:
   name: egress-leads-broker-db
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - lead-broker-staging.aws.db
   ports:
@@ -93,6 +94,7 @@ kind: ServiceEntry
 metadata:
   name: egress-leads-broker-redis
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - lead-broker-staging.aws.redis
   ports:
@@ -108,6 +110,7 @@ kind: ServiceEntry
 metadata:
   name: egress-leads-broker-some-external-website
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - api.lob.com
     - auth.lob.com
@@ -124,6 +127,7 @@ kind: ServiceEntry
 metadata:
   name: egress-kafka
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - kafka.server.com
   ports:
@@ -139,8 +143,7 @@ kind: VirtualService
 metadata:
   name: egress-leads-broker-db
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - lead-broker-staging.aws.db
   gateways:
@@ -151,7 +154,7 @@ spec:
         - gateways:
             - mesh
           sourceLabels:
-            app.kubernetes.io/instance: leads-broker-webserver
+            app.kubernetes.io/name: leads-broker
           port: 5432
           sniHosts:
             - lead-broker-staging.aws.db
@@ -180,8 +183,7 @@ kind: VirtualService
 metadata:
   name: egress-leads-broker-redis
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - lead-broker-staging.aws.redis
   gateways:
@@ -192,7 +194,7 @@ spec:
         - gateways:
             - mesh
           sourceLabels:
-            app.kubernetes.io/instance: leads-broker-webserver
+            app.kubernetes.io/name: leads-broker
           port: 6379
           sniHosts:
             - lead-broker-staging.aws.redis
@@ -221,8 +223,7 @@ kind: VirtualService
 metadata:
   name: egress-leads-broker-some-external-website
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - api.lob.com
     - auth.lob.com
@@ -234,7 +235,7 @@ spec:
         - gateways:
             - mesh
           sourceLabels:
-            app.kubernetes.io/instance: leads-broker-webserver
+            app.kubernetes.io/name: leads-broker
           port: 443
           sniHosts:
             - api.lob.com
@@ -269,8 +270,7 @@ kind: VirtualService
 metadata:
   name: egress-kafka
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - kafka.server.com
   gateways:
@@ -281,7 +281,7 @@ spec:
         - gateways:
             - mesh
           sourceLabels:
-            app.kubernetes.io/instance: leads-broker-webserver
+            app.kubernetes.io/name: leads-broker
           port: 9001
           sniHosts:
             - kafka.server.com

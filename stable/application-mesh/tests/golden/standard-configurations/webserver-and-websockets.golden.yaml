@@ -50,8 +50,7 @@ metadata:
   name: istio-egress-gateway-disable-mtls
 spec:
   host: istio-egress-gateway.istio-ingress.svc.cluster.local
-  exportTo:
-  - "."
+  exportTo: [".", "istio-ingress"]
   trafficPolicy:
     tls:
       mode: DISABLE
@@ -117,6 +116,7 @@ kind: ServiceEntry
 metadata:
   name: egress-leads-broker-db
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - abc-staging.aws.db
   ports:
@@ -132,6 +132,7 @@ kind: ServiceEntry
 metadata:
   name: egress-leads-broker-redis
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - abc-staging.aws.redis
   ports:
@@ -147,6 +148,7 @@ kind: ServiceEntry
 metadata:
   name: egress-abc-120
 spec:
+  exportTo: [".", "istio-ingress"]
   hosts:
     - api.openai.com
     - api.slack.com
@@ -165,7 +167,7 @@ metadata:
 spec:
   workloadSelector:
     labels:
-      app.kubernetes.io/instance: leads-broker-webserver
+      app.kubernetes.io/name: leads-broker
   outboundTrafficPolicy:
     mode: REGISTRY_ONLY
   egress:
@@ -185,7 +187,7 @@ metadata:
 spec:
   workloadSelector:
     labels:
-      app.kubernetes.io/instance: leads-broker-websockets
+      app.kubernetes.io/name: leads-broker
   outboundTrafficPolicy:
     mode: REGISTRY_ONLY
   egress:
@@ -203,8 +205,7 @@ kind: VirtualService
 metadata:
   name: egress-leads-broker-db
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - abc-staging.aws.db
   gateways:
@@ -215,14 +216,7 @@ spec:
         - gateways:
             - mesh
           sourceLabels:
-            app.kubernetes.io/instance: leads-broker-webserver
-          port: 5432
-          sniHosts:
-            - abc-staging.aws.db
-        - gateways:
-            - mesh
-          sourceLabels:
-            app.kubernetes.io/instance: leads-broker-websockets
+            app.kubernetes.io/name: leads-broker
           port: 5432
           sniHosts:
             - abc-staging.aws.db
@@ -251,8 +245,7 @@ kind: VirtualService
 metadata:
   name: egress-leads-broker-redis
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - abc-staging.aws.redis
   gateways:
@@ -263,14 +256,7 @@ spec:
         - gateways:
             - mesh
           sourceLabels:
-            app.kubernetes.io/instance: leads-broker-webserver
-          port: 6379
-          sniHosts:
-            - abc-staging.aws.redis
-        - gateways:
-            - mesh
-          sourceLabels:
-            app.kubernetes.io/instance: leads-broker-websockets
+            app.kubernetes.io/name: leads-broker
           port: 6379
           sniHosts:
             - abc-staging.aws.redis
@@ -299,8 +285,7 @@ kind: VirtualService
 metadata:
   name: egress-abc-120
 spec:
-  exportTo:
-    - "*"
+  exportTo: [".", "istio-ingress"]
   hosts:
     - api.openai.com
     - api.slack.com
@@ -312,15 +297,7 @@ spec:
         - gateways:
             - mesh
           sourceLabels:
-            app.kubernetes.io/instance: leads-broker-webserver
-          port: 443
-          sniHosts:
-            - api.openai.com
-            - api.slack.com
-        - gateways:
-            - mesh
-          sourceLabels:
-            app.kubernetes.io/instance: leads-broker-websockets
+            app.kubernetes.io/name: leads-broker
           port: 443
           sniHosts:
             - api.openai.com
