@@ -116,6 +116,7 @@ spec:
   - hosts:
     - istio-ingress/*
     - istio-system/*
+    - "./*"
     - "./best-product-staging.aws.db"
     - "./datagotix.com"
 ---

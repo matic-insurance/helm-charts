@@ -15,13 +15,12 @@ spec:
   - hosts:
     - istio-ingress/*
     - istio-system/*
-{{- /* In-mesh neighbours. REGISTRY_ONLY denies anything not listed here, and
-       that includes services in the workload's own namespace. These are already
-       in the registry, so they need a Sidecar entry only - no ServiceEntry,
-       Gateway or VirtualService, which is why they are not part of allowlist. */}}
-{{- range $_, $host := $.Values.egress.internal_allowlist }}
-    - "./{{ $host }}"
-{{- end }}
+{{- /* The workload's own namespace. REGISTRY_ONLY denies anything not listed
+       here, and that includes in-mesh neighbours, so without this every
+       service-to-service call fails as a sidecar 502 on block_all. These hosts
+       are already in the registry and need no ServiceEntry, which is why
+       allowlist - that builds MESH_EXTERNAL entries - cannot express them. */}}
+    - "./*"
 {{- range $_, $egress := $.Values.egress.allowlist }}
 {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
     - "./{{ $host }}"

@@ -77,14 +77,8 @@ ingress:
 # Outbound endpoints used by the application
 egress:
   enabled: false
-
-  # In-mesh hosts this workload may call, as fully qualified cluster names, e.g.
-  #   internal_allowlist:
-  #     - origin-webserver.production-mesh.svc.cluster.local
-  # REGISTRY_ONLY blocks in-namespace neighbours too, and they cannot go in
-  # allowlist below because that forces MESH_EXTERNAL and TLS/SNI routing.
-  internal_allowlist: []
-
+  # Note: services in the workload's own namespace are always reachable; only
+  # destinations outside it need listing here.
   allowlist:
 
   # Name of the external service. Product name will be added as prefix
