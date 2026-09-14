@@ -32,6 +32,8 @@ ingress:
 
 egress:
   enabled: true
+  internal_allowlist:
+    - other-product-webserver.abc-mesh.svc.cluster.local
   allowlist:
     - name: db
       type: postgres

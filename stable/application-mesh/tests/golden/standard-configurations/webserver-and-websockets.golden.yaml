@@ -174,7 +174,7 @@ spec:
   - hosts:
     - istio-ingress/*
     - istio-system/*
-    - "./*"
+    - "./other-product-webserver.abc-mesh.svc.cluster.local"
     - "./abc-staging.aws.db"
     - "./abc-staging.aws.redis"
     - "./api.openai.com"
@@ -195,7 +195,7 @@ spec:
   - hosts:
     - istio-ingress/*
     - istio-system/*
-    - "./*"
+    - "./other-product-webserver.abc-mesh.svc.cluster.local"
     - "./abc-staging.aws.db"
     - "./abc-staging.aws.redis"
     - "./api.openai.com"
