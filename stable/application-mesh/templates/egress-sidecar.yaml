@@ -15,6 +15,10 @@ spec:
   - hosts:
     - istio-ingress/*
     - istio-system/*
+{{- /* Services in the workload's own namespace. REGISTRY_ONLY denies anything
+       not listed here, and that includes in-mesh neighbours - without this the
+       allowlist silently blocks every service-to-service call. */}}
+    - "./*"
 {{- range $_, $egress := $.Values.egress.allowlist }}
 {{- range $host := compact (append ($egress.hosts | default list) ($egress.host)) }}
     - "./{{ $host }}"
